@@ -1,0 +1,17 @@
+{
+    "logger": {
+        "name": "sixbox",
+        "level": "INFO",
+        "format": "%(asctime)s-%(name)s-%(levelname)s-%(message)s",
+        "folder": "data/log",
+        "file_handler": {
+            "filename": "data/log/log.log",
+            "when": "D",
+            "interval": 1,
+            "backupCount": 7,
+            "encoding": "utf-8",
+            "delay": false,
+            "utc": false
+        }
+    }
+}
