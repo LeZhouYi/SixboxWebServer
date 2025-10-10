@@ -6,7 +6,7 @@ from uuid import uuid4
 
 from tinydb import TinyDB, where
 
-from core.config import get_config
+from core.database.table.table_base import TableBase
 from core.helpers.file import write_json
 from core.helpers.lock import lock_required
 
@@ -26,24 +26,18 @@ class Role:
 class User:
     """
     用户表键名
-    username: string，用户名，唯一，登录账号
-    password: string, 密码
-    role: string, 角色
-    USER_ID: string, uuid
     """
-    USERNAME = "username"
-    PASSWORD = "password"
-    ROLE = "role"
-    USER_ID = "user_id"
+    USERNAME = "username"  # 用户名，唯一，登录账号
+    PASSWORD = "password"  # 密码
+    ROLE = "role"  # 角色
+    USER_ID = "userID"  # UUID
 
 
-class UserDB:
-
+class UserDB(TableBase):
     _lock = threading.Lock()
 
     def __init__(self):
-        self._config = get_config("database", "user")
-        self._db = self.init_db(self.get_env("db_path"))
+        super().__init__("database", "user")
 
     def init_db(self, db_path: Union[LiteralString, str]):
         """
@@ -59,14 +53,6 @@ class UserDB:
             return self._db
         return TinyDB(db_path)
 
-    def get_env(self, key: str):
-        """
-        获取env配置
-        :param key: 字段
-        :return:
-        """
-        return self._config[key]
-
     @lock_required(_lock)
     def add_user(self, username: str, password: str, role: str) -> str:
         """
@@ -76,7 +62,7 @@ class UserDB:
         :param role: 角色
         :return: primary_key
         """
-        result = self._db.get(where(User.USERNAME)==username) # type: ignore
+        result = self._db.get(where(User.USERNAME) == username)  # type: ignore
         if result:
             raise Exception(f"用户名已存在：{username}")
         self._db.insert({

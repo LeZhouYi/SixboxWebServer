@@ -24,4 +24,5 @@ def init_logger() -> logging.Logger:
     )
     return logging.getLogger(config.get("name"))
 
+
 logger = init_logger()

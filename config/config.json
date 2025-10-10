@@ -25,6 +25,13 @@
                     "role": "admin"
                 }
             ]
+        },
+        "session": {
+            "db_path": "data/db/session.json",
+            "db_init": {},
+            "jwt_secret_key": "vU7yZ4iH8pP7",
+            "jwt_algorithm": "HS256",
+            "jwt_exp_delta_seconds": 2592000
         }
     },
     "flask": {

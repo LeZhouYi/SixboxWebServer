@@ -2,6 +2,7 @@ from core.helpers.file import load_json
 
 __config = load_json("config/config.json")
 
+
 def get_section(section: str):
     """
     读取当前配置对应节点
@@ -11,6 +12,7 @@ def get_section(section: str):
     if section in __config:
         return __config[section]
     raise KeyError(section)
+
 
 def get_config(section: str, option: str) -> any:
     """

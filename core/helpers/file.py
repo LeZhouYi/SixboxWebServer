@@ -3,7 +3,7 @@ import os.path
 from typing import LiteralString, Union, Dict, List
 
 
-def load_json(filepath: Union[LiteralString,str]):
+def load_json(filepath: Union[LiteralString, str]):
     """
     加载本地的JSON数据
     :param filepath: 文件路径
@@ -14,7 +14,8 @@ def load_json(filepath: Union[LiteralString,str]):
     with open(filepath) as file:
         return json.load(file)
 
-def write_json(filepath: Union[LiteralString,str], data: Union[Dict,List], ensure_ascii: bool =False, indent=4):
+
+def write_json(filepath: Union[LiteralString, str], data: Union[Dict, List], ensure_ascii: bool = False, indent=4):
     """
     写json数据到本地文件，若文件不存在则新建
     :param filepath: 文件路径
