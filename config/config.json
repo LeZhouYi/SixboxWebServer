@@ -13,5 +13,33 @@
             "delay": false,
             "utc": false
         }
+    },
+    "database": {
+        "user": {
+            "db_path": "data/db/user.json",
+            "db_init": {},
+            "defaults": [
+                {
+                    "username": "admin",
+                    "password": "1234567a",
+                    "role": "admin"
+                }
+            ]
+        }
+    },
+    "flask": {
+        "init": {
+            "import_name": "sixbox",
+            "template_folder": "sources/templates",
+            "sources_folder": "sources/static"
+        },
+        "run": {
+            "debug": false,
+            "host": "0.0.0.0",
+            "port": 6839
+        },
+        "env": {
+            "api_prefix": "/api/v1"
+        }
     }
 }

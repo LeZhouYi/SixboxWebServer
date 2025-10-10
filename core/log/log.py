@@ -3,15 +3,15 @@ import os
 import sys
 from logging.handlers import TimedRotatingFileHandler
 
-from core.config import get_config
+from core.config import get_section
 
 
-def init_logger():
+def init_logger() -> logging.Logger:
     """
     初始化日志
     :return:
     """
-    config: dict = get_config("logger")
+    config: dict = get_section("logger")
     folder = config.get("folder")
     os.makedirs(folder, exist_ok=True)
     logging.basicConfig(
