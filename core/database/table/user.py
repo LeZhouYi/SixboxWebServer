@@ -1,7 +1,7 @@
 import hashlib
 import os.path
 import threading
-from typing import LiteralString, Union
+from typing import LiteralString, Union, Optional
 from uuid import uuid4
 
 from tinydb import TinyDB, where
@@ -39,7 +39,7 @@ class UserDB(TableBase):
     def __init__(self):
         super().__init__("database", "user")
 
-    def init_db(self, db_path: Union[LiteralString, str]):
+    def init_db(self, db_path: Union[LiteralString, str]) -> TinyDB:
         """
         初始化本地数据文件并加载
         :param db_path: 本地数据文件路径
@@ -62,9 +62,9 @@ class UserDB(TableBase):
         :param role: 角色
         :return: primary_key
         """
-        result = self._db.get(where(User.USERNAME) == username)  # type: ignore
+        result = self._db.get(where(User.USERNAME) == username) # type: ignore
         if result:
-            raise Exception(f"用户名已存在：{username}")
+            raise Exception(f"DUPLICATE USERNAME")
         self._db.insert({
             User.USER_ID: str(uuid4()),
             User.USERNAME: username,
@@ -72,6 +72,17 @@ class UserDB(TableBase):
             User.ROLE: role
         })
         return username
+
+    @lock_required(_lock)
+    def verify_user(self, username: str, password: str) -> Optional[dict]:
+        """
+        校验用户是否存在并且密码正确，如果匹配则返回相应数据
+        :param username:
+        :param password:
+        :return:
+        """
+        password = self.hash_encrypt(password)
+        return self._db.get((where(User.USERNAME) == username) & (where(User.PASSWORD) == password))  # type: ignore
 
     @staticmethod
     def hash_encrypt(value: str) -> str:

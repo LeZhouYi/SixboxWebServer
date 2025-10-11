@@ -10,7 +10,7 @@ def load_json(filepath: Union[LiteralString, str]):
     :return:
     """
     if not os.path.exists(filepath) or not os.path.isfile(filepath):
-        raise FileNotFoundError(f"文件不存在或非文件：{filepath}")
+        raise FileNotFoundError(str(filepath))
     with open(filepath) as file:
         return json.load(file)
 

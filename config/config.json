@@ -38,7 +38,7 @@
         "init": {
             "import_name": "sixbox",
             "template_folder": "sources/templates",
-            "sources_folder": "sources/static"
+            "static_folder": "sources/static"
         },
         "run": {
             "debug": false,

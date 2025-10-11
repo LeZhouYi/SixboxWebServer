@@ -1,9 +1,16 @@
-def validate_str_empty(value: str, info_template: str):
+def validate_str_empty(value: str) -> bool:
     """
-    校验字符串不能为空
+    校验字符串是否为空
     :param value: 要检查的值
-    :param info_template: 输出的错误提示
+    :return: True 表示字符串为空
+    """
+    return value is None or value.strip() == ""
+
+def validate_dict_str_empty(data: dict, key:str)->bool:
+    """
+    校验dict中key对应的字符串是否为空
+    :param data:
+    :param key:
     :return:
     """
-    if value is None or value.strip() == "":
-        raise Exception(info_template or "string empty")
+    return validate_str_empty(data.get(key))

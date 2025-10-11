@@ -16,7 +16,7 @@ class TableBase(ABC):
         :param option: 字段名
         """
         self._config = get_config(section, option)
-        self._db = self.init_db(self.get_env("db_path"))
+        self._db: TinyDB = self.init_db(self.get_env("db_path"))
 
     def get_env(self, key: str):
         """
