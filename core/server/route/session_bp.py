@@ -4,7 +4,7 @@ from core.database.table import USER_DB, SESSION_DB
 from core.database.table.session import Session
 from core.database.table.user import User
 from core.database.view.session_view import verify_token, get_bearer_token
-from core.helpers.route import gen_prefix_api, gen_fail_response, gen_success_response
+from core.helpers.route import gen_prefix_api, gen_fail_response, gen_success_response, extract_values
 from core.helpers.validate import validate_str_empty
 
 SESSION_BP = Blueprint("session", __name__)
@@ -30,6 +30,9 @@ def login():
         if user is None:
             raise Exception("USER/PASSWORD ERROR")
         response_body = SESSION_DB.add_session(user.get(User.USER_ID), device_id)
+        response_body.update(extract_values(user,[
+            User.USER_ID
+        ]))
         return jsonify(response_body)
     except Exception as e:
         return gen_fail_response(str(e))

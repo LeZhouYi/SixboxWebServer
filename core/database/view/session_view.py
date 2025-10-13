@@ -9,20 +9,25 @@ from core.helpers.route import gen_fail_response
 from core.helpers.validate import validate_str_empty
 
 
-def token_required(func):
+def token_required():
     """
     添加Token校验的装饰器
-    :param func:
     :return:
     """
-    @wraps(func)
-    def decorator(*args,**kwargs):
-        try:
-            verify_token(request)
-            return func(*args, **kwargs)
-        except Exception as e:
-            return gen_fail_response(str(e))
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                verify_token(request)
+                return func(*args, **kwargs)
+            except Exception as e:
+                return gen_fail_response(str(e))
+
+        return wrapper
+
     return decorator
+
 
 def verify_token(request_in: request) -> dict:
     """
@@ -34,6 +39,7 @@ def verify_token(request_in: request) -> dict:
     if validate_str_empty(token):
         raise Exception("TOKEN INVALID")
     return SESSION_DB.verify_access_token(token)
+
 
 def get_bearer_token(request_in: request) -> Optional[str]:
     """获取bearer类型的token"""

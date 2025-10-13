@@ -13,7 +13,7 @@ def lock_required(lock: threading.Lock, timeout: int = 300):
         def wrapper(*args, **kwargs):
             acquired = lock.acquire_lock(timeout=timeout)
             if not acquired:
-                raise Exception(f"获取得锁超时:{timeout}，函数：{func}")
+                raise Exception("LOCK REQUIRED TIMEOUT")
             try:
                 return func(*args, **kwargs)
             finally:

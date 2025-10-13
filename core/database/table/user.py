@@ -22,6 +22,21 @@ class Role:
     # 游客，只读
     TOURIST = "tourist"
 
+    @classmethod
+    def match(cls, now_role: str, will_role:str) -> bool:
+        """
+        比较角色是否满足权限
+        :param now_role: 当前角色
+        :param will_role: 申请的角色
+        :return:
+        """
+        if now_role == cls.ADMIN:
+            return True # 已是最高权限
+        elif now_role == cls.USER:
+            return will_role != cls.ADMIN #不是Admin就满足权限
+        else:
+            return will_role == cls.TOURIST #只有tourist满足权限
+
 
 class User:
     """
@@ -30,7 +45,8 @@ class User:
     USERNAME = "username"  # 用户名，唯一，登录账号
     PASSWORD = "password"  # 密码
     ROLE = "role"  # 角色
-    USER_ID = "userID"  # UUID
+    USER_ID = "userID"  # UUID 可以作为外部下载链接的参数
+    BACKGROUND = "background"  # 图片背景，默认为None，图片随机
 
 
 class UserDB(TableBase):
@@ -65,13 +81,15 @@ class UserDB(TableBase):
         result = self._db.get(where(User.USERNAME) == username) # type: ignore
         if result:
             raise Exception(f"DUPLICATE USERNAME")
+        user_id = str(uuid4())
         self._db.insert({
-            User.USER_ID: str(uuid4()),
+            User.USER_ID: user_id,
             User.USERNAME: username,
             User.PASSWORD: self.hash_encrypt(password),
-            User.ROLE: role
+            User.ROLE: role,
+            User.BACKGROUND: None
         })
-        return username
+        return user_id
 
     @lock_required(_lock)
     def verify_user(self, username: str, password: str) -> Optional[dict]:
@@ -94,3 +112,18 @@ class UserDB(TableBase):
         hash_coder = hashlib.sha256()
         hash_coder.update(value.encode("utf-8"))
         return hash_coder.hexdigest()
+
+    @lock_required(_lock)
+    def match_role(self, user_id: str, will_role:str) -> bool:
+        """
+        匹配用户的角色权限是否满足
+        :param user_id: 申请的角色
+        :param will_role:
+        :return:
+        """
+        result = self._db.get(where(User.USER_ID)==user_id) # type:ignore
+        if result is None:
+            raise Exception("USER NOT FOUND")
+        now_role = result.get(User.ROLE)
+        return Role.match(now_role, will_role)
+

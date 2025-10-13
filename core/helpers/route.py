@@ -46,3 +46,15 @@ def gen_success_response(message: str, status_code: int = 200) -> tuple[Response
     :return:
     """
     return jsonify({ResponseKey.STATUS: "OK", ResponseKey.MESSAGE: message}), status_code
+
+def extract_values(source_data:dict, keys:list)->dict:
+    """
+    根据keys提供合适的数据
+    :param source_data:
+    :param keys:
+    :return:
+    """
+    return_data = {}
+    for key in keys:
+        return_data[key] = source_data.get(key)
+    return return_data
