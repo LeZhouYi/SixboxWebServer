@@ -22,7 +22,7 @@
                 {
                     "username": "admin",
                     "password": "1234567a",
-                    "role": "admin"
+                    "role": 0
                 }
             ]
         },
@@ -32,21 +32,62 @@
             "jwt_secret_key": "vU7yZ4iH8pP7",
             "jwt_algorithm": "HS256",
             "jwt_exp_delta_seconds": 2592000
+        },
+        "storage": {
+            "db_path": "data/db/storage.json",
+            "db_init": {
+            },
+            "defaults": [
+                {
+                    "filepath": null,
+                    "filename": "根目录",
+                    "filetype": null,
+                    "remark": "默认目录",
+                    "folderID": null,
+                    "uploader": null
+                },
+                {
+                    "filepath": null,
+                    "filename": "音频",
+                    "filetype": null,
+                    "remark": "存放音乐文件",
+                    "folderID": null,
+                    "uploader": null
+                },
+                {
+                    "filepath": null,
+                    "filename": "视频",
+                    "filetype": null,
+                    "remark": "存放视频文件",
+                    "folderID": null,
+                    "uploader": null
+                }
+            ],
+            "file_ext": [
+                ".pdf"
+            ],
+            "save_folder": "data/storage"
         }
     },
     "flask": {
-        "init": {
+        "app_init": {
             "import_name": "sixbox",
             "template_folder": "sources/templates",
             "static_folder": "sources/static"
         },
-        "run": {
+        "app_run": {
             "debug": false,
             "host": "0.0.0.0",
             "port": 6839
         },
         "env": {
-            "api_prefix": "/api/v1"
+            "api_prefix": "/api/v1",
+            "langs": [
+                "zh_CN",
+                "en"
+            ],
+            "domain": "messages",
+            "locale_dir": "sources/locale"
         }
     }
 }

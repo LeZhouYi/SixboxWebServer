@@ -7,8 +7,8 @@ from uuid import uuid4
 from tinydb import TinyDB, where
 
 from core.database.table.table_base import TableBase
-from core.helpers.file import write_json
 from core.helpers.lock import lock_required
+from core.helpers.route import extract_values
 
 
 class Role:
@@ -16,26 +16,11 @@ class Role:
     角色
     """
     # 管理员，全部功能
-    ADMIN = "admin"
+    ADMIN = 0
     # 用户，没有管理/设置功能
-    USER = "user"
+    USER = 1
     # 游客，只读
-    TOURIST = "tourist"
-
-    @classmethod
-    def match(cls, now_role: str, will_role:str) -> bool:
-        """
-        比较角色是否满足权限
-        :param now_role: 当前角色
-        :param will_role: 申请的角色
-        :return:
-        """
-        if now_role == cls.ADMIN:
-            return True # 已是最高权限
-        elif now_role == cls.USER:
-            return will_role != cls.ADMIN #不是Admin就满足权限
-        else:
-            return will_role == cls.TOURIST #只有tourist满足权限
+    TOURIST = 2
 
 
 class User:
@@ -62,34 +47,38 @@ class UserDB(TableBase):
         :return:
         """
         if not os.path.exists(db_path):
-            write_json(db_path, self.get_env("db_init"))
-            self._db = TinyDB(db_path)
+            self._db = super().init_db(db_path)
             for default_item in self.get_env("defaults"):
-                self.add_user(**default_item)
+                self.add_user(default_item)
             return self._db
         return TinyDB(db_path)
 
     @lock_required(_lock)
-    def add_user(self, username: str, password: str, role: str) -> str:
+    def add_user(self, data: dict) -> dict:
         """
         新增用户
-        :param username: 用户名
-        :param password: 密码
-        :param role: 角色
-        :return: primary_key
+        :param data:
+        :return:
         """
-        result = self._db.get(where(User.USERNAME) == username) # type: ignore
+        result = self._db.get(where(User.USERNAME) == data.get(User.USERNAME))  # type: ignore
         if result:
             raise Exception(f"DUPLICATE USERNAME")
         user_id = str(uuid4())
-        self._db.insert({
+        data.update({
             User.USER_ID: user_id,
-            User.USERNAME: username,
-            User.PASSWORD: self.hash_encrypt(password),
-            User.ROLE: role,
+            User.PASSWORD: self.hash_encrypt(data.get(User.PASSWORD)),
             User.BACKGROUND: None
         })
-        return user_id
+        self._db.insert(extract_values(data, [
+            User.USER_ID,
+            User.USERNAME,
+            User.PASSWORD,
+            User.ROLE,
+            User.BACKGROUND
+        ]))
+        return {
+            User.USER_ID: user_id
+        }
 
     @lock_required(_lock)
     def verify_user(self, username: str, password: str) -> Optional[dict]:
@@ -114,16 +103,40 @@ class UserDB(TableBase):
         return hash_coder.hexdigest()
 
     @lock_required(_lock)
-    def match_role(self, user_id: str, will_role:str) -> bool:
+    def match_role(self, user_id: str, will_role: int) -> bool:
         """
         匹配用户的角色权限是否满足
         :param user_id: 申请的角色
         :param will_role:
         :return:
         """
-        result = self._db.get(where(User.USER_ID)==user_id) # type:ignore
+        result = self._db.get(where(User.USER_ID) == user_id)  # type:ignore
         if result is None:
             raise Exception("USER NOT FOUND")
         now_role = result.get(User.ROLE)
-        return Role.match(now_role, will_role)
+        return will_role >= now_role
 
+    @lock_required(_lock)
+    def get_user(self, user_id: str):
+        """
+        获取用户
+        :param user_id:
+        :return:
+        """
+        result = self._db.get(where(User.USER_ID) == user_id)  # type: ignore
+        if result:
+            return result
+        raise Exception("USER NOT FOUND")
+
+    @lock_required(_lock)
+    def delete_user(self, user_id: str):
+        """
+        删除用户
+        :param user_id:
+        :return:
+        """
+        result = self._db.get(where(User.USER_ID) == user_id)  # type: ignore
+        if result:
+            self._db.remove(where(User.USER_ID) == user_id)  # type: ignore
+            return
+        raise Exception("USER NOT FOUND")

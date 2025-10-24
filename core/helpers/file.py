@@ -11,7 +11,7 @@ def load_json(filepath: Union[LiteralString, str]):
     """
     if not os.path.exists(filepath) or not os.path.isfile(filepath):
         raise FileNotFoundError(str(filepath))
-    with open(filepath) as file:
+    with open(filepath, encoding="utf-8") as file:
         return json.load(file)
 
 

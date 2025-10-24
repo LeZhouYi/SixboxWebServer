@@ -6,7 +6,8 @@ def validate_str_empty(value: str) -> bool:
     """
     return value is None or value.strip() == ""
 
-def validate_dict_str_empty(data: dict, key:str)->bool:
+
+def validate_dict_str_empty(data: dict, key: str) -> bool:
     """
     校验dict中key对应的字符串是否为空
     :param data:

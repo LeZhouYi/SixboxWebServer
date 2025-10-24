@@ -5,26 +5,19 @@ from typing import Optional
 from flask import request
 
 from core.database.table import SESSION_DB
-from core.helpers.route import gen_fail_response
 from core.helpers.validate import validate_str_empty
 
 
-def token_required():
+def token_required(func):
     """
     添加Token校验的装饰器
     :return:
     """
 
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                verify_token(request)
-                return func(*args, **kwargs)
-            except Exception as e:
-                return gen_fail_response(str(e))
-
-        return wrapper
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        verify_token(request)
+        return func(*args, **kwargs)
 
     return decorator
 

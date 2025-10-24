@@ -1,17 +1,7 @@
 from flask import Flask
 
 from core.config import get_section
-from core.server.route.session_bp import SESSION_BP
-from core.server.route.user_bp import USER_BP
-
-
-def register_blueprints(app: Flask):
-    """
-    注册所有路由的蓝图
-    :return:
-    """
-    app.register_blueprint(USER_BP)
-    app.register_blueprint(SESSION_BP)
+from core.server.route.helpers import register_blueprints
 
 
 def run_app():
@@ -20,6 +10,6 @@ def run_app():
     :return:
     """
     config = get_section("flask")
-    app = Flask(**config.get("init"))
+    app = Flask(**config.get("app_init"))
     register_blueprints(app)
-    app.run(**config.get("run"))
+    app.run(**config.get("app_run"))

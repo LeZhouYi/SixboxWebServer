@@ -119,3 +119,12 @@ class SessionDB(TableBase):
         }
         token = jwt.encode(payload, self.get_env("jwt_secret_key"), algorithm=self.get_env("jwt_algorithm"))
         return token
+
+    @lock_required(_lock)
+    def delete_token_by_user(self, user_id: str):
+        """
+        通过用户ID进行删除所属的token
+        :param user_id:
+        :return:
+        """
+        self._db.remove(where(Session.USER_ID) == user_id)  # type: ignore
