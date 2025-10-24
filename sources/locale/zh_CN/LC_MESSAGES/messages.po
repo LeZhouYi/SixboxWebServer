@@ -18,12 +18,96 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
+msgid "FAIL RESULT"
+msgstr "操作失败"
+
+msgid "SUCCESS RESULT"
+msgstr ""
+
+msgid "LOCK REQUIRED TIMEOUT"
+msgstr ""
+
+# ------------role-----------------------
+msgid "PERMISSION DENIED"
+msgstr ""
+
+msgid "OPERATION SUCCESS"
+msgstr ""
+
 msgid "TOKEN INVALID"
 msgstr "Token已失效"
+
+#, fuzzy
+msgid "TOKEN EXPIRED"
+msgstr "Token已失效"
+
+#, fuzzy
+msgid "REFRESH TOKEN INVALID"
+msgstr "Token已失效"
+
+#, fuzzy
+msgid "DEVICE ID REQUIRED"
+msgstr "用户名不能为空"
+
+msgid "USER/PASSWORD ERROR"
+msgstr ""
+
+#, fuzzy
+msgid "REFRESH TOKEN REQUIRED"
+msgstr "用户名不能为空"
 
 msgid "USERNAME REQUIRED"
 msgstr "用户名不能为空"
 
-msgid "FAIL RESULT"
-msgstr "操作失败"
+msgid "DUPLICATE USERNAME"
+msgstr ""
+
+msgid "USER NOT FOUND"
+msgstr ""
+
+#, fuzzy
+msgid "PASSWORD REQUIRED"
+msgstr "用户名不能为空"
+
+#, fuzzy
+msgid "ROLE REQUIRED"
+msgstr "用户名不能为空"
+
+msgid "ROLE ERROR"
+msgstr ""
+
+# ------------storage---------------------
+msgid "FILE SAVE FAIL"
+msgstr ""
+
+msgid "FILE EXT EMPTY"
+msgstr ""
+
+#, fuzzy
+msgid "FOLDER REQUIRED"
+msgstr "用户名不能为空"
+
+msgid "FOLDER NOT FOUND"
+msgstr ""
+
+msgid "DATA NOT FOUND"
+msgstr ""
+
+#, fuzzy
+msgid "FILES REQUIRED"
+msgstr "用户名不能为空"
+
+#, fuzzy
+msgid "FILENAME REQUIRED"
+msgstr "用户名不能为空"
+
+msgid "FILENAME EMPTY"
+msgstr ""
+
+msgid "FILE FORMAT UNSUPPORTED"
+msgstr ""
+
+# -------------web base---------------------
+msgid "DEFAULT TITLE"
+msgstr "六号部落"
 

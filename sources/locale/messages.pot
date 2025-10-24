@@ -98,3 +98,7 @@ msgstr ""
 
 msgid "FILE FORMAT UNSUPPORTED"
 msgstr ""
+
+#-------------web base---------------------
+msgid "DEFAULT TITLE"
+msgstr ""

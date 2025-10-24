@@ -1,0 +1,4 @@
+/*浅色主题*/
+[data-theme="light"] {
+    --background-color: white;
+}

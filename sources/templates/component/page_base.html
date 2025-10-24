@@ -1,0 +1,18 @@
+<!--页面基础结构，定义了多语言、标题及主体内容区域-->
+<!DOCTYPE html>
+<html lang="{{get_locale()}}">
+<head>
+    <meta charset="UTF-8"/>
+    <!--    页面标题-->
+    <title>
+        {% block title %}{{_("DEFAULT TITLE")}}{% endblock %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
+    <!--    样式文件引用-->
+    {% block css_file %}
+    {% endblock %}
+</head>
+<!--页面主体-->
+{% block body %}{% endblock %}
+</html>

@@ -1,8 +1,14 @@
 # runtime
 data/
+sources/static/css/generate/
+sources/static/js/generate/
+*.webassets-cache
 
 # idea
 .idea/
 
 # python
 __pycache__/
+
+# env
+.venv/

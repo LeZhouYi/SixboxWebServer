@@ -88,6 +88,17 @@
             ],
             "domain": "messages",
             "locale_dir": "sources/locale"
+        },
+        "sources": {
+            "cssmin": {
+                "login_css": {
+                    "output": "css/generate/login.css",
+                    "sources": [
+                        "css/default.css",
+                        "css/theme.css"
+                    ]
+                }
+            }
         }
     }
 }
