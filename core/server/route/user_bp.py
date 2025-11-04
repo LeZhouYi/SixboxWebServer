@@ -3,9 +3,9 @@ from flask import Blueprint, request, jsonify
 from core.database.table import USER_DB, SESSION_DB
 from core.database.table.session import Session
 from core.database.table.user import Role, User
-from core.database.view.common_view import catch_exception
 from core.database.view.session_view import verify_token
 from core.database.view.user_view import role_required
+from core.database.view.view_utils import catch_exception
 from core.helpers.route import gen_prefix_api, extract_values, gen_success_response
 from core.helpers.validate import validate_str_empty
 
@@ -54,4 +54,4 @@ def delete_user(user_id: str):
         raise Exception("PERMISSION DENIED")
     USER_DB.delete_user(user_id)
     SESSION_DB.delete_token_by_user(user_id)
-    return gen_success_response(request, "OPERATION SUCCESS")
+    return gen_success_response(request, "SUCCESS RESULT")

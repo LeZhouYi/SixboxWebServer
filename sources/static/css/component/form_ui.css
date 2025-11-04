@@ -1,0 +1,45 @@
+:root {
+    --form-item-height: 44px;  /*基础元素高度*/
+    --form-theme-color: #363B64;  /*主题色*/
+    --form-item-radius: 12px;  /*基础元素圆角*/
+    --form-item-border: 2px solid #363B64;
+    --form-font-size: 16px;
+    --form-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+}
+
+.form-icon-input{
+    min-height: var(--form-item-height);
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--background-color);
+    border-radius: var(--form-item-radius);
+    border: var(--form-item-border);
+    display: flex;
+    flex-direction: row;
+    color: var(--form-theme-color);
+    font-size: var(--form-font-size);
+    transition: all .5s ease;
+    box-shadow: var(--form-shadow);
+}
+
+.form-button{
+    cursor: pointer;
+    min-height: var(--form-item-height);
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--form-theme-color);
+    border-radius: var(--form-item-radius);
+    border: var(--form-item-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--background-color);
+    font-size: var(--form-font-size);
+    transition: all .5s ease;
+    box-shadow: var(--form-shadow);
+}
+
+.form-button:hover{
+    color: var(--form-theme-color);
+    background-color: var(--background-color);
+}

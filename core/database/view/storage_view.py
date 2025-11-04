@@ -13,7 +13,7 @@ def save_file(file: FileStorage):
     if file.filename is None:
         raise Exception("FILENAME EMPTY")
     file_ext = os.path.splitext(file.filename)[-1].lower()
-    if file_ext not in STORAGE_DB.get_env("file_ext"):
+    if file_ext not in STORAGE_DB.get_env("extensions"):
         raise Exception("FILE FORMAT UNSUPPORTED")
     folder = os.path.join(STORAGE_DB.get_env("save_folder"), file_ext[1:])
     os.makedirs(folder, exist_ok=True)

@@ -1,5 +1,6 @@
 import gettext
 from gettext import NullTranslations
+from typing import Generator, Any
 
 from flask import Response, jsonify, Request, request
 from flask_assets import Environment
@@ -126,3 +127,14 @@ def register_assets(assets: Environment):
                     output=asset_attr["output"]
                 )
             )
+
+
+def get_stream_io(filepath: str, chunk_size: int = None) -> Generator[bytes, Any, None]:
+    """获取文件流式传输流"""
+    chunk_size = chunk_size or _get_env("chunk_size")
+    with open(filepath, "rb") as file:
+        while True:
+            data = file.read(chunk_size)
+            if not data:
+                break
+            yield data

@@ -3,9 +3,9 @@ from flask import Blueprint, request, jsonify
 from core.database.table import STORAGE_DB
 from core.database.table.session import Session
 from core.database.table.storage import Storage
-from core.database.view.common_view import catch_exception
 from core.database.view.session_view import verify_token
 from core.database.view.storage_view import save_file
+from core.database.view.view_utils import catch_exception
 from core.helpers.route import gen_prefix_api
 from core.helpers.validate import validate_str_empty
 

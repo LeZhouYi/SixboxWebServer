@@ -30,9 +30,6 @@ msgstr ""
 msgid "PERMISSION DENIED"
 msgstr ""
 
-msgid "OPERATION SUCCESS"
-msgstr ""
-
 # -----------token-----------------------
 msgid "TOKEN INVALID"
 msgstr ""
@@ -99,6 +96,44 @@ msgstr ""
 msgid "FILE FORMAT UNSUPPORTED"
 msgstr ""
 
+#-------------cover------------------------
+msgid "COVER NOT FOUND"
+msgstr ""
+
+msgid "COVER EMPTY"
+msgstr ""
+
+msgid "COVER NOT EXIST"
+msgstr ""
+
+#-------------static-----------------------
+msgid "ICON FORMAT ERROR"
+msgstr ""
+
+msgid "ICON NOT FOUND"
+msgstr ""
+
 #-------------web base---------------------
 msgid "DEFAULT TITLE"
+msgstr ""
+
+msgid "COVER"
+msgstr ""
+
+msgid "LOGO"
+msgstr ""
+
+msgid "ACCOUNT"
+msgstr ""
+
+msgid "ACCOUNT HOLDER"
+msgstr ""
+
+msgid "PASSWORD"
+msgstr ""
+
+msgid "PASSWORD HOLDER"
+msgstr ""
+
+msgid "LOGIN BUTTON"
 msgstr ""

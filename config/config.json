@@ -63,13 +63,18 @@
                     "uploader": null
                 }
             ],
-            "file_ext": [
+            "extensions": [
                 ".pdf"
             ],
             "save_folder": "data/storage"
+        },
+        "cover": {
+            "save_folder": "data/static/cover",
+            "extensions": [".png",".jpg",".jpeg"]
         }
     },
     "flask": {
+        "static_folder": "sources/static",
         "app_init": {
             "import_name": "sixbox",
             "template_folder": "sources/templates",
@@ -87,15 +92,29 @@
                 "en"
             ],
             "domain": "messages",
-            "locale_dir": "sources/locale"
+            "locale_dir": "sources/locale",
+            "chunk_size": 1024
         },
         "sources": {
             "cssmin": {
                 "login_css": {
                     "output": "css/generate/login.css",
                     "sources": [
+                        "css/component/cover_container.css",
+                        "css/component/form_ui.css",
+                        "css/page/login.css",
                         "css/default.css",
                         "css/theme.css"
+                    ]
+                }
+            },
+            "jsmin": {
+                "login_js": {
+                    "output": "js/generate/login.js",
+                    "sources": [
+                        "js/sixbox/helpers/screen.js",
+                        "js/sixbox/helpers/throttle.js",
+                        "js/sixbox/page/login/login.js"
                     ]
                 }
             }

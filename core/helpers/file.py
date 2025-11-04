@@ -15,7 +15,8 @@ def load_json(filepath: Union[LiteralString, str]):
         return json.load(file)
 
 
-def write_json(filepath: Union[LiteralString, str], data: Union[Dict, List], ensure_ascii: bool = False, indent=4):
+def write_json(filepath: Union[LiteralString, str], data: Union[Dict, List], ensure_ascii: bool = False,
+               indent=4):
     """
     写json数据到本地文件，若文件不存在则新建
     :param filepath: 文件路径
@@ -27,3 +28,19 @@ def write_json(filepath: Union[LiteralString, str], data: Union[Dict, List], ens
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath, "w", encoding="utf-8") as file:
         json.dump(data, file, ensure_ascii=ensure_ascii, indent=indent)
+
+
+def get_filelist(folder: Union[LiteralString, str], extensions: List[str] = None) -> list[Union[LiteralString, str]]:
+    """
+    获取该路径对应的文件列表，未指定suffixes则返回所有
+    :param extensions:
+    :param folder:
+    :param suffixes:
+    :return:
+    """
+    filelist = []
+    for filename in os.listdir(folder):
+        filepath = os.path.join(folder, filename)
+        if os.path.isfile(filepath) and (extensions is None or os.path.splitext(filename)[-1].lower() in extensions):
+            filelist.append(filename)
+    return filelist

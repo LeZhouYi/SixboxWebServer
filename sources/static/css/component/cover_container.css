@@ -1,0 +1,18 @@
+.cover-container {
+    /*内部左侧大部分内容显示图片，右侧一栏为正文*/
+    height:100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.cover-display{
+    /*显示图片的区域*/
+    flex: 1;
+    overflow: hidden;
+}
+.cover-img{
+    /*图片*/
+    width:100%;
+    height:100%;
+    object-fit: cover;
+}

@@ -25,7 +25,7 @@ class Storage:
     REMARK = "remark"  # 备注
     FOLDER_ID = "folderID"  # 所属文件夹
 
-    FILES = "files" # request form-data 的文件列表
+    FILES = "files"  # request form-data 的文件列表
 
 
 class StorageDB(TableBase):
@@ -69,7 +69,8 @@ class StorageDB(TableBase):
         folder_id = data.get(Storage.FOLDER_ID)
         if folder_id is None:
             raise Exception("FOLDER REQUIRED")
-        elif self._db.get((where(Storage.FILE_ID) == folder_id) & (where(Storage.FILE_TYPE) is None)) is None:  # type: ignore
+        elif self._db.get(
+                (where(Storage.FILE_ID) == folder_id) & (where(Storage.FILE_TYPE) is None)) is None:  # type: ignore
             raise Exception("FOLDER NOT FOUND")
         return data
 

@@ -2,7 +2,7 @@
 data/
 sources/static/css/generate/
 sources/static/js/generate/
-*.webassets-cache
+sources/static/.webassets-cache
 
 # idea
 .idea/

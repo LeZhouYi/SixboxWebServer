@@ -2,8 +2,7 @@ from functools import wraps
 
 from flask import request
 
-from core.helpers.exception import ApiException
-from core.helpers.route import gen_fail_response, get_translator
+from core.helpers.route import gen_fail_response
 
 
 def catch_exception(func):
@@ -17,9 +16,6 @@ def catch_exception(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-
-            if isinstance(e, ApiException):
-                return e.gen_response(get_translator(request))
             return gen_fail_response(request, str(e))
 
     return decorator

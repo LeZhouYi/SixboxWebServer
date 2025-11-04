@@ -3,9 +3,8 @@ from flask import Blueprint, request, jsonify
 from core.database.table import USER_DB, SESSION_DB
 from core.database.table.session import Session
 from core.database.table.user import User
-from core.database.view.common_view import catch_exception
 from core.database.view.session_view import verify_token, get_bearer_token
-from core.helpers.exception import ApiException
+from core.database.view.view_utils import catch_exception
 from core.helpers.route import gen_prefix_api, gen_success_response, extract_values
 from core.helpers.validate import validate_str_empty
 
@@ -22,7 +21,7 @@ def login():
     device_id = data.get(Session.DEVICE_ID)
 
     if validate_str_empty(username):
-        raise ApiException("USERNAME REQUIRED")
+        raise Exception("USERNAME REQUIRED")
     if validate_str_empty(password):
         raise Exception("PASSWORD REQUIRED")
     if validate_str_empty(device_id):
