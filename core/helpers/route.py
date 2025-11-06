@@ -1,4 +1,5 @@
 import gettext
+import os
 from gettext import NullTranslations
 from typing import Generator, Any
 
@@ -46,7 +47,7 @@ def gen_fail_response(request_in: Request, message: str, error_code: int = 400) 
     translator = get_translator(request_in)
     return jsonify({
         ResponseKey.STATUS: translator.gettext("FAIL RESULT"),
-        ResponseKey.MESSAGE: message
+        ResponseKey.MESSAGE: translator.gettext(message)
     }), error_code
 
 
@@ -61,7 +62,7 @@ def gen_success_response(request_in: Request, message: str, status_code: int = 2
     translator = get_translator(request_in)
     return jsonify({
         ResponseKey.STATUS: translator.gettext("SUCCESS RESULT"),
-        ResponseKey.MESSAGE: message
+        ResponseKey.MESSAGE: translator.gettext(message)
     }), status_code
 
 
@@ -119,10 +120,18 @@ def register_assets(assets: Environment):
     asset_configs = __config["sources"]
     for filter_type, asset_dict in asset_configs.items():
         for asset_name, asset_attr in asset_dict.items():
+            sources = []
+            for source_file_str in asset_attr["sources"]:
+                if source_file_str.endswith("/."):
+                    folder = source_file_str.split("/.")[0]
+                    for filename in os.listdir(folder):
+                        sources.append(str(os.path.join(folder, filename)))
+                else:
+                    sources.append(source_file_str)
             assets.register(
                 asset_name,
                 Bundle(
-                    *asset_attr["sources"],
+                    *sources,
                     filters=filter_type,
                     output=asset_attr["output"]
                 )

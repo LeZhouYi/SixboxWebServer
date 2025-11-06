@@ -119,12 +119,6 @@ msgstr "图标不存在"
 msgid "DEFAULT TITLE"
 msgstr "六号盒子"
 
-msgid "COVER"
-msgstr "封面"
-
-msgid "LOGO"
-msgstr "LOGO"
-
 msgid "ACCOUNT"
 msgstr "帐号"
 
@@ -139,4 +133,10 @@ msgstr "请输入密码"
 
 msgid "LOGIN BUTTON"
 msgstr "登录"
+
+#~ msgid "COVER"
+#~ msgstr "封面"
+
+#~ msgid "LOGO"
+#~ msgstr "LOGO"
 

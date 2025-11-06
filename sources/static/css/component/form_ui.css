@@ -11,7 +11,6 @@
     min-height: var(--form-item-height);
     width: 100%;
     box-sizing: border-box;
-    background-color: var(--background-color);
     border-radius: var(--form-item-radius);
     border: var(--form-item-border);
     display: flex;
@@ -20,6 +19,24 @@
     font-size: var(--form-font-size);
     transition: all .5s ease;
     box-shadow: var(--form-shadow);
+    align-items: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    gap: 5px;
+    background-color: var(--background-color);
+}
+
+.form-icon-input>input{
+    flex-grow: 1;
+    height: 100%;
+    border-width: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: var(--text-remark-size);
+    background: transparent;
+}
+.form-icon-input>input:focus-visible{
+    outline:none;
 }
 
 .form-button{
@@ -42,4 +59,20 @@
 .form-button:hover{
     color: var(--form-theme-color);
     background-color: var(--background-color);
+}
+
+.form-line-item{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.form-icon>img{
+    width: 100%;
+    height: 100%;
 }

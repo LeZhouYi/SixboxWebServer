@@ -2,8 +2,12 @@
     --login-form-width: 460px; /*登录栏宽*/
 }
 
+.login-container{
+
+}
+
 .login-form{
-    width: var(--login-form-width);
+    max-width: var(--login-form-width);
     height: 100%;
     background-color: var(--background-color);
     display: flex;
@@ -11,4 +15,51 @@
     box-sizing: border-box;
     padding-left: 90px;
     padding-right: 90px;
+    gap: 20px;
+    transition: all 0.7s ease;
+}
+
+.login-form>*:first-child{
+    padding-top: 200px;
+    margin-bottom: 20px;
+}
+
+.login-form>*:last-child{
+    margin-top: 30px;
+}
+
+.login-logo{
+    width: 100%;
+    display: flex;
+}
+
+.login-logo>img{
+    width: 100%;
+    object-fit: contain;
+    object-position: bottom;
+}
+
+.login-container{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    transition: all 0.7s ease;
+}
+
+@media (max-width: 1024px), (max-device-width: 1024px){
+    .login-container{
+        position: absolute;
+        width: 100%;
+        background: rgba(255,255,255,0.85);
+    }
+    .login-form{
+        background: transparent;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+    .login-form>*:first-child{
+        padding-top: 100px;
+        margin-bottom: 20px;
+    }
 }

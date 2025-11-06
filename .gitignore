@@ -1,8 +1,8 @@
 # runtime
-data/
-sources/static/css/generate/
-sources/static/js/generate/
-sources/static/.webassets-cache
+/data/
+/sources/static/css/generate/
+/sources/static/js/generate/
+/sources/static/.webassets-cache
 
 # idea
 .idea/

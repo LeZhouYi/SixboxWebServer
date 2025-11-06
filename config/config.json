@@ -70,7 +70,11 @@
         },
         "cover": {
             "save_folder": "data/static/cover",
-            "extensions": [".png",".jpg",".jpeg"]
+            "extensions": [
+                ".png",
+                ".jpg",
+                ".jpeg"
+            ]
         }
     },
     "flask": {
@@ -100,8 +104,7 @@
                 "login_css": {
                     "output": "css/generate/login.css",
                     "sources": [
-                        "css/component/cover_container.css",
-                        "css/component/form_ui.css",
+                        "css/component/*",
                         "css/page/login.css",
                         "css/default.css",
                         "css/theme.css"
@@ -112,9 +115,12 @@
                 "login_js": {
                     "output": "js/generate/login.js",
                     "sources": [
-                        "js/sixbox/helpers/screen.js",
-                        "js/sixbox/helpers/throttle.js",
-                        "js/sixbox/page/login/login.js"
+                        "js/sixbox/helpers/*",
+                        "js/sixbox/base/*",
+                        "js/sixbox/component/spinner.js",
+                        "js/sixbox/component/popup_message.js",
+                        "js/spinner/spinner.js",
+                        "js/sixbox/page/login/*"
                     ]
                 }
             }

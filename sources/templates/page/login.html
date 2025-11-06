@@ -10,30 +10,36 @@
     <body>
         <div class="cover-container">
             <div class="cover-display">
-                <img class="cover-img" src="static/covers/cover.png" alt="{% block cover %}{{_('COVER')}}{% endblock %}">
+                <img class="cover-img" src="static/covers/cover.png" alt="cover">
             </div>
-            <form class="login-form">
-                <div class="login-logo">
-                    <img src="static/icons/logo.png" alt="{% block logo %}{{_('LOGO')}}{% endblock %}">
-                </div>
-                <div class="form-line-item">
-                    <label for="account">{% block account %}{{_('ACCOUNT')}}{% endblock %}</label>
-                    <div class="form-icon-input">
-                        <div class="form-icon"></div>
-                        <input type="text" id="account" placeholder="{% block account_holder %}{{_('ACCOUNT HOLDER')}}{% endblock %}">
+            <div class="login-container">
+                <form class="login-form" id="login-form">
+                    <div class="login-logo">
+                        <img src="static/icons/logo.png" alt="logo">
                     </div>
-                </div>
-                <div class="form-line-item">
-                    <label for="password">{% block password %}{{_('PASSWORD')}}{% endblock %}</label>
-                    <div class="form-password">
-                        <div class="form-icon"></div>
-                        <input type="password" id="password" placeholder="{% block password_holder %}{{_('PASSWORD HOLDER')}}{% endblock %}">
+                    <div class="form-line-item">
+                        <label for="account">{% block account %}{{_('ACCOUNT')}}{% endblock %}</label>
+                        <div class="form-icon-input">
+                            <div class="form-icon">
+                                <img src="static/icons/user.png" alt="user">
+                            </div>
+                            <input type="text" id="account" placeholder="{% block account_holder %}{{_('ACCOUNT HOLDER')}}{% endblock %}">
+                        </div>
                     </div>
-                </div>
-                <div class="form-button">
-                    <a>{% block login_button %}{{_('LOGIN BUTTON')}}{% endblock %}</a>
-                </div>
-            </form>
+                    <div class="form-line-item">
+                        <label for="password">{% block password %}{{_('PASSWORD')}}{% endblock %}</label>
+                        <div class="form-icon-input">
+                            <div class="form-icon">
+                                <img src="static/icons/password.png" alt="password">
+                            </div>
+                            <input type="password" id="password" placeholder="{% block password_holder %}{{_('PASSWORD HOLDER')}}{% endblock %}">
+                        </div>
+                    </div>
+                    <div class="form-button spinner-holder" id="login-button">
+                        <a>{% block login_button %}{{_('LOGIN BUTTON')}}{% endblock %}</a>
+                    </div>
+                </form>
+            </div>
         </div>
     {% block js_file %}
         {% assets "login_js" %}

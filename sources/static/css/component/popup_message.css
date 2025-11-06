@@ -1,0 +1,97 @@
+.message-overlay{
+    height: 100%;
+    width: 100%;
+    overflow-y: hidden;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1;
+    pointer-events:none;
+}
+
+.message-container{
+    min-width: 400px;
+    max-width: 70%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    pointer-events:none;
+}
+
+.error-message{
+    min-height: 44px;
+    background: #FCDCDD;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+    border-radius: 12px;
+    border: 2px solid #FC9C9E;
+    box-sizing: border-box;
+    gap: 5px;
+    animation: slide-down 0.5s ease-out forwards, fade-out 4s ease-in-out forwards;
+}
+
+.success-message{
+    min-height: 44px;
+    background: #DCFAE0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+    border-radius: 12px;
+    border: 2px solid #3DBA4E;
+    box-sizing: border-box;
+    gap: 5px;
+    animation: slide-down 0.5s ease-out forwards, fade-out 4s ease-in-out forwards;
+}
+
+.message-icon{
+    width: 32px;
+    height: 32px;
+    margin-top: 6px;
+    margin-left: 5px;
+}
+
+.message-text{
+    width: 100%;
+    box-sizing: border-box;
+    margin-right: 5px;
+    font-size: 15px;
+    padding-top: 9px;
+    padding-bottom: 5px;
+    white-space: pre-wrap;
+}
+.error-message>.message-text{
+    color: #F2323F;
+}
+
+.success-message>.message-text{
+    color: #3DBA4E;
+}
+
+.message-icon>img{
+    width: 100%;
+}
+
+/*动画*/
+@keyframes slide-down{
+    from{
+        opacity: 0,
+        transform: translateY(-20px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes fade-out{
+    from{
+        opacity: 1,
+    }
+    to{
+        opacity: 0;
+    }
+}

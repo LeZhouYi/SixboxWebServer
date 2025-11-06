@@ -117,12 +117,6 @@ msgstr ""
 msgid "DEFAULT TITLE"
 msgstr ""
 
-msgid "COVER"
-msgstr ""
-
-msgid "LOGO"
-msgstr ""
-
 msgid "ACCOUNT"
 msgstr ""
 
