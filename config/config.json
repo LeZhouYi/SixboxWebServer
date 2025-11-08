@@ -109,18 +109,77 @@
                         "css/default.css",
                         "css/theme.css"
                     ]
+                },
+                "storage_css": {
+                    "output": "css/generate/storage.css",
+                    "sources": [
+                        "css/component/*",
+                        "css/page/storage.css",
+                        "css/default.css",
+                        "css/theme.css"
+                    ]
+                },
+                "music_css": {
+                    "output": "css/generate/music.css",
+                    "sources": [
+                        "css/component/*",
+                        "css/default.css",
+                        "css/theme.css"
+                    ]
+                },
+                "pdf_editor_css": {
+                    "output": "css/generate/pdf_editor.css",
+                    "sources": [
+                        "css/component/*",
+                        "css/default.css",
+                        "css/theme.css"
+                    ]
                 }
             },
             "jsmin": {
                 "login_js": {
                     "output": "js/generate/login.js",
                     "sources": [
+                        "js/spinner/spinner.js",
                         "js/sixbox/helpers/*",
-                        "js/sixbox/base/*",
+                        "js/sixbox/init/*",
                         "js/sixbox/component/spinner.js",
                         "js/sixbox/component/popup_message.js",
-                        "js/spinner/spinner.js",
+                        "js/sixbox/dataview/*",
                         "js/sixbox/page/login/*"
+                    ]
+                },
+                "storage_js": {
+                    "output": "js/generate/storage.js",
+                    "sources": [
+                        "js/spinner/spinner.js",
+                        "js/sixbox/helpers/*",
+                        "js/sixbox/init/*",
+                        "js/sixbox/component/*",
+                        "js/sixbox/dataview/*",
+                        "js/sixbox/page/storage/*"
+                    ]
+                },
+                "music_js": {
+                    "output": "js/generate/music.js",
+                    "sources": [
+                        "js/spinner/spinner.js",
+                        "js/sixbox/helpers/*",
+                        "js/sixbox/init/*",
+                        "js/sixbox/component/*",
+                        "js/sixbox/dataview/*",
+                        "js/sixbox/page/music/*"
+                    ]
+                },
+                "pdf_editor_js": {
+                    "output": "js/generate/pdf_editor.js",
+                    "sources": [
+                        "js/spinner/spinner.js",
+                        "js/sixbox/helpers/*",
+                        "js/sixbox/init/*",
+                        "js/sixbox/component/*",
+                        "js/sixbox/dataview/*",
+                        "js/sixbox/page/tools/pdf_editor/*"
                     ]
                 }
             }

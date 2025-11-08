@@ -8,4 +8,11 @@ body{
     margin: 0px;
     background-color: var(--background-color);
     display: flex;
+    position: relative;
+}
+
+.ellipsis{
+    white-space: nowrap;    /* 强制文本在一行显示 */
+    overflow: hidden;        /* 超出容器宽度的部分隐藏 */
+    text-overflow: ellipsis; /* 用省略号表示被隐藏的部分 */
 }

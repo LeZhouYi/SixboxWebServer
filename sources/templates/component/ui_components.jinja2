@@ -1,0 +1,20 @@
+{# 封面 #}
+{% macro cover() -%}
+    <div class="cover-display">
+        <img class="cover-img" src="/static/covers/cover.png" alt="cover">
+    </div>
+{%- endmacro %}
+
+{# 主要页面的自定义背景 #}
+{% macro background() -%}
+    <div class="background-container">
+        <img alt="background">
+    </div>
+{%- endmacro %}
+
+{# LOGO #}
+{% macro logo() -%}
+    <div class="logo-container">
+        <img src="/static/icons/logo.png" alt="logo">
+    </div>
+{%- endmacro %}

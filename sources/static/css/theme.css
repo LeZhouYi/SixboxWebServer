@@ -1,4 +1,6 @@
 /*浅色主题*/
 [data-theme="light"] {
     --background-color: white;
+    --transparent-color: rgba(255,255,255,0.85);
+    --theme-color: #363B64;
 }

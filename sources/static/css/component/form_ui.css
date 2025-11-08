@@ -1,10 +1,23 @@
 :root {
     --form-item-height: 44px;  /*基础元素高度*/
-    --form-theme-color: #363B64;  /*主题色*/
+    --form-theme-color: var(--theme-color);  /*主题色*/
     --form-item-radius: 12px;  /*基础元素圆角*/
-    --form-item-border: 2px solid #363B64;
+    --form-item-border: 2px solid var(--theme-color);
     --form-font-size: 16px;
     --form-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:autofill {
+    box-shadow: 0 0 0 1000px white inset !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    background-image: none !important;
+    transition: background-color 5000s ease-in-out 0s !important;
+}
+input:focus-visible{
+    outline:none;
 }
 
 .form-icon-input{
@@ -34,9 +47,7 @@
     padding-bottom: 0;
     font-size: var(--text-remark-size);
     background: transparent;
-}
-.form-icon-input>input:focus-visible{
-    outline:none;
+    border-radius: 10px;
 }
 
 .form-button{

@@ -1,0 +1,39 @@
+{# 侧边栏带左侧图标的一个按钮 #}
+{% macro sidebar_item(name, href, icon) -%}
+    <div class="sidebar-item" href="{{href}}">
+        <div class="sidebar-icon">
+            <img src="{{icon}}" alt="{{name}}">
+        </div>
+        <div class="sidebar-text ellipsis">{{name}}</div>
+    </div>
+{%- endmacro %}
+
+{# 侧边栏二级按钮 #}
+{% macro sidebar_group_item(name, icon, href) -%}
+    <div class="sidebar-group-item" href="{{href}}">
+        <div class="sidebar-group-icon">
+            <img src="{{icon}}" alt="group item icon">
+        </div>
+        <div class="sidebar-text ellipsis">{{name}}</div>
+    </div>
+{%- endmacro %}
+
+{# 侧边栏左侧带图标，内部带内容的按钮 #}
+{% macro sidebar_groups(name, icon, items) -%}
+    <div class="sidebar-group">
+        <div class="sidebar-group-head">
+            <div class="sidebar-icon">
+                <img src="{{icon}}" alt="{{name}}">
+            </div>
+            <div class="sidebar-text ellipsis">{{name}}</div>
+            <div class="sidebar-switch">
+                <img src="/static/icons/caret_forward.png", alt="switch">
+            </div>
+        </div>
+        <div class="sidebar-group-container">
+            {% for name,value in items.items() %}
+                {{sidebar_group_item(name, value.icon, value.href)}}
+            {% endfor %}
+        </div>
+    </div>
+{%- endmacro %}

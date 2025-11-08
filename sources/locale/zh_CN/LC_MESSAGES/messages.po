@@ -134,6 +134,18 @@ msgstr "请输入密码"
 msgid "LOGIN BUTTON"
 msgstr "登录"
 
+msgid "STORAGE TITLE"
+msgstr "文件仓库"
+
+msgid "MUSIC BOX"
+msgstr "音乐盒"
+
+msgid "TOOLS BOX"
+msgstr "工具箱"
+
+msgid "PDF EDITOR"
+msgstr "PDF编辑"
+
 #~ msgid "COVER"
 #~ msgstr "封面"
 

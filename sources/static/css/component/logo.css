@@ -1,0 +1,10 @@
+.logo-container{
+    width: 100%;
+    display: flex;
+}
+
+.logo-container>img{
+    width: 100%;
+    object-fit: contain;
+    object-position: bottom;
+}

@@ -1,0 +1,19 @@
+{# 左侧带图标的，上侧有标签的输入框 #}
+{% macro input(id, name, type, icon, placeholder='') -%}
+    <div class="form-line-item">
+        <label for="{{id}}">{{name}}</label>
+        <div class="form-icon-input">
+            <div class="form-icon">
+                <img src="{{icon}}" alt="user">
+            </div>
+            <input type="{{type}}" id="{{id}}" placeholder="{{placeholder}}">
+        </div>
+    </div>
+{%- endmacro %}
+
+{# 简单的深色按钮 #}
+{% macro button(id, name) -%}
+    <div class="form-button spinner-holder ellipsis" id="{{id}}">
+        <a>{{name}}</a>
+    </div>
+{%- endmacro %}

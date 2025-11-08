@@ -53,12 +53,12 @@ class PopupMessage{
         console.log(message);
     }
 
-    displayErrorMessage(message, styleClass= "error-message", iconUrl="static/icons/alert.png", removeTime=3500){
+    displayErrorMessage(message, styleClass= "error-message", iconUrl="/static/icons/alert.png", removeTime=3500){
         /*显示错误信息*/
         this.displayMessage(message,styleClass,iconUrl,removeTime);
     }
 
-    displaySuccessMessage(message, styleClass="success-message", iconUrl="static/icons/correct.png", removeTime=3500){
+    displaySuccessMessage(message, styleClass="success-message", iconUrl="/static/icons/correct.png", removeTime=3500){
         /*显示成功信息*/
         this.displayMessage(message,styleClass,iconUrl,removeTime);
     }

@@ -1,4 +1,6 @@
-{% extends 'component/page_base.html' %}
+{% extends 'component/page_base.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+{% import 'component/ui_components.jinja2' as components %}
 
 {% block css_file %}
     {% assets "login_css" %}
@@ -6,45 +8,22 @@
     {% endassets %}
 {% endblock %}
 
-{% block body %}
-    <body>
-        <div class="cover-container">
-            <div class="cover-display">
-                <img class="cover-img" src="static/covers/cover.png" alt="cover">
-            </div>
-            <div class="login-container">
-                <form class="login-form" id="login-form">
-                    <div class="login-logo">
-                        <img src="static/icons/logo.png" alt="logo">
-                    </div>
-                    <div class="form-line-item">
-                        <label for="account">{% block account %}{{_('ACCOUNT')}}{% endblock %}</label>
-                        <div class="form-icon-input">
-                            <div class="form-icon">
-                                <img src="static/icons/user.png" alt="user">
-                            </div>
-                            <input type="text" id="account" placeholder="{% block account_holder %}{{_('ACCOUNT HOLDER')}}{% endblock %}">
-                        </div>
-                    </div>
-                    <div class="form-line-item">
-                        <label for="password">{% block password %}{{_('PASSWORD')}}{% endblock %}</label>
-                        <div class="form-icon-input">
-                            <div class="form-icon">
-                                <img src="static/icons/password.png" alt="password">
-                            </div>
-                            <input type="password" id="password" placeholder="{% block password_holder %}{{_('PASSWORD HOLDER')}}{% endblock %}">
-                        </div>
-                    </div>
-                    <div class="form-button spinner-holder" id="login-button">
-                        <a>{% block login_button %}{{_('LOGIN BUTTON')}}{% endblock %}</a>
-                    </div>
-                </form>
-            </div>
+{% block body_content %}
+    <div class="cover-container">
+        {{components.cover()}}
+        <div class="login-container">
+            <form class="login-form" id="login-form">
+                {{components.logo()}}
+                {{forms.input('account',_('ACCOUNT'),'text','/static/icons/user.png', _('ACCOUNT HOLDER'))}}
+                {{forms.input('password',_('PASSWORD'),'password','/static/icons/password.png', _('PASSWORD HOLDER'))}}
+                {{forms.button('login-button',_('LOGIN BUTTON'))}}
+            </form>
         </div>
-    {% block js_file %}
-        {% assets "login_js" %}
-            <script type="module" src="{{ ASSET_URL }}"></script>
-        {% endassets %}
-    {% endblock %}
-    </body>
+    </div>
+{% endblock %}
+
+{% block js_file %}
+    {% assets "login_js" %}
+        <script type="module" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 {% endblock %}

@@ -1,0 +1,23 @@
+{# 带有导航栏和侧边栏的页面 #}
+{% extends 'component/page_base.jinja2' %}
+{% import 'component/ui_components.jinja2' as components %}
+{% import 'component/ui_sidebars.jinja2' as sidebars %}
+
+{% block body_content %}
+    {{components.background()}}
+    <div class="sidebar-container">
+        {# 侧边栏 #}
+        <div class="sidebar-overlay">
+            <div class="sidebar-content">
+                {{components.logo()}}
+                {{sidebars.sidebar_item(_('STORAGE TITLE'),'/home.html','/static/icons/folder.png')}}
+                {{sidebars.sidebar_item(_('MUSIC BOX'),'/music.html','/static/icons/music.png')}}
+                {{sidebars.sidebar_groups(_('TOOLS BOX'),'/static/icons/tools.png',{_('PDF EDITOR'):{'icon':'/static/icons/pdf.png','href':'/tools/pdf_editor.html'}})}}
+            </div>
+        </div>
+        {# 导航栏 #}
+        <div class="navigation-container">
+            <div class="navigation-content"></div>
+        </div>
+    </div>
+{% endblock %}

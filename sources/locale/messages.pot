@@ -131,3 +131,15 @@ msgstr ""
 
 msgid "LOGIN BUTTON"
 msgstr ""
+
+msgid "STORAGE TITLE"
+msgstr ""
+
+msgid "MUSIC BOX"
+msgstr ""
+
+msgid "TOOLS BOX"
+msgstr ""
+
+msgid "PDF EDITOR"
+msgstr ""

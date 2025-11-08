@@ -4,6 +4,7 @@
     width: 100%;
     display: flex;
     flex-direction: row;
+    background-color: var(--theme-color);
 }
 .cover-display{
     /*显示图片的区域*/
