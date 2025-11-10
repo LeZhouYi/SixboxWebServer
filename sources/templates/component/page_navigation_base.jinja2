@@ -1,7 +1,10 @@
 {# 带有导航栏和侧边栏的页面 #}
+{# 需要定义navigation_title的值 #}
+
 {% extends 'component/page_base.jinja2' %}
 {% import 'component/ui_components.jinja2' as components %}
 {% import 'component/ui_sidebars.jinja2' as sidebars %}
+{% import 'component/ui_navigation.jinja2' as navigations %}
 
 {% block body_content %}
     {{components.background()}}
@@ -15,9 +18,17 @@
                 {{sidebars.sidebar_groups(_('TOOLS BOX'),'/static/icons/tools.png',{_('PDF EDITOR'):{'icon':'/static/icons/pdf.png','href':'/tools/pdf_editor.html'}})}}
             </div>
         </div>
-        {# 导航栏 #}
-        <div class="navigation-container">
-            <div class="navigation-content"></div>
+        {# 侧边栏包裹的实际页面 #}
+        <div class="sidebar-page sidebar-padding">
+            {# 导航栏 #}
+            <div class="navigation-container">
+                {# 导航栏的内容 #}
+                {{navigations.navigation(navigation_title)}}
+                <div class="navigation-page">
+                    {# 实际页面内容 #}
+                    {% block page_content %}{% endblock %}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

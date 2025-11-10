@@ -1,0 +1,19 @@
+{# 主导航栏 #}
+{% macro navigation(title) -%}
+    <div class="navigation-content">
+        {{navigation_button('navigation_sidebar','/static/icons/sidebar.png')}}
+        <div class="navigation-title ellipsis">{{title}}</div>
+        <div class="navigation-control">
+            {{navigation_button('navigation_notification', '/static/icons/notification.png')}}
+            {{navigation_button('navigation_setting', '/static/icons/setting.png')}}
+            {{navigation_button('navigation_user', '/static/icons/user.png')}}
+        </div>
+    </div>
+{%- endmacro %}
+
+{# 导航栏按钮 #}
+{% macro navigation_button(id,icon) -%}
+    <div class="navigation-button" id="{{id}}">
+        <img src="{{icon}}" alt="navigation icon">
+    </div>
+{%- endmacro %}

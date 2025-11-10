@@ -67,6 +67,9 @@ input:focus-visible{
     box-shadow: var(--form-shadow);
 }
 
+.form-button>a{
+}
+
 .form-button:hover{
     color: var(--form-theme-color);
     background-color: var(--background-color);

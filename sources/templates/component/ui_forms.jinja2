@@ -13,7 +13,7 @@
 
 {# 简单的深色按钮 #}
 {% macro button(id, name) -%}
-    <div class="form-button spinner-holder ellipsis" id="{{id}}">
-        <a>{{name}}</a>
+    <div class="form-button spinner-holder" id="{{id}}">
+        <a class="ellipsis">{{name}}</a>
     </div>
 {%- endmacro %}

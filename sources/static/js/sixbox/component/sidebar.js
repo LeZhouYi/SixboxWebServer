@@ -79,6 +79,7 @@ class Sidebar{
             if (overlay && !overlay.contains(event.target) && !overlay.classList.contains("sidebar-hidden")) {
                 overlay.classList.add("sidebar-hidden");
                 event.preventDefault();
+                document.querySelector(".sidebar-page")?.classList.remove("sidebar-padding");
             }
         });
     }
