@@ -1,4 +1,7 @@
-{% extends 'component/page_navigation_base.jinja2' %}
+{% extends 'base/page_navigation_base.jinja2' %}
+{% import 'component/ui_storage.jinja2' as storages %}
+{% import 'component/ui_forms.jinja2' as forms %}
+{% import 'component/ui_page_select.jinja2' as page_selectors %}
 {% set navigation_title = _('STORAGE TITLE') %}
 
 {% block css_file %}
@@ -8,6 +11,50 @@
 {% endblock %}
 
 {% block page_content %}
+    <div class="storage-page">
+        <div class="storage-control-bar">
+            {{ forms.icon_button('create_folder_button','/static/icons/folder_create.png') }}
+            {{ forms.icon_button('create_text_button', '/static/icons/file_create.png') }}
+            {{ forms.icon_button('upload_file_button', '/static/icons/upload.png') }}
+            {{ storages.storage_path_bar() }}
+            {{ forms.search_bar('storage_search', _('STORAGE SEARCH')) }}
+        </div>
+        <div class="storage-file-container">
+            <div class="storage-file-header">
+                {{ storages.storage_header_column('') }}
+                {{ storages.storage_header_column(_('STORAGE FILENAME')) }}
+                {{ storages.storage_header_column(_('STORAGE UPDATE TIME')) }}
+                {{ storages.storage_header_column(_('STORAGE FILE TYPE')) }}
+                {{ storages.storage_header_column(_('STORAGE FILE SIZE')) }}
+                {{ storages.storage_header_column(_('STORAGE FILE CONTROL')) }}
+            </div>
+            <div class="storage-filelist">
+                <div class="storage-file-item">
+                    <div class="storage-file-icon">
+                        <img src="/static/icons/folder.png" alt="file-icon">
+                    </div>
+                    <div class="storage-file-column">
+                        <a>根目录</a>
+                    </div>
+                    <div class="storage-file-column">
+                        <a>24164887894616</a>
+                    </div>
+                    <div class="storage-file-column">
+                        <a>文件夹</a>
+                    </div>
+                    <div class="storage-file-column">
+                        <a>200K</a>
+                    </div>
+                    <div class="storage-file-control">
+                        <img src="/static/icons/folder.png" alt="file-icon">
+                    </div>
+                </div>
+            </div>
+            <div class="storage-file-footer">
+                {{ page_selectors.page_select('storage', [20,50,100]) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block js_file %}

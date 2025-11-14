@@ -143,3 +143,27 @@ msgstr ""
 
 msgid "PDF EDITOR"
 msgstr ""
+
+msgid "STORAGE SEARCH"
+msgstr ""
+
+msgid "STORAGE FILENAME"
+msgstr ""
+
+msgid "STORAGE UPDATE TIME"
+msgstr ""
+
+msgid "STORAGE FILE TYPE"
+msgstr ""
+
+msgid "STORAGE FILE SIZE"
+msgstr ""
+
+msgid "STORAGE FILE CONTROL"
+msgstr ""
+
+msgid "PARAM PAGE REQUIRED / ERROR"
+msgstr ""
+
+msgid "PARAM LIMIT REQUIRED / ERROR"
+msgstr ""

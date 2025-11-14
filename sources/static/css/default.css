@@ -19,3 +19,17 @@ body{
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
 }
+
+/*覆盖浏览器对输入框的自动填充的样式*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:autofill {
+    box-shadow: 0 0 0 1000px white inset !important;
+    -webkit-text-fill-color: #1f2937 !important;
+    background-image: none !important;
+    transition: background-color 5000s ease-in-out 0s !important;
+}
+input:focus-visible{
+    outline:none;
+}

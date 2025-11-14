@@ -1,0 +1,43 @@
+{%- macro page_select(id_prefix, values) %}
+    <div class="page-select-container">
+        {{ page_select_button('%s_previous'|format(id_prefix), 'static/icons/caret_backward.png') }}
+        <div class="page-select-item">
+            {{ page_select_text('%s_prefix_text'|format(id_prefix)) }}
+            {{ page_select_input('%s_prefix_text'|format(id_prefix)) }}
+            {{ page_select_text('%s_postfix_text'|format(id_prefix)) }}
+        </div>
+        {{ page_select_button('%s_next','/static/icons/caret_forward.png')}}
+        <div class="page-select-item">
+            {{ page_select_limit('%s_limit'|format(id_prefix), values) }}
+            {{ page_select_text('%s_limit_text'|format(id_prefix)) }}
+        </div>
+    </div>
+{% endmacro %}
+
+{# 跳转页转入框 #}
+{%- macro page_select_input(id) %}
+    <input class="page-select-input" id="{{id}}" type="text">
+{% endmacro -%}
+
+{# 按钮 #}
+{%- macro page_select_button(id, icon) %}
+    <div class="page-select-button" id={{id}}>
+        <img src="{{icon}}" alt="button-icon">
+    </div>
+{% endmacro -%}
+
+{# 文本区域 #}
+{%- macro page_select_text(id) %}
+    <div class="page-select-text">
+        <a id="{{id}}">页数</a>
+    </div>
+{% endmacro -%}
+
+{# 单页项数选择框 #}
+{%- macro page_select_limit(id, values) %}
+    <select class="page-select-limit" id="{{id}}">
+        {% for value in values %}
+            <option value="{{value}}">{{value}}</option>
+        {% endfor %}
+    </select>
+{% endmacro -%}

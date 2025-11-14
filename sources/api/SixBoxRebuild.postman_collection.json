@@ -33,7 +33,13 @@
 							"type": "noauth"
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"1234567a\",\r\n    \"deviceID\": \"postman\"\r\n}",
@@ -59,7 +65,13 @@
 					"name": "登出",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{base_url}}/sessions",
 							"host": [
@@ -90,8 +102,17 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"refreshToken\": \"{{refreshToken}}\"\r\n}",
@@ -122,10 +143,16 @@
 					"name": "新增用户",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"user1\",\r\n    \"password\": \"1234567a\",\r\n    \"role\": \"user\"\r\n}",
+							"raw": "{\r\n    \"username\": \"user1\",\r\n    \"password\": \"1234567a\",\r\n    \"role\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -139,6 +166,125 @@
 							],
 							"path": [
 								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取用户详情",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/{{userID}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{{userID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Storage",
+			"item": [
+				{
+					"name": "新增文件",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": "/C:/Users/cheng/Desktop/临时文件/SO_第一流程/0000274431_item.pdf"
+								},
+								{
+									"key": "filename",
+									"value": "abc1",
+									"type": "text"
+								},
+								{
+									"key": "folderID",
+									"value": "63a3a7e2-cd64-46ad-ab8c-c21343392bd2",
+									"type": "text"
+								},
+								{
+									"key": "remark",
+									"value": "test",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/storages/files",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"storages",
+								"files"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "搜索文件/文件夹",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/storages?folderID=&search=&_page=0&_limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"storages"
+							],
+							"query": [
+								{
+									"key": "folderID",
+									"value": ""
+								},
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "_page",
+									"value": "0"
+								},
+								{
+									"key": "_limit",
+									"value": "20"
+								}
 							]
 						}
 					},
@@ -197,6 +343,11 @@
 		{
 			"key": "userID",
 			"value": ""
+		},
+		{
+			"key": "language",
+			"value": "",
+			"type": "default"
 		}
 	]
 }

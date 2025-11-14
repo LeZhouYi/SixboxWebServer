@@ -1,7 +1,7 @@
 import datetime
 import os
 import threading
-from typing import Union, LiteralString
+from typing import Union, LiteralString, Tuple, List
 from uuid import uuid4
 
 from tinydb import TinyDB, where
@@ -26,6 +26,13 @@ class Storage:
     FOLDER_ID = "folderID"  # 所属文件夹
 
     FILES = "files"  # request form-data 的文件列表
+    CONTENTS = "contents"  # 该文件夹下包含的内容
+    TOTAL = "total"  # 该文件夹下包含的内容的总数或搜索的总数
+    FOLDERS = "folders"  # 文件夹列表，表示当前文件/文件夹的嵌套关系
+
+
+class DefaultFolder:
+    ROOT_FOLDER = 0  # 根目录
 
 
 class StorageDB(TableBase):
@@ -101,6 +108,7 @@ class StorageDB(TableBase):
             Storage.FILE_ID: data_id
         }
 
+    @lock_required(_lock)
     def edit_data(self, data: dict):
         """
         编辑数据
@@ -131,3 +139,65 @@ class StorageDB(TableBase):
         :return:
         """
         return self._db.get((where(Storage.FILE_ID) == folder_id) & (where(Storage.FILE_TYPE) is None)) is not None
+
+    @lock_required(_lock)
+    def search_data(self, folder_id: Union[str, None], search: Union[str, None], page: int, limit: int) -> Tuple[
+        int, List[dict]]:
+        """
+        搜索数据
+        :param folder_id:
+        :param search:
+        :param page:
+        :param limit:
+        :return:
+        """
+        if search is None:
+            query = where(Storage.FOLDER_ID) == folder_id
+        else:
+            query = where(Storage.FILE_NAME).search(search) | where(Storage.REMARK).search(search)
+        # 分别搜索文件夹和文件，按名称排序后拼接
+        # noinspection PyComparisonWithNone
+        search_data = self._db.search((where(Storage.FOLDER_ID) == folder_id) & (where(Storage.FILE_TYPE) == None))
+        print(search_data)
+        search_data = sorted(search_data, key=lambda data_item: data_item[Storage.FILE_NAME])
+        # noinspection PyComparisonWithNone
+        file_search = self._db.search(query & (where(Storage.FILE_TYPE) != None))
+        search_data.extend(sorted(file_search, key=lambda data_item: data_item[Storage.FILE_NAME]))
+
+        # 统计/切片
+        count = len(search_data)
+        search_data = search_data[page * limit:(page + 1) * limit]
+        return count, search_data
+
+    @lock_required(_lock)
+    def get_default_folder(self, default_index: int):
+        """
+        获取默认固定的文件夹
+        :param default_index:
+        :return:
+        """
+        default_data = self.get_env("defaults")[default_index]
+        return self._db.get(
+            (where(Storage.FILE_NAME) == default_data.get(Storage.FILE_NAME))
+            & (where(Storage.FILE_TYPE) == None)
+            & (where(Storage.FOLDER_ID) == None)
+            & (where(Storage.UPLOADER) == None)
+        )
+
+    def get_file_data(self, file_id: str) -> dict:
+        """
+        获取文件夹
+        :param file_id:
+        :return:
+        """
+        result = self._db.get((where(Storage.FILE_ID) == file_id) & (where(Storage.FILE_TYPE) == None))
+        if result:
+            parents = []
+            parent_id = result.get(Storage.FOLDER_ID)
+            while parent_id:
+                folder_data = self._db.get((where(Storage.FILE_ID) == parent_id) & (where(Storage.FILE_TYPE) == None))
+                parents.append(folder_data)
+                parent_id = folder_data.get(Storage.FOLDER_ID)
+            result[Storage.FOLDERS] = reversed(parents)
+            return result
+        raise Exception("FOLDER NOT FOUND")

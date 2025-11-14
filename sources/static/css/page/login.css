@@ -1,5 +1,5 @@
 :root{
-    --login-form-width: 460px; /*登录栏宽*/
+    --login-form-width: 346px; /*登录栏宽*/
 }
 
 .login-container{
@@ -13,9 +13,9 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    padding-left: 90px;
-    padding-right: 90px;
-    gap: 20px;
+    padding-left: 45px;
+    padding-right: 45px;
+    gap: 15px;
     transition: all 0.7s ease;
 }
 
@@ -40,10 +40,8 @@
     .login-container{
         position: absolute;
         width: 100%;
-        background: rgba(255,255,255,0.85);
     }
     .login-form{
-        background: transparent;
         padding-left: 40px;
         padding-right: 40px;
     }

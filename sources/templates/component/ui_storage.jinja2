@@ -1,0 +1,16 @@
+{# 操作栏的路径 #}
+{% macro storage_path_bar() -%}
+    <div class="storage-path-bar">
+        <div class="storage-icon">
+            <img src="/static/icons/folder.png" alt="storage_icon">
+        </div>
+        <div class="storage-path-text"></div>
+    </div>
+{%- endmacro %}
+
+{# 文件列表的标题 #}
+{% macro storage_header_column(text) -%}
+    <div class="storage-header-column">
+        <a>{{text}}</a>
+    </div>
+{%- endmacro %}

@@ -1,19 +1,38 @@
+{# 左侧带图标的输入框 #}
+{%- macro icon_input(id, type, icon, placeholder='') %}
+    <div class="form-icon-input">
+        <div class="form-icon">
+            <img src="{{icon}}" alt="user">
+        </div>
+        <input type="{{type}}" id="{{id}}" placeholder="{{placeholder}}">
+    </div>
+{% endmacro -%}
+
 {# 左侧带图标的，上侧有标签的输入框 #}
-{% macro input(id, name, type, icon, placeholder='') -%}
+{%- macro label_input(id, name, type, icon, placeholder='') %}
     <div class="form-line-item">
         <label for="{{id}}">{{name}}</label>
-        <div class="form-icon-input">
-            <div class="form-icon">
-                <img src="{{icon}}" alt="user">
-            </div>
-            <input type="{{type}}" id="{{id}}" placeholder="{{placeholder}}">
-        </div>
+        {{icon_input(id, type, icon, placeholder)}}
     </div>
-{%- endmacro %}
+{% endmacro -%}
 
 {# 简单的深色按钮 #}
-{% macro button(id, name) -%}
+{%- macro button(id, name) %}
     <div class="form-button spinner-holder" id="{{id}}">
         <a class="ellipsis">{{name}}</a>
     </div>
-{%- endmacro %}
+{% endmacro -%}
+
+{# 图标按钮 #}
+{%- macro icon_button(id, icon)%}
+    <div class="form-button-icon" id="{{id}}">
+        <img src="{{icon}}" alt="button_icon">
+    </div>
+{% endmacro -%}
+
+{# 搜索栏 #}
+{%- macro search_bar(id, placeholder='') %}
+    <div class="form-search-bar">
+        {{ icon_input(id, 'text', '/static/icons/magnifier.png', placeholder) }}
+    </div>
+{% endmacro -%}

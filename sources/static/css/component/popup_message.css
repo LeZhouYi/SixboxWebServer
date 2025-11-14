@@ -95,3 +95,9 @@
         opacity: 0;
     }
 }
+
+@media (max-width: 1024px), (max-device-width: 1024px){
+    .message-container{
+        min-width: calc( 100% - 30px );
+    }
+}

@@ -1,7 +1,31 @@
 class Sidebar{
-    constructor(bodyWidth=1024){
+    constructor(href, bodyWidth=1024){
         this.initWithHref = this.initWithHref.bind(this);
+
+        this.initWithHref(href);
         this.bindOverlay(bodyWidth);
+    }
+
+    bindSidebarSwitch(switchId, closeIcon="/static/icons/window_close.png", openIcon="/static/icons/window_open.png"){
+        /*绑定控制侧边栏展开关闭的按钮*/
+        callElement(switchId, element=>{
+            element.addEventListener("click", function(event){
+                let overlay = document.querySelector(".sidebar-overlay");
+                if(!overlay){
+                    return;
+                }
+                event.stopPropagation();
+                if (overlay.classList.contains("sidebar-hidden")){
+                    overlay.classList.remove("sidebar-hidden");
+                    document.querySelector(".sidebar-page")?.classList.add("sidebar-padding");
+                    element.src = closeIcon;
+                }else{
+                    overlay.classList.add("sidebar-hidden");
+                    document.querySelector(".sidebar-page")?.classList.remove("sidebar-padding");
+                    element.src = openIcon;
+                }
+            });
+        });
     }
 
     initWithHref(href){
@@ -78,7 +102,7 @@ class Sidebar{
             let overlay = document.querySelector(".sidebar-overlay");
             if (overlay && !overlay.contains(event.target) && !overlay.classList.contains("sidebar-hidden")) {
                 overlay.classList.add("sidebar-hidden");
-                event.preventDefault();
+                event.stopPropagation();
                 document.querySelector(".sidebar-page")?.classList.remove("sidebar-padding");
             }
         });

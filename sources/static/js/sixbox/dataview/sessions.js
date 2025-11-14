@@ -13,4 +13,11 @@ class SessionsView{
             "refreshToken": refreshToken
         });
     }
+
+    checkAccessToken(href="/login.html"){
+        /*检查accessToken是否存在*/
+        if(!localStorage.getItem("accessToken")){
+            window.location.href = href;
+        }
+    }
 }

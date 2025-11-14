@@ -1,92 +1,116 @@
-:root {
-    --form-item-height: 44px;  /*基础元素高度*/
-    --form-theme-color: var(--theme-color);  /*主题色*/
-    --form-item-radius: 12px;  /*基础元素圆角*/
-    --form-item-border: 2px solid var(--theme-color);
-    --form-font-size: 16px;
-    --form-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
-}
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:autofill {
-    box-shadow: 0 0 0 1000px white inset !important;
-    -webkit-text-fill-color: #1f2937 !important;
-    background-image: none !important;
-    transition: background-color 5000s ease-in-out 0s !important;
-}
-input:focus-visible{
-    outline:none;
-}
-
+/*带图标的输入框的效果*/
 .form-icon-input{
-    min-height: var(--form-item-height);
+    height: 100%;
     width: 100%;
     box-sizing: border-box;
-    border-radius: var(--form-item-radius);
-    border: var(--form-item-border);
+    border-radius: 12px;
+    border: 2px solid var(--theme-color);
     display: flex;
     flex-direction: row;
-    color: var(--form-theme-color);
-    font-size: var(--form-font-size);
+    color: var(--theme-color);
+    font-size: 16px;
     transition: all .5s ease;
-    box-shadow: var(--form-shadow);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
     align-items: center;
     padding-left: 5px;
     padding-right: 5px;
     gap: 5px;
     background-color: var(--background-color);
 }
-
 .form-icon-input>input{
     flex-grow: 1;
     height: 100%;
     border-width: 0;
     padding-top: 0;
     padding-bottom: 0;
-    font-size: var(--text-remark-size);
+    font-size: 16px;
     background: transparent;
     border-radius: 10px;
 }
 
+/*简易，深色背景的按钮*/
 .form-button{
     cursor: pointer;
-    min-height: var(--form-item-height);
+    min-height: 44px;
     width: 100%;
     box-sizing: border-box;
-    background-color: var(--form-theme-color);
-    border-radius: var(--form-item-radius);
-    border: var(--form-item-border);
+    background-color: var(--theme-color);
+    border-radius: 12px;
+    border: 2px solid var(--theme-color);
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--background-color);
-    font-size: var(--form-font-size);
+    font-size: 16px;
     transition: all .5s ease;
-    box-shadow: var(--form-shadow);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
 }
-
-.form-button>a{
-}
-
 .form-button:hover{
-    color: var(--form-theme-color);
+    color: var(--theme-color);
     background-color: var(--background-color);
 }
 
+/*占满一行的，带标签的输入栏*/
 .form-line-item{
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
+.form-line-item>label{
+    height: 24px;
+}
+.form-line-item>.form-icon-input{
+    height: 44px;
+}
 
+/*默认图标效果*/
 .form-icon {
     width: 24px;
     height: 24px;
 }
-
 .form-icon>img{
-    width: 100%;
-    height: 100%;
+    width: 24px;
+    height: 24px;
+}
+
+/*纯图片的按钮*/
+.form-button-icon{
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+    box-sizing: border-box;
+    background: var(--transparent-color);
+    border-radius: 12px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #e7e1f1;
+    transition: all 0.5s ease;
+    cursor: pointer;
+}
+.form-button-icon>img{
+    width: 24px;
+    height: 24px;
+}
+.form-button-icon:hover{
+    border-color: var(--theme-color);
+}
+
+/*左侧带图片的搜索栏，对form-icon-input的改造*/
+.form-search-bar{
+    height: 36px;
+    width: 500px;
+    display: flex;
+}
+.form-search-bar>.form-icon-input{
+    background-color: var(--transparent-color);
+    font-size: 14px;
+    border-color: var(--border-color);
+}
+.form-search-bar>.form-icon-input:hover{
+    border-color: var(--theme-color);
+}
+.form-search-bar input{
+    font-size: 14px;
+    color: var(--theme-color);
 }

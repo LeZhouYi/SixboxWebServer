@@ -1,10 +1,12 @@
 import os.path
+from typing import Union
 from uuid import uuid4
 
 from werkzeug.datastructures import FileStorage
 
 from core.database.table import STORAGE_DB
-from core.database.table.storage import Storage
+from core.database.table.storage import Storage, DefaultFolder
+from core.helpers.validate import validate_str_empty
 from core.log import logger
 
 
@@ -27,3 +29,22 @@ def save_file(file: FileStorage):
         Storage.FILE_TYPE: file_ext[1:],
         Storage.FILE_PATH: filepath
     }
+
+
+def search_storage_data(file_id: Union[str, None], search: Union[str, None], page: int, limit: int) -> dict:
+    """搜索文件/文件夹"""
+    if validate_str_empty(search):
+        if validate_str_empty(file_id):
+            folder_data = STORAGE_DB.get_default_folder(DefaultFolder.ROOT_FOLDER)
+        else:
+            folder_data = STORAGE_DB.get_file_data(file_id)
+        count, search_data = STORAGE_DB.search_data(folder_data.get(Storage.FILE_ID), None, page, limit)
+        folder_data[Storage.TOTAL] = count
+        folder_data[Storage.CONTENTS] = search_data
+        return folder_data
+    else:
+        count, search_data = STORAGE_DB.search_data(None, search, page, limit)
+        return {
+            Storage.TOTAL: count,
+            Storage.CONTENTS: search_data
+        }

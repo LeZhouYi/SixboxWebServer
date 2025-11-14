@@ -3,7 +3,12 @@ from functools import wraps
 from flask import request
 
 from core.helpers.route import gen_fail_response
+from core.helpers.validate import validate_int_empty
 
+class Params:
+    PAGE = "_page"
+    LIMIT = "_limit"
+    SEARCH = "search"
 
 def catch_exception(func):
     """
@@ -17,5 +22,25 @@ def catch_exception(func):
             return func(*args, **kwargs)
         except Exception as e:
             return gen_fail_response(request, str(e))
+
+    return decorator
+
+
+def page_args_required(func):
+    """
+    添加params中_limit和_page的校验
+    :param func:
+    :return:
+    """
+
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        page = request.args.get(Params.PAGE)
+        if validate_int_empty(page, 0):
+            raise Exception("PARAM PAGE REQUIRED / ERROR")
+        limit = request.args.get(Params.LIMIT)
+        if validate_int_empty(limit, 1):
+            raise Exception("PARAM LIMIT REQUIRED / ERROR")
+        return func(*args, **kwargs)
 
     return decorator

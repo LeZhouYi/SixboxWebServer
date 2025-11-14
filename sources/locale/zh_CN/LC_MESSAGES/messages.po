@@ -146,9 +146,20 @@ msgstr "工具箱"
 msgid "PDF EDITOR"
 msgstr "PDF编辑"
 
-#~ msgid "COVER"
-#~ msgstr "封面"
+msgid "STORAGE SEARCH"
+msgstr "输入文本搜索"
 
-#~ msgid "LOGO"
-#~ msgstr "LOGO"
+msgid "STORAGE FILENAME"
+msgstr "文件名"
 
+msgid "STORAGE UPDATE TIME"
+msgstr "更新时间"
+
+msgid "STORAGE FILE TYPE"
+msgstr "类型"
+
+msgid "STORAGE FILE SIZE"
+msgstr "大小"
+
+msgid "STORAGE FILE CONTROL"
+msgstr "操作"

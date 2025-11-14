@@ -3,16 +3,16 @@ from flask import Blueprint, request, jsonify
 from core.database.table import STORAGE_DB
 from core.database.table.session import Session
 from core.database.table.storage import Storage
-from core.database.view.session_view import verify_token
-from core.database.view.storage_view import save_file
-from core.database.view.view_utils import catch_exception
+from core.database.view.session_view import verify_token, token_required
+from core.database.view.storage_view import save_file, search_storage_data
+from core.database.view.view_utils import catch_exception, page_args_required, Params
 from core.helpers.route import gen_prefix_api
 from core.helpers.validate import validate_str_empty
 
 STORAGE_BP = Blueprint("storage", __name__)
 
 
-@STORAGE_BP.route(gen_prefix_api("/files"), methods=["POST"])
+@STORAGE_BP.route(gen_prefix_api("/storages/files"), methods=["POST"])
 @catch_exception
 def add_files():
     """新增文件"""
@@ -38,3 +38,15 @@ def add_files():
         })
         return_body.append(STORAGE_DB.add_data(data))
     return jsonify(return_body)
+
+@STORAGE_BP.route(gen_prefix_api("/storages"), methods=["GET"])
+@catch_exception
+@token_required
+@page_args_required
+def search_storages():
+    """搜索文件"""
+    folder_id = request.args.get(Storage.FOLDER_ID)
+    search = request.args.get(Params.SEARCH)
+    page = int(request.args.get(Params.PAGE))
+    limit = int(request.args.get(Params.LIMIT))
+    return jsonify(search_storage_data(folder_id, search, page, limit))
