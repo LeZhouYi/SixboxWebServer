@@ -1,16 +1,17 @@
 window.addEventListener("DOMContentLoaded", function(){
     new LoginController(
-        "account","password","login-button"
+        "account","password","login-button", "login-form"
     );
 });
 
 class LoginController{
     /*控制登录页面的行为*/
 
-    constructor(accountId, passwordId, buttonId){
+    constructor(accountId, passwordId, buttonId, formId){
         this.accountId = accountId;
         this.passwordId = passwordId;
         this.buttonId = buttonId;
+        this.formId = formId;
         this.eventCache = {};
 
         this.bindEvent = this.bindEvent.bind(this);
@@ -22,7 +23,8 @@ class LoginController{
     }
 
     init(){
-        this.bindEvent(this.buttonId, "click", this.login);
+        this.bindEvent(this.buttonId, "submit", this.login);
+        this.bindEvent(this.formId, "submit", this.login);
         this.bindEvent(this.accountId, "keydown", this.onEnter);
         this.bindEvent(this.passwordId, "keydown", this.onEnter);
     }
@@ -35,13 +37,14 @@ class LoginController{
         }
     }
 
-    async login(){
+    async login(event){
         /*登录*/
         let spinner = createSpinner(this.buttonId);
         try{
+            event?.preventDefault();
             let responseData = await new SessionsView().login(
-                document.getElementById(this.accountId).value,
-                document.getElementById(this.passwordId).value,
+                document.getElementById(this.accountId)?.value,
+                document.getElementById(this.passwordId)?.value,
                 localStorage.getItem("deviceID")
             );
             localStorage.setItem("accessToken", responseData.accessToken);
@@ -50,7 +53,7 @@ class LoginController{
             history.replaceState(null, document.title, "/home.html");
             window.location.href = "/home.html";
         }catch(error){
-            new PopupMessage().displayErrorMessage(error.message);
+            new PopupMessage().displayErrorMessage(error);
         }finally{
             spinner?.remove();
         }

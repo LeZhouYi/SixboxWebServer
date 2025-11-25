@@ -15,7 +15,7 @@
     border-right: 2px solid var(--theme-color);
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
 
 .sidebar-item{
@@ -62,7 +62,7 @@
 
 .sidebar-text{
     color: #A098AE;
-    font-size: 17px;
+    font-size: 16px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -184,6 +184,7 @@
     min-width: 256px;
     position: absolute;
     height: 100%;
+    z-index: 1;
 }
 
 .sidebar-hidden{

@@ -44,7 +44,8 @@
                     "filetype": null,
                     "remark": "默认目录",
                     "folderID": null,
-                    "uploader": null
+                    "uploader": null,
+                    "size": null
                 },
                 {
                     "filepath": null,
@@ -52,7 +53,8 @@
                     "filetype": null,
                     "remark": "存放音乐文件",
                     "folderID": null,
-                    "uploader": null
+                    "uploader": null,
+                    "size": null
                 },
                 {
                     "filepath": null,
@@ -60,7 +62,8 @@
                     "filetype": null,
                     "remark": "存放视频文件",
                     "folderID": null,
-                    "uploader": null
+                    "uploader": null,
+                    "size": null
                 }
             ],
             "extensions": [

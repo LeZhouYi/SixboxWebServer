@@ -13,10 +13,10 @@
         {{components.cover()}}
         <div class="login-container">
             <form class="login-form" id="login-form">
-                {{components.logo()}}
-                {{forms.label_input('account',_('ACCOUNT'),'text','/static/icons/user.png', _('ACCOUNT HOLDER'))}}
-                {{forms.label_input('password',_('PASSWORD'),'password','/static/icons/password.png', _('PASSWORD HOLDER'))}}
-                {{forms.button('login-button',_('LOGIN BUTTON'))}}
+                {{ components.logo() }}
+                {{ forms.label_input('account',_('ACCOUNT'),'text','/static/icons/user.png', _('ACCOUNT HOLDER'), True) }}
+                {{ forms.label_input('password',_('PASSWORD'),'password','/static/icons/password.png', _('PASSWORD HOLDER'), True) }}
+                {{ forms.button('login-button',_('LOGIN BUTTON'), 'submit') }}
             </form>
         </div>
     </div>

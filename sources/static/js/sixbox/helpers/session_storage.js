@@ -10,11 +10,14 @@ function checkSessionDefault(itemKey, defaultValue) {
 
 function storeSession(key, nowValue, defaultValue=null){
     /*记录当前的参数，如果参数是空，则设置为默认值*/
-    if(nowValue){
+    if(nowValue!==null&&nowValue!==undefined){
         sessionStorage.setItem(key, nowValue);
         return nowValue;
-    }else{
+    }else if(defaultValue!==null){
         sessionStorage.setItem(key, defaultValue);
+        return defaultValue;
+    }else{
+        sessionStorage.removeItem(key);
         return defaultValue;
     }
 }

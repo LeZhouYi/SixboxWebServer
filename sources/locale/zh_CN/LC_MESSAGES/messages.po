@@ -163,3 +163,37 @@ msgstr "大小"
 
 msgid "STORAGE FILE CONTROL"
 msgstr "操作"
+
+msgid "PARAM PAGE REQUIRED / ERROR"
+msgstr "未指定或错误的页数"
+
+msgid "PARAM LIMIT REQUIRED / ERROR"
+msgstr "未指定或错误的项数"
+
+msgid "ADD FOLDER"
+msgstr "新建文件夹"
+
+msgid "FOLDER NAME"
+msgstr "名称"
+
+msgid "FOLDER NAME HOLDER"
+msgstr "请输入名称"
+
+msgid "FOLDER REMARK"
+msgstr "备注"
+
+msgid "FOLDER REMARK HOLDER"
+msgstr "请输入备注"
+
+msgid "FOLDER SELECT"
+msgstr "所属文件夹"
+
+msgid "CONFIRM BUTTON"
+msgstr "确认"
+
+msgid "CANCEL BUTTON"
+msgstr "取消"
+
+msgid "CREATE SUCCESS"
+msgstr "创建成功"
+

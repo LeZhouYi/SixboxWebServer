@@ -12,7 +12,7 @@ def login():
 @PAGE_BP.route("/home.html", methods=["GET"])
 def home():
     """主页"""
-    return render_template("page/storage.html")
+    return render_template("page/storage/storage.html")
 
 
 @PAGE_BP.route("/", methods=["GET"])

@@ -167,3 +167,30 @@ msgstr ""
 
 msgid "PARAM LIMIT REQUIRED / ERROR"
 msgstr ""
+
+msgid "ADD FOLDER"
+msgstr ""
+
+msgid "FOLDER NAME"
+msgstr ""
+
+msgid "FOLDER NAME HOLDER"
+msgstr ""
+
+msgid "FOLDER REMARK"
+msgstr ""
+
+msgid "FOLDER REMARK HOLDER"
+msgstr ""
+
+msgid "FOLDER SELECT"
+msgstr ""
+
+msgid "CONFIRM BUTTON"
+msgstr ""
+
+msgid "CANCEL BUTTON"
+msgstr ""
+
+msgid "CREATE SUCCESS"
+msgstr ""

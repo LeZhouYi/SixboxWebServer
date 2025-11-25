@@ -1,5 +1,5 @@
 import os.path
-from typing import Union
+from typing import Union, Optional
 from uuid import uuid4
 
 from werkzeug.datastructures import FileStorage
@@ -8,7 +8,6 @@ from core.database.table import STORAGE_DB
 from core.database.table.storage import Storage, DefaultFolder
 from core.helpers.validate import validate_str_empty
 from core.log import logger
-
 
 def save_file(file: FileStorage):
     """保存文件"""
@@ -22,16 +21,18 @@ def save_file(file: FileStorage):
     filepath = os.path.join(folder, f"{uuid4()}{file_ext}")
     try:
         file.save(filepath)
+        filesize = os.path.getsize(filepath)
     except Exception as e:
         logger.error(f"保存文件失败：{e}")
         raise Exception("FILE SAVE FAIL")
     return {
         Storage.FILE_TYPE: file_ext[1:],
-        Storage.FILE_PATH: filepath
+        Storage.FILE_PATH: filepath,
+        Storage.SIZE: filesize
     }
 
 
-def search_storage_data(file_id: Union[str, None], search: Union[str, None], page: int, limit: int) -> dict:
+def search_storage_data(file_id: Union[str, None], search: Union[str, None], page: int, limit: Optional[int]) -> dict:
     """搜索文件/文件夹"""
     if validate_str_empty(search):
         if validate_str_empty(file_id):

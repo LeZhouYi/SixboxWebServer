@@ -223,7 +223,7 @@
 								{
 									"key": "files",
 									"type": "file",
-									"src": "/C:/Users/cheng/Desktop/临时文件/SO_第一流程/0000274431_item.pdf"
+									"src": "/C:/Users/cheng/Downloads/图片1.pdf"
 								},
 								{
 									"key": "filename",
@@ -232,7 +232,7 @@
 								},
 								{
 									"key": "folderID",
-									"value": "63a3a7e2-cd64-46ad-ab8c-c21343392bd2",
+									"value": "d9d87520-d8cd-40e2-91d5-705b6096fb65",
 									"type": "text"
 								},
 								{
@@ -285,6 +285,70 @@
 									"key": "_limit",
 									"value": "20"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取文件夹详情",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/storages/folders/d9d87520-d8cd-40e2-91d5-705b6096fb65",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"storages",
+								"folders",
+								"d9d87520-d8cd-40e2-91d5-705b6096fb65"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取默认文件夹详情",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/storages/folders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"storages",
+								"folders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "新增文件夹",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"folderID\": \"d9d87520-d8cd-40e2-91d5-705b6096fb65\",\r\n    \"filename\": \"TEST\",\r\n    \"remark\": \"用于测试\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/storages/folders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"storages",
+								"folders"
 							]
 						}
 					},

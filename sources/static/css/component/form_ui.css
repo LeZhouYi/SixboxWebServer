@@ -23,7 +23,7 @@
     border-width: 0;
     padding-top: 0;
     padding-bottom: 0;
-    font-size: 16px;
+    font-size: 15px;
     background: transparent;
     border-radius: 10px;
 }
@@ -31,23 +31,42 @@
 /*简易，深色背景的按钮*/
 .form-button{
     cursor: pointer;
-    min-height: 44px;
+    min-height: 36px;
     width: 100%;
     box-sizing: border-box;
     background-color: var(--theme-color);
     border-radius: 12px;
     border: 2px solid var(--theme-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     color: var(--background-color);
-    font-size: 16px;
+    font-size: 15px;
     transition: all .5s ease;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+    text-align: center;
 }
 .form-button:hover{
     color: var(--theme-color);
     background-color: var(--background-color);
+}
+
+.form-warn_button{
+    cursor: pointer;
+    min-height: 36px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #FC9C9E;
+    border-radius: 12px;
+    border: 2px solid #FC9C9E;
+    color: var(--background-color);
+    font-size: 15px;
+    transition: all .5s ease;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.form-warn_button:hover{
+    color: var(--theme-color);
+    background-color: var(--background-color);
+    border-color: var(--theme-color);
 }
 
 /*占满一行的，带标签的输入栏*/
@@ -56,11 +75,13 @@
     flex-direction: column;
     gap: 5px;
 }
-.form-line-item>label{
-    height: 24px;
+.form-line-item>*:nth-child(1){
+    min-height: 24px;
+    font-size: 15px;
 }
-.form-line-item>.form-icon-input{
-    height: 44px;
+
+.form-line-item>*:nth-child(2){
+    min-height: 36px;
 }
 
 /*默认图标效果*/
@@ -113,4 +134,91 @@
 .form-search-bar input{
     font-size: 14px;
     color: var(--theme-color);
+}
+
+.form-title{
+    color: var(--theme-color);
+    font-size: 29px;
+    font-weight: bold;
+}
+
+.form-base{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-base .form-title:first-child{
+    padding-bottom: 15px;
+}
+
+.form-base .form-buttons:last-child{
+    padding-top: 15px;
+}
+
+.form-input{
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 2px solid var(--theme-color);
+    display: flex;
+    flex-direction: row;
+    color: var(--theme-color);
+    font-size: 15px;
+    transition: all .5s ease;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    gap: 5px;
+    background-color: var(--background-color);
+}
+
+.form-select{
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 2px solid var(--theme-color);
+    display: flex;
+    flex-direction: row;
+    color: var(--theme-color);
+    font-size: 15px;
+    transition: all .5s ease;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    gap: 5px;
+    background-color: var(--background-color);
+}
+
+.form-textarea{
+    max-height: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 2px solid var(--theme-color);
+    display: flex;
+    flex-direction: row;
+    color: var(--theme-color);
+    font-size: 15px;
+    transition: all .5s ease;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+    align-items: center;
+    padding: 10px;
+    gap: 5px;
+    background-color: var(--background-color);
+}
+
+.form-buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-buttons>*{
+    max-width: 120px;
 }

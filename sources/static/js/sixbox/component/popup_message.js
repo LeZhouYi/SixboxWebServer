@@ -50,12 +50,13 @@ class PopupMessage{
         setTimeout(() => {
             messageItem.remove();
         }, removeTime);
-        console.log(message);
     }
 
-    displayErrorMessage(message, styleClass= "error-message", iconUrl="/static/icons/alert.png", removeTime=3500){
+    displayErrorMessage(error, styleClass= "error-message", iconUrl="/static/icons/alert.png", removeTime=3500){
         /*显示错误信息*/
-        this.displayMessage(message,styleClass,iconUrl,removeTime);
+        console.log(error.message);
+        console.log(error.stack);
+        this.displayMessage(error.message,styleClass,iconUrl,removeTime);
     }
 
     displaySuccessMessage(message, styleClass="success-message", iconUrl="/static/icons/correct.png", removeTime=3500){

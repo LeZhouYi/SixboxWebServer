@@ -1,22 +1,24 @@
 {%- macro page_select(id_prefix, values) %}
     <div class="page-select-container">
-        {{ page_select_button('%s_previous'|format(id_prefix), 'static/icons/caret_backward.png') }}
+        {{ page_select_button('%sPrevious'|format(id_prefix), 'static/icons/caret_backward.png') }}
         <div class="page-select-item">
-            {{ page_select_text('%s_prefix_text'|format(id_prefix)) }}
-            {{ page_select_input('%s_prefix_text'|format(id_prefix)) }}
-            {{ page_select_text('%s_postfix_text'|format(id_prefix)) }}
+            {{ page_select_text('%sPrefixText'|format(id_prefix)) }}
+            {{ page_select_input('%sPageText'|format(id_prefix)) }}
+            {{ page_select_text('%sPostfixText'|format(id_prefix)) }}
         </div>
-        {{ page_select_button('%s_next','/static/icons/caret_forward.png')}}
+        {{ page_select_button('%sNext'|format(id_prefix),'/static/icons/caret_forward.png')}}
         <div class="page-select-item">
-            {{ page_select_limit('%s_limit'|format(id_prefix), values) }}
-            {{ page_select_text('%s_limit_text'|format(id_prefix)) }}
+            {{ page_select_limit('%sLimit'|format(id_prefix), values) }}
+            {{ page_select_text('%sLimitText'|format(id_prefix)) }}
         </div>
     </div>
 {% endmacro %}
 
 {# 跳转页转入框 #}
 {%- macro page_select_input(id) %}
-    <input class="page-select-input" id="{{id}}" type="text">
+    <div class="page-select-input">
+        <input id="{{id}}" type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'');">
+    </div>
 {% endmacro -%}
 
 {# 按钮 #}
@@ -29,7 +31,7 @@
 {# 文本区域 #}
 {%- macro page_select_text(id) %}
     <div class="page-select-text">
-        <a id="{{id}}">页数</a>
+        <a id="{{id}}"></a>
     </div>
 {% endmacro -%}
 

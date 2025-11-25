@@ -40,8 +40,8 @@
     flex-direction: row;
     border-radius: 12px;
     transition: all 0.5s ease;
-    padding: 0px 5px;
-    gap: 5px;
+    padding: 0px 7px;
+    gap: 10px;
 }
 
 .storage-path-bar: hover{
@@ -65,15 +65,19 @@
     border-bottom: 2px solid var(--line-color);
     display: grid;
     grid-template-columns: 32px 1fr 180px 90px 90px 32px;
-    gap: 15px;
-    padding: 0px 15px;
+    gap: 10px;
+    padding: 0px 15px 0px 5px;
     align-items: end;
+}
+.storage-file-header>*:nth-child(2){
+    min-width: 180px;
 }
 
 .storage-filelist{
     width: 100%;
     box-sizing: border-box;
     flex-grow: 1;
+    position: relative;
 }
 
 .storage-file-footer{
@@ -91,13 +95,23 @@
     width: 100%;
     height: 44px;
     box-sizing: border-box;
-    border-bottom: 1px solid var(--line-color);
+    border-bottom: 1px dotted var(--line-color);
     display: grid;
     grid-template-columns: 32px 1fr 180px 90px 90px 32px;
-    gap: 15px;
-    padding: 0px 15px;
+    gap: 10px;
+    padding: 0px 15px 0px 5px;
     align-items: center;
+    transition: all 0.5s ease;
+    cursor: pointer;
 }
+.storage-file-item>*:nth-child(2){
+    min-width: 180px;
+}
+
+.storage-file-item:hover{
+    background-color: rgba(244, 247, 249, 0.65);
+}
+
 .storage-file-icon{
     min-width: 32px;
     width: 32px;
@@ -140,11 +154,32 @@
 }
 
 .storage-file-column>a{
-    min-height:24px;
+    min-height:22px;
     display: flex;
     align-items: end;
+    font-size: 15px;
+    white-space: pre-wrap;
 }
 
 .storage-header-column{
     padding-bottom: 5px;
+    color: #A098AE;
+    font-size: 15px;
+}
+
+.storage-path-text{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+.storage-path-text>a{
+    font-size: 14px;
+    height: 20px;
+    display: flex;
+    align-items: end;
+}
+
+.storage-path-item{
+    cursor: pointer;
 }

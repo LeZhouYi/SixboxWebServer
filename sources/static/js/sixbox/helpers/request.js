@@ -49,6 +49,7 @@ async function fetchWithRetry(requestFunc, retryTimes = 1) {
                 localStorage.setItem("accessToken",tokenResponse.accessToken);
             }
         }else{
+            let statusCode = response.status;
             if (ERROR_CODE.includes(statusCode)) {
                 let data = await response.json();
                 throw new Error(data.message);

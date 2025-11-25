@@ -1,7 +1,7 @@
 import datetime
 import os
 import threading
-from typing import Union, LiteralString, Tuple, List
+from typing import Union, LiteralString, Tuple, List, Optional
 from uuid import uuid4
 
 from tinydb import TinyDB, where
@@ -24,6 +24,7 @@ class Storage:
     EDITED_TIME = "editedTime"
     REMARK = "remark"  # 备注
     FOLDER_ID = "folderID"  # 所属文件夹
+    SIZE = "size" # 文件大小，空表示文件夹
 
     FILES = "files"  # request form-data 的文件列表
     CONTENTS = "contents"  # 该文件夹下包含的内容
@@ -96,7 +97,8 @@ class StorageDB(TableBase):
             Storage.FILE_TYPE,
             Storage.UPLOADER,
             Storage.REMARK,
-            Storage.FOLDER_ID
+            Storage.FOLDER_ID,
+            Storage.SIZE
         ])
         insert_data.update({
             Storage.FILE_ID: data_id,
@@ -138,17 +140,17 @@ class StorageDB(TableBase):
         :param folder_id:
         :return:
         """
-        return self._db.get((where(Storage.FILE_ID) == folder_id) & (where(Storage.FILE_TYPE) is None)) is not None
+        return self._db.get((where(Storage.FILE_ID) == folder_id) & (where(Storage.FILE_TYPE) == None)) is not None
 
     @lock_required(_lock)
-    def search_data(self, folder_id: Union[str, None], search: Union[str, None], page: int, limit: int) -> Tuple[
+    def search_data(self, folder_id: Union[str, None], search: Union[str, None], page: int, limit: Optional[int]) -> Tuple[
         int, List[dict]]:
         """
         搜索数据
         :param folder_id:
         :param search:
         :param page:
-        :param limit:
+        :param limit: 为空只会获得文件夹，数量不受限制
         :return:
         """
         if search is None:
@@ -157,16 +159,18 @@ class StorageDB(TableBase):
             query = where(Storage.FILE_NAME).search(search) | where(Storage.REMARK).search(search)
         # 分别搜索文件夹和文件，按名称排序后拼接
         # noinspection PyComparisonWithNone
-        search_data = self._db.search((where(Storage.FOLDER_ID) == folder_id) & (where(Storage.FILE_TYPE) == None))
-        print(search_data)
+        search_data = self._db.search(query & (where(Storage.FILE_TYPE) == None))
         search_data = sorted(search_data, key=lambda data_item: data_item[Storage.FILE_NAME])
-        # noinspection PyComparisonWithNone
-        file_search = self._db.search(query & (where(Storage.FILE_TYPE) != None))
-        search_data.extend(sorted(file_search, key=lambda data_item: data_item[Storage.FILE_NAME]))
+
+        if limit is not None:
+            # noinspection PyComparisonWithNone
+            file_search = self._db.search(query & (where(Storage.FILE_TYPE) != None))
+            search_data.extend(sorted(file_search, key=lambda data_item: data_item[Storage.FILE_NAME]))
 
         # 统计/切片
         count = len(search_data)
-        search_data = search_data[page * limit:(page + 1) * limit]
+        if limit is not None:
+            search_data = search_data[page * limit:(page + 1) * limit]
         return count, search_data
 
     @lock_required(_lock)
@@ -198,6 +202,6 @@ class StorageDB(TableBase):
                 folder_data = self._db.get((where(Storage.FILE_ID) == parent_id) & (where(Storage.FILE_TYPE) == None))
                 parents.append(folder_data)
                 parent_id = folder_data.get(Storage.FOLDER_ID)
-            result[Storage.FOLDERS] = reversed(parents)
+            result[Storage.FOLDERS] = list(reversed(parents))
             return result
         raise Exception("FOLDER NOT FOUND")
