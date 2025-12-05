@@ -38,7 +38,7 @@ def search_storage_data(file_id: Union[str, None], search: Union[str, None], pag
         if validate_str_empty(file_id):
             folder_data = STORAGE_DB.get_default_folder(DefaultFolder.ROOT_FOLDER)
         else:
-            folder_data = STORAGE_DB.get_file_data(file_id)
+            folder_data = STORAGE_DB.get_folder_data(file_id)
         count, search_data = STORAGE_DB.search_data(folder_data.get(Storage.FILE_ID), None, page, limit)
         folder_data[Storage.TOTAL] = count
         folder_data[Storage.CONTENTS] = search_data

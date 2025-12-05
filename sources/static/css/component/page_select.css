@@ -7,9 +7,9 @@
 
 .page-select-button{
     display: flex;
-    height: 32px;
-    width: 32px;
-    min-width: 32px;
+    height: 28px;
+    width: 28px;
+    min-width: 28px;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
@@ -31,9 +31,10 @@
     border-radius: 10px;
     border: 2px solid var(--line-color);
     box-sizing: border-box;
-    height: 32px;
+    height: 28px;
     transition: all 0.5s ease;
     text-align: center;
+    font-size: 15px;
 }
 
 .page-select-input>input{
@@ -41,10 +42,10 @@
     min-width: 44px;
     padding-top: 0;
     padding-bottom: 0;
-    font-size: 16px;
+    font-size: 15px;
     background: transparent;
     box-sizing: border-box;
-    height: 32px;
+    height: 24px;
     text-align: center;
     border: 0px;
 }
@@ -63,9 +64,10 @@
     border-radius: 10px;
     border: 2px solid var(--line-color);
     box-sizing: border-box;
-    height: 32px;
+    height: 28px;
     transition: all 0.5s ease;
     text-align: center;
+    font-size: 15px;
 }
 
 .page-select-limit:hover{
@@ -82,5 +84,6 @@
 .page-select-text>a{
     min-height: 24px;
     display: flex;
-    align-items: end;
+    align-items: center;
+    font-size: 15px;
 }

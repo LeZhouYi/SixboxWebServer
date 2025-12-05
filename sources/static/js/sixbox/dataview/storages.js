@@ -29,6 +29,26 @@ class StoragesView{
         });
     }
 
+    async editFolder(folderID, filename, remark, fileID){
+        /*编辑文件夹*/
+        return fetchJsonWithAuth("PUT", `/storages/folders/${fileID}`, {
+            "folderID": folderID,
+            "filename": filename,
+            "remark": remark,
+            "fileID": fileID
+        });
+    }
+
+    async addFile(file,filename,folderID,remark){
+        /*新增文件*/
+        let formData = new FormData();
+        formData.append("files", file);
+        formData.append("filename", filename);
+        formData.append("folderID", folderID);
+        formData.append("remark", remark);
+        return fetchFormWithAuth("POST", `/storages/files`, formData);
+    }
+
     getUrlParams(){
         /*获取URL的query参数*/
         let params = new URLSearchParams();

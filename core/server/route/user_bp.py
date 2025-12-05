@@ -36,7 +36,7 @@ def get_user(user_id: str):
     """获取用户详情"""
     verify_result = verify_token(request)
     now_user_id = verify_result.get(Session.USER_ID)
-    if USER_DB.match_role(now_user_id, Role.ADMIN) and now_user_id != user_id:
+    if not USER_DB.match_role(now_user_id, Role.ADMIN) and now_user_id != user_id:
         raise Exception("PERMISSION DENIED")
     will_user = USER_DB.get_user(user_id)
     return jsonify(extract_values(will_user, [
@@ -50,7 +50,7 @@ def delete_user(user_id: str):
     """删除/注销用户"""
     verify_result = verify_token(request)
     now_user_id = verify_result.get(Session.USER_ID)
-    if USER_DB.match_role(now_user_id, Role.ADMIN) and now_user_id != user_id:
+    if not USER_DB.match_role(now_user_id, Role.ADMIN) and now_user_id != user_id:
         raise Exception("PERMISSION DENIED")
     USER_DB.delete_user(user_id)
     SESSION_DB.delete_token_by_user(user_id)

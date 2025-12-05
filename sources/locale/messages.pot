@@ -194,3 +194,36 @@ msgstr ""
 
 msgid "CREATE SUCCESS"
 msgstr ""
+
+msgid "FILE EDIT"
+msgstr ""
+
+msgid "FILE DELETE"
+msgstr ""
+
+msgid "FILE DOWNLOAD"
+msgstr ""
+
+msgid "EDIT FOLDER"
+msgstr ""
+
+msgid "FILE ID REQUIRED"
+msgstr ""
+
+msgid "EDIT SUCCESS"
+msgstr ""
+
+msgid "UPLOAD FILE"
+msgstr ""
+
+msgid "FILENAME"
+msgstr ""
+
+msgid "FILENAME HOLDER"
+msgstr ""
+
+msgid "FILE UPLOAD HOLDER"
+msgstr ""
+
+msgid "UPLOAD DRAG HOLDER"
+msgstr ""

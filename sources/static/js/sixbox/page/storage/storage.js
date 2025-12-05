@@ -6,7 +6,7 @@ window.addEventListener("DOMContentLoaded", function(){
     let storageController = new StorageController();
 });
 
-const iconMapping = {
+const storageIconMapping = {
     "": "/static/icons/folder.png",
     "pdf": "/static/icons/pdf.png"
 }
@@ -18,6 +18,11 @@ const storageTexts = {
         "childFolder":"子目录",
         "parentFolder": "父目录"
     }
+}
+
+const storageControlMapping = {
+    "folder": ["fileEditButton","fileDeleteButton"],
+    "file": ["fileEditButton","fileDeleteButton","fileDownloadButton"]
 }
 
 class StorageController{
@@ -35,6 +40,14 @@ class StorageController{
         this.init = this.init.bind(this);
         this.bindCreateFolder = this.bindCreateFolder.bind(this);
         this.onAddFolder = this.onAddFolder.bind(this);
+        this.bindFileItemEvent = this.bindFileItemEvent.bind(this);
+        this.onShowFileControl = this.onShowFileControl.bind(this);
+        this.bindControlButton = this.bindControlButton.bind(this);
+        this.bindEditFolder = this.bindEditFolder.bind(this);
+        this.onEditFolder = this.onEditFolder.bind(this);
+        this.bindUploadFile = this.bindUploadFile.bind(this);
+        this.onClickUploadFile = this.onClickUploadFile.bind(this);
+        this.onUploadFile = this.onUploadFile.bind(this);
 
         // 初始化页面选择器
         this.pageSelect = new PageSelect("storage", 20);
@@ -46,6 +59,12 @@ class StorageController{
         // 初始化弹窗
         this.popupAddFolder = new PopupContainer("popupAddFolder");
         this.popupMessage = new PopupMessage();
+        this.popupFileControl = new PopupContainerFloat("popupFileControl");
+        this.popupEditFolder = new PopupContainer("popupEditFolder");
+        this.popupUploadFile = new PopupContainer("popupUploadFile");
+
+        // 初始化文件上传的控件
+        this.formFileUpload = new FormFileUploader("uploadFileLoader");
 
         // 初始化页面
         this.checkParams();
@@ -57,18 +76,192 @@ class StorageController{
 
     init(){
         this.bindCreateFolder();
+        this.bindControlButton();
+        this.bindEditFolder();
+        this.bindUploadFile();
+    }
+
+    bindUploadFile(){
+        callElement("uploadFileButton", element=>{
+            element.addEventListener("click",(event)=>{
+                this.onClickUploadFile();
+            });
+        });
+        callElement("uploadFileCancel", element=>{
+            element.addEventListener("click",(event)=>{
+                this.popupUploadFile.hideContainer();
+            });
+        });
+        this.formFileUpload.bindOnDrop(()=>{
+            if(this.formFileUpload.tempFile.length > 0){
+                callElement("uploadFileName", element=>{
+                    let name = this.formFileUpload.tempFile[0].name;
+                    element.value = name.split(".")[0];
+                });
+            }
+        });
+        this.formFileUpload.bindOnClick(()=>{
+            if(this.formFileUpload.tempFile.length > 0){
+                callElement("uploadFileName", element=>{
+                    let name = this.formFileUpload.tempFile[0].name;
+                    element.value = name.split(".")[0];
+                });
+            }
+        });
+        callElement("uploadFileForm", element=>{
+            element.addEventListener("submit", (event)=>{
+                this.onUploadFile();
+            })
+        });
+    }
+
+    async onUploadFile(){
+        /*点击上传文件*/
+        let spinner = createSpinner("uploadFileConfirm");
+        try{
+            event?.preventDefault();
+            let file = null;
+            if(this.formFileUpload.tempFile.length > 0){
+                file = this.formFileUpload.tempFile[0];
+            }
+            let responseData = await this.storagesView.addFile(
+                file,
+                document.getElementById("uploadFileName")?.value,
+                document.getElementById("uploadFileSelect")?.value,
+                document.getElementById("uploadFileRemark")?.value
+            )
+            this.updateFileList();
+            this.popupUploadFile.hideContainer();
+            this.formFileUpload.reset();
+            document.getElementById("uploadFileForm")?.reset();
+            this.popupMessage.displaySuccessMessage(responseData.message);
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }finally{
+            spinner?.remove();
+        }
+    }
+
+    async onClickUploadFile(){
+        /*点击弹出上传文件窗口*/
+        let spinner = createSpinner("uploadFileButton", "spinner-container", 0.75);
+        try{
+            let fileID = sessionStorage.getItem("fileID");
+            let parentData = await this.storagesView.getFolderDetail(fileID);
+            this.resetSelectFolder("uploadFileSelect", parentData);
+            this.popupUploadFile.showContainer();
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }finally{
+            spinner?.remove();
+        }
+    }
+
+    bindEditFolder(){
+        callElement("editFolderCancel", element=>{
+            /*取消新增*/
+            element.addEventListener("click", (event)=>{
+                this.popupEditFolder.hideContainer();
+            });
+        });
+        callElement("editFolderForm", element=>{
+            /*确认编辑*/
+            element.addEventListener("submit", this.onEditFolder);
+        });
+    }
+
+    async onEditFolder(event){
+        /*编辑文件夹*/
+        let spinner = createSpinner("editFolderConfirm");
+        try{
+            event?.preventDefault();
+            let responseData = await this.storagesView.editFolder(
+                document.getElementById("editFolderSelect")?.value,
+                document.getElementById("editFolderName")?.value,
+                document.getElementById("editFolderRemark")?.value,
+                sessionStorage.getItem("nowFileID")
+            )
+            this.updateFileList();
+            this.popupEditFolder.hideContainer();
+            document.getElementById("editFolderForm")?.reset();
+            this.popupMessage.displaySuccessMessage(responseData.message);
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }finally{
+            spinner?.remove();
+        }
+    }
+
+    getSuitFileType(type){
+        /*获取匹配的FileType*/
+        if(!type){
+            return "folder";
+        }else{
+            return "file";
+        }
+    }
+
+    bindControlButton(){
+        /*操作按钮事件绑定*/
+        callElement("fileEditButton", element=>{
+            element.addEventListener("click", (event)=>{
+                let fileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"));
+                if(fileType=="folder"){
+                    this.onClickEditFolder(event);
+                }
+            });
+        });
+    }
+
+    async onClickEditFolder(event){
+        /*点击编辑文件夹*/
+        let spinner = createSpinner("fileEditButton","spinner-container",0.75);
+        try{
+            let folderID = sessionStorage.getItem("nowFileID");
+            let folderData = await this.storagesView.getFolderDetail(folderID);
+            let parentFolder = folderData.folders[0];
+            let parentData = await this.storagesView.getFolderDetail(parentFolder.fileID);
+            this.resetSelectFolder("editFolderSelect", parentData);
+            callElement("editFolderName", element=>{
+                element.value = folderData.filename;
+            });
+            callElement("editFolderRemark", element=>{
+                element.value = folderData.remark;
+            });
+            this.popupEditFolder.showContainer();
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }finally{
+            this.popupFileControl.hideContainer();
+            spinner?.remove();
+        }
+    }
+
+    onShowFileControl(){
+        /*当操作弹窗显示时，调整显示项*/
+        let nowFileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"));
+        for(let element of document.querySelectorAll("#popupFileControl .storage-control-list>*")){
+            let elementID = element.id;
+            if(elementID){
+                if(storageControlMapping[nowFileType].includes(elementID)){
+                    element.classList.remove("hidden");
+                }else{
+                    element.classList.add("hidden");
+                }
+            }
+        }
     }
 
     async bindCreateFolder(){
         callElement("createFolderButton", element=>{
             /*显示新增文件夹弹窗*/
             element.addEventListener("click", async (event)=>{
-                let spinner = createSpinnerByElement(element);
+                let spinner = createSpinnerByElement(element, "spinner-container", 0.75);
                 try{
-                    this.popupAddFolder.showContainer();
                     let folderID = sessionStorage.getItem("folderID") || "";
                     let folderData = await this.storagesView.getFolderDetail(folderID);
                     this.resetSelectFolder("addFolderSelect", folderData);
+                    this.popupAddFolder.showContainer();
                 }catch(error){
                     this.popupMessage.displayErrorMessage(error);
                 }finally{
@@ -104,7 +297,7 @@ class StorageController{
             );
             this.updateFileList();
             this.popupAddFolder.hideContainer();
-            document.getElementById("addFolderForm").reset();
+            document.getElementById("addFolderForm")?.reset();
             this.popupMessage.displaySuccessMessage(responseData.message);
         }catch(error){
             this.popupMessage.displayErrorMessage(error);
@@ -246,7 +439,7 @@ class StorageController{
         fileItemDiv.classList.add("storage-file-item");
 
         //文件图标
-        let fileIconDiv = this.createFileIcon(iconMapping[fileType]);
+        let fileIconDiv = this.createFileIcon(storageIconMapping[fileType]);
         fileItemDiv.appendChild(fileIconDiv);
 
         //文件名
@@ -270,16 +463,34 @@ class StorageController{
         //文件操作
         let controlDiv = this.createControlIcon();
         fileItemDiv.appendChild(controlDiv);
+        controlDiv.addEventListener("click", (event)=>{
+            event.stopPropagation();
+            storeSession("nowFileID",itemData.fileID);
+            storeSession("nowFileType", itemData.type);
+            this.onShowFileControl();
+            this.popupFileControl.showContainer(event.pageX, event.pageY, "start", "end", 15);
+        });
+        this.bindFileItemEvent(fileItemDiv, itemData);
+        return fileItemDiv;
+    }
 
-        if(fileType === ""){
+    bindFileItemEvent(fileItemDiv, itemData){
+        let fileType = itemData.type;
+        //如果对特殊的文件类型如图片/视频/文本，则在else if中添加和实现
+        if(fileType === null){
             fileItemDiv.addEventListener("click", (event)=>{
                 storeSession("folderID", itemData.fileID);
                 sessionStorage.removeItem("search");
                 this.updateFileList();
             });
+        }else{
+            fileItemDiv.addEventListener("click", (event)=>{
+                storeSession("nowFileID",itemData.fileID);
+                storeSession("nowFileType", itemData.type);
+                this.onShowFileControl();
+                this.popupFileControl.showContainer(event.pageX, event.pageY, "start", "end", 15);
+            });
         }
-
-        return fileItemDiv;
     }
 
     createControlIcon(){

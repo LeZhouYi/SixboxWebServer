@@ -188,9 +188,9 @@ class StorageDB(TableBase):
             & (where(Storage.UPLOADER) == None)
         )
 
-    def get_file_data(self, file_id: str) -> dict:
+    def get_folder_data(self, file_id: str) -> dict:
         """
-        获取文件夹
+        获取文件夹数据
         :param file_id:
         :return:
         """

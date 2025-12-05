@@ -20,7 +20,7 @@ class PopupContainer{
             }
             popupOverlay.addEventListener("click", (event)=>{
                 if(!element.contains(event.target)){
-                    popupOverlay.classList.add("popup-hidden");
+                    popupOverlay.classList.add("hidden");
                 }
                 event.stopPropagation();
             });
@@ -34,7 +34,7 @@ class PopupContainer{
             if(!popupOverlay){
                 return;
             }
-            popupOverlay.classList.remove("popup-hidden");
+            popupOverlay.classList.remove("hidden");
         });
     }
 
@@ -45,7 +45,7 @@ class PopupContainer{
             if(!popupOverlay){
                 return;
             }
-            popupOverlay.classList.add("popup-hidden");
+            popupOverlay.classList.add("hidden");
         });
     }
 

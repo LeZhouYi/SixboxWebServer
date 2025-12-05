@@ -33,3 +33,7 @@ input:autofill {
 input:focus-visible{
     outline:none;
 }
+
+.hidden{
+    display: none;
+}

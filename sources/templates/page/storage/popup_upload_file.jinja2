@@ -1,0 +1,18 @@
+{% extends 'component/ui_popup_base.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+
+{% block popup_id %}popupUploadFile{% endblock %}
+
+{% block popup_content %}
+<form class="form-base" id="uploadFileForm">
+    {{ forms.form_title(_('UPLOAD FILE')) }}
+    {{ forms.form_upload('uploadFileLoader', '*',_('FILE UPLOAD HOLDER')) }}
+    {{ forms.label_line_input('uploadFileName', _('FILENAME'), 'text', _('FILENAME HOLDER'), True) }}
+    {{ forms.label_select('uploadFileSelect', _('FOLDER SELECT')) }}
+    {{ forms.label_textarea('uploadFileRemark', _('FOLDER REMARK'), 5, _('FOLDER REMARK HOLDER'), True) }}
+    <div class="form-buttons">
+        {{ forms.button('uploadFileConfirm', _('CONFIRM BUTTON'), 'submit') }}
+        {{ forms.warn_button('uploadFileCancel', _('CANCEL BUTTON')) }}
+    </div>
+</form>
+{% endblock %}

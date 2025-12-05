@@ -180,8 +180,8 @@
 .sidebar-overlay{
     transition: all 0.7s ease;
     overflow: hidden;
-    width: 256px;
-    min-width: 256px;
+    width: 220px;
+    min-width: 220px;
     position: absolute;
     height: 100%;
     z-index: 1;
@@ -192,7 +192,7 @@
 }
 
 .sidebar-padding{
-    padding-left: 256px;
+    padding-left: 220px;
 }
 
 .sidebar-page{

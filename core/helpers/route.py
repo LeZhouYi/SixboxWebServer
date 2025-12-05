@@ -17,7 +17,7 @@ class ResponseKey:
     MESSAGE = "message"
 
 
-def _get_env(key: str):
+def get_route_env(key: str):
     """
     获取env配置
     :param key:
@@ -33,7 +33,7 @@ def gen_prefix_api(api_str: str) -> str:
     :param api_str:
     :return:
     """
-    return _get_env("api_prefix") + api_str
+    return get_route_env("api_prefix") + api_str
 
 
 def gen_fail_response(request_in: Request, message: str, error_code: int = 400) -> tuple[Response, int]:
@@ -85,35 +85,15 @@ def get_translator(request_in: Request) -> NullTranslations:
     :param request_in:
     :return:
     """
-    best_match = request_in.accept_languages.best_match(_get_env("langs")) or "zh_CN"
+    best_match = request_in.accept_languages.best_match(get_route_env("langs")) or "zh_CN"
     translator = gettext.translation(
-        domain=_get_env("domain"),
-        localedir=_get_env("locale_dir"),
+        domain=get_route_env("domain"),
+        localedir=get_route_env("locale_dir"),
         languages=[best_match],
         fallback=True
     )
     translator.install()
     return translator
-
-
-def get_text(message: str) -> str:
-    """
-    获取多语言的文本
-    :param message:
-    :return:
-    """
-    translator = get_translator(request)
-    return translator.gettext(message)
-
-
-def get_locale() -> str:
-    """
-    获取当前语言
-    :return:
-    """
-    best_match = request.accept_languages.best_match(_get_env("langs")) or "zh_CN"
-    return best_match.replace("_", "-")
-
 
 def register_assets(assets: Environment):
     """注册web assets"""
@@ -140,7 +120,7 @@ def register_assets(assets: Environment):
 
 def get_stream_io(filepath: str, chunk_size: int = None) -> Generator[bytes, Any, None]:
     """获取文件流式传输流"""
-    chunk_size = chunk_size or _get_env("chunk_size")
+    chunk_size = chunk_size or get_route_env("chunk_size")
     with open(filepath, "rb") as file:
         while True:
             data = file.read(chunk_size)

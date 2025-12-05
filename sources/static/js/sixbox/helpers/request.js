@@ -64,7 +64,7 @@ async function fetchJsonWithAuth(method, url, jsonData={}) {
     let fetchFunc = async function(){
         if(method==="GET"){
             return fetch(API_PREFIX + url, {
-            "method": method,
+                "method": method,
                 "headers": {
                     "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
                 }
@@ -79,6 +79,21 @@ async function fetchJsonWithAuth(method, url, jsonData={}) {
             "body": JSON.stringify(jsonData)
         });
     };
+    const response = await fetchWithRetry(fetchFunc);
+    return getResponseJson(response);
+}
+
+async function fetchFormWithAuth(method, url, formData){
+    /*fetch传输form-data数据并获取json数据*/
+    let fetchFunc = async function(){
+        return fetch(API_PREFIX+url, {
+            "method": method,
+            "headers":{
+                "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+            },
+            "body": formData
+        })
+    }
     const response = await fetchWithRetry(fetchFunc);
     return getResponseJson(response);
 }

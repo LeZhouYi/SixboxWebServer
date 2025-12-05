@@ -8,7 +8,7 @@
     {{ forms.form_title(_('ADD FOLDER')) }}
     {{ forms.label_line_input('addFolderName',_('FOLDER NAME'), 'text', _('FOLDER NAME HOLDER'), True)}}
     {{ forms.label_select('addFolderSelect', _('FOLDER SELECT')) }}
-    {{ forms.label_textarea('addFolderRemark', _('FOLDER REMARK'), 10, _('FOLDER REMARK HOLDER'), True) }}
+    {{ forms.label_textarea('addFolderRemark', _('FOLDER REMARK'), 5, _('FOLDER REMARK HOLDER'), True) }}
     <div class="form-buttons">
         {{ forms.button('addFolderConfirm', _('CONFIRM BUTTON'), 'submit') }}
         {{ forms.warn_button('addFolderCancel', _('CANCEL BUTTON')) }}

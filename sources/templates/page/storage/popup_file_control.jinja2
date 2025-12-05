@@ -1,0 +1,12 @@
+{% extends 'component/ui_popup_float.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+
+{% block popup_id %}popupFileControl{% endblock %}
+
+{% block popup_content %}
+    <div class="storage-control-list">
+        {{ forms.icon_text_button('fileEditButton', _('FILE EDIT'), '/static/icons/edit.png') }}
+        {{ forms.icon_text_button('fileDownloadButton', _('FILE DOWNLOAD'), '/static/icons/download.png') }}
+        {{ forms.icon_text_button('fileDeleteButton', _('FILE DELETE'), '/static/icons/trash.png') }}
+    </div>
+{% endblock %}

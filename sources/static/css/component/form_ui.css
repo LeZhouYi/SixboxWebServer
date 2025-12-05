@@ -222,3 +222,129 @@
 .form-buttons>*{
     max-width: 120px;
 }
+
+.form-text-button>img{
+    width: 22px;
+    height: 22px;
+}
+
+.form-text-button{
+    height: 36px;
+    display: flex;
+    flex-direction: row;
+    background-color: var(--transparent-color);
+    border-radius: 12px;
+    box-sizing: border-box;
+    gap: 10px;
+    align-items: center;
+    border: 2px solid transparent;
+    transition: all 0.5s ease;
+    cursor: pointer;
+}
+
+.form-text-button:hover{
+    border-color: var(--theme-color);
+}
+
+.form-text-button>*:last-child{
+    font-size: 15px;
+    padding-right: 14px;
+}
+.form-text-button>img{
+    padding-left: 10px;
+}
+
+.form-file-uploader{
+    max-height: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 2px solid var(--theme-color);
+    display: flex;
+    flex-direction: column;
+    color: var(--theme-color);
+    font-size: 15px;
+    transition: all .5s ease;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    gap: 5px;
+    background-color: var(--background-color);
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+
+.form-file-holder{
+    font-size: 14px;
+    color: var(--line-color);
+}
+
+.form-file-uploader.form-file-enter{
+    background: repeating-linear-gradient(
+        -45deg,
+        rgba(144,238,144,0.3),
+        rgba(144,238,144,0.3) 10px,
+        rgba(255,255,255,0.2),
+        rgba(255,255,255,0.2) 30px
+    );
+}
+
+.form-file-input{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-file-input>input{
+    display: none;
+}
+
+.form-file-input>*:nth-child(4){
+    display: none;
+}
+
+.form-file-input.form-file-enter>*:nth-child(3){
+    display: none;
+}
+
+.form-file-input.form-file-enter>*:nth-child(4){
+    display: block;
+}
+
+.form-file-display{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    width: 100%;
+}
+
+.form-remove-icon{
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-remove-icon>img{
+    width: 24px;
+    height: 24px;
+}
+
+.form-remove-icon:hover>img{
+    width: 22px;
+    height: 22px;
+}
+
+.form-file-uploader.form-file-drop{
+    min-height: 36px;
+    padding: 0px 10px;
+}
+
+.form-filename{
+    font-size: 15px;
+}

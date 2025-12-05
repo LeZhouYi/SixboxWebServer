@@ -197,3 +197,36 @@ msgstr "取消"
 msgid "CREATE SUCCESS"
 msgstr "创建成功"
 
+msgid "FILE EDIT"
+msgstr "编辑"
+
+msgid "FILE DELETE"
+msgstr "删除"
+
+msgid "FILE DOWNLOAD"
+msgstr "下载"
+
+msgid "EDIT FOLDER"
+msgstr "编辑文件夹"
+
+msgid "FILE ID REQUIRED"
+msgstr "必须指定文件ID"
+
+msgid "EDIT SUCCESS"
+msgstr "编辑成功"
+
+msgid "UPLOAD FILE"
+msgstr "上传文件"
+
+msgid "FILENAME"
+msgstr "文件名"
+
+msgid "FILENAME HOLDER"
+msgstr "请输入文件名"
+
+msgid "FILE UPLOAD HOLDER"
+msgstr "点击或拖动文件到此区域上传文件"
+
+msgid "UPLOAD DRAG HOLDER"
+msgstr "松开鼠标以确认上传"
+

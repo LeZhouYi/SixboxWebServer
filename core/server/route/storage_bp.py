@@ -1,8 +1,9 @@
 from flask import Blueprint, request, jsonify
 
-from core.database.table import STORAGE_DB
+from core.database.table import STORAGE_DB, USER_DB
 from core.database.table.session import Session
 from core.database.table.storage import Storage
+from core.database.table.user import Role
 from core.database.view.session_view import verify_token, token_required
 from core.database.view.storage_view import save_file, search_storage_data
 from core.database.view.view_utils import catch_exception, page_args_required, Params
@@ -29,7 +30,6 @@ def add_files():
     folder_id = request.form.get(Storage.FOLDER_ID)
     if not STORAGE_DB.is_folder_exist(folder_id):
         raise Exception("FOLDER NOT FOUND")
-    file_ids = []
     for i, file in enumerate(files):
         data = save_file(file)
         data.update({
@@ -38,8 +38,8 @@ def add_files():
             Storage.UPLOADER: decoded.get(Session.USER_ID),
             Storage.REMARK: None
         })
-        file_ids.append(STORAGE_DB.add_data(data).get(Storage.FILE_ID))
-    return jsonify(file_ids)
+        STORAGE_DB.add_data(data).get(Storage.FILE_ID)
+    return gen_success_response(request, "CREATE SUCCESS", 201)
 
 
 @STORAGE_BP.route(gen_prefix_api("/storages"), methods=["GET"])
@@ -90,3 +90,27 @@ def get_folder(folder_id: str):
 def get_default_folder():
     """获取文件夹详情"""
     return jsonify(search_storage_data(None, None, 0, None))
+
+@STORAGE_BP.route(gen_prefix_api("/storages/folders/<file_id>"), methods=["PUT"])
+@catch_exception
+def edit_folder(file_id: str):
+    """编辑文件夹"""
+    verify_result = verify_token(request)
+    now_user_id = verify_result.get(Session.USER_ID)
+    if not STORAGE_DB.is_folder_exist(file_id):
+        raise Exception("FOLDER NOT FOUND")
+    folder_data = STORAGE_DB.get_folder_data(file_id)
+    if not USER_DB.match_role(now_user_id, Role.ADMIN) and now_user_id != folder_data.get(Storage.UPLOADER):
+        raise Exception("PERMISSION DENIED")
+    data = request.json
+    if validate_str_empty(data.get(Storage.FILE_ID)):
+        raise Exception("FILE ID REQUIRED")
+    if validate_str_empty(data.get(Storage.FILE_NAME)):
+        raise Exception("FILENAME REQUIRED")
+    folder_id = data.get(Storage.FOLDER_ID)
+    if validate_str_empty(folder_id):
+        raise Exception("FOLDER REQUIRED")
+    if not STORAGE_DB.is_folder_exist(folder_id):
+        raise Exception("FOLDER NOT FOUND")
+    STORAGE_DB.edit_data(data)
+    return gen_success_response(request, "EDIT SUCCESS", 201)

@@ -114,7 +114,7 @@ class UserDB(TableBase):
         if result is None:
             raise Exception("USER NOT FOUND")
         now_role = result.get(User.ROLE)
-        return will_role >= now_role
+        return will_role <= now_role
 
     @lock_required(_lock)
     def get_user(self, user_id: str):

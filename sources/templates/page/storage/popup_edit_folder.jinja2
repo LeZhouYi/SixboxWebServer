@@ -1,0 +1,17 @@
+{% extends 'component/ui_popup_base.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+
+{% block popup_id %}popupEditFolder{% endblock %}
+
+{% block popup_content %}
+<form class="form-base" id="editFolderForm">
+    {{ forms.form_title(_('EDIT FOLDER')) }}
+    {{ forms.label_line_input('editFolderName',_('FOLDER NAME'), 'text', _('FOLDER NAME HOLDER'), True)}}
+    {{ forms.label_select('editFolderSelect', _('FOLDER SELECT')) }}
+    {{ forms.label_textarea('editFolderRemark', _('FOLDER REMARK'), 5, _('FOLDER REMARK HOLDER'), True) }}
+    <div class="form-buttons">
+        {{ forms.button('editFolderConfirm', _('CONFIRM BUTTON'), 'submit') }}
+        {{ forms.warn_button('editFolderCancel', _('CANCEL BUTTON')) }}
+    </div>
+</form>
+{% endblock %}

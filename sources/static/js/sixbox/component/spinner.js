@@ -1,10 +1,10 @@
-function createSpinner(elementId, className="spinner-container"){
+function createSpinner(elementId, className="spinner-container", scale=1){
     /*创建loading*/
     let target = document.getElementById(elementId);
-    return createSpinnerByElement(target, className);
+    return createSpinnerByElement(target, className, scale);
 }
 
-function createSpinnerByElement(elementTarget, className="spinner-container"){
+function createSpinnerByElement(elementTarget, className="spinner-container", scale=1){
     /*创建loading*/
     if(!elementTarget){
         return;
@@ -18,6 +18,7 @@ function createSpinnerByElement(elementTarget, className="spinner-container"){
         event.stopPropagation();
     });
     elementTarget.prepend(spinner);
-    new Spinner().spin(spinner);
+    let spinnerInstance = new Spinner().spin(spinner);
+    spinnerInstance.el.style.transform = `scale(${scale})`;
     return spinner;
 }

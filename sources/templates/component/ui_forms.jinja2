@@ -18,7 +18,7 @@
 
 {# 简单的深色按钮 #}
 {%- macro button(id, name, type=None) %}
-    <input class="form-button spinner-holder" id="{{id}}" value="{{name}}" {% if type is not none %}type="{{type}}"{% endif %}>
+    <input class="form-button spinner-holder" {% if id is not none %}id="{{id}}"{% endif %} value="{{name}}" {% if type is not none %}type="{{type}}"{% endif %}>
 {% endmacro -%}
 
 {# 简单的警告色按钮 #}
@@ -83,5 +83,46 @@
     <div class="form-line-item">
         <label for="{{id}}">{{name}}</label>
         {{ textarea(id, min_line, placeholder, False) }}
+    </div>
+{% endmacro -%}
+
+{# 带图标和文本的button #}
+{%- macro icon_text_button(id, name, icon) %}
+    <div class="form-text-button spinner-holder" id="{{id}}">
+        <img src="{{icon}}" alt="button-icon">
+        <div>{{name}}</div>
+    </div>
+{% endmacro -%}
+
+{# 带label的拖动上传文件控件 #}
+{%- macro label_form_upload(id,name,accept,holder) %}
+    <div class="form-line-item">
+        <label for="{{id}}">{{name}}</label>
+        {{ form_upload(id, accept, holder) }}
+    </div>
+{% endmacro -%}
+
+{# 拖动上传文件控件 #}
+{%- macro form_upload(id,accept,holder) %}
+    <div class="form-file-uploader" id="{{id}}">
+        <div class="form-file-input">
+            <input type="file" accept="{{accept}}">
+            <div class="form-file-icon">
+                <img src="/static/icons/upload.png">
+            </div>
+            <div class="form-file-holder">
+                {{holder}}
+            </div>
+            <div class="form-file-holder">
+                {{ _('UPLOAD DRAG HOLDER') }}
+            </div>
+        </div>
+        <div class="form-file-display hidden">
+            <div class="form-filename">
+            </div>
+            <div class="form-remove-icon">
+                <img src="/static/icons/close.png">
+            </div>
+        </div>
     </div>
 {% endmacro -%}
