@@ -142,6 +142,16 @@
     font-weight: bold;
 }
 
+.form-center-text{
+    color: var(--theme-color);
+    font-size: 29px;
+    font-weight: bold;
+    width: 100%;
+    justify-content: center;
+    display: flex;
+}
+
+
 .form-base{
     display: flex;
     flex-direction: column;
@@ -153,6 +163,21 @@
 }
 
 .form-base .form-buttons:last-child{
+    padding-top: 15px;
+}
+
+.form-center{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+}
+
+.form-center .form-center-text:first-child{
+    padding-bottom: 15px;
+}
+
+.form-center .form-center-buttons:last-child{
     padding-top: 15px;
 }
 
@@ -210,6 +235,18 @@
     padding: 10px;
     gap: 5px;
     background-color: var(--background-color);
+}
+
+.form-center-buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.form-center-buttons>*{
+    max-width: 120px;
 }
 
 .form-buttons{

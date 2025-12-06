@@ -5,6 +5,16 @@ class StoragesView{
         this.getFolderDetail = this.getFolderDetail.bind(this);
     }
 
+    async deleteFolder(folderID){
+        /*删除文件夹*/
+        return fetchJsonWithAuth("DELETE", `/storages/folders/${folderID}`);
+    }
+
+    async deleteFile(fileID){
+        /*删除文件*/
+        return fetchJsonWithAuth("DELETE", `/storages/files/${fileID}`);
+    }
+
     async getStorageList(){
         /*获取/搜索文件列表*/
         let params = this.getUrlParams();

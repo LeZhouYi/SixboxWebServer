@@ -9,6 +9,7 @@ from tinydb import TinyDB, where
 from core.database.table.table_base import TableBase
 from core.helpers.lock import lock_required
 from core.helpers.route import extract_values
+from core.log import logger
 
 
 class Storage:
@@ -24,7 +25,7 @@ class Storage:
     EDITED_TIME = "editedTime"
     REMARK = "remark"  # 备注
     FOLDER_ID = "folderID"  # 所属文件夹
-    SIZE = "size" # 文件大小，空表示文件夹
+    SIZE = "size"  # 文件大小，空表示文件夹
 
     FILES = "files"  # request form-data 的文件列表
     CONTENTS = "contents"  # 该文件夹下包含的内容
@@ -143,8 +144,9 @@ class StorageDB(TableBase):
         return self._db.get((where(Storage.FILE_ID) == folder_id) & (where(Storage.FILE_TYPE) == None)) is not None
 
     @lock_required(_lock)
-    def search_data(self, folder_id: Union[str, None], search: Union[str, None], page: int, limit: Optional[int]) -> Tuple[
-        int, List[dict]]:
+    def search_data(self, folder_id: Union[str, None], search: Union[str, None], page: int, limit: Optional[int]) -> \
+            Tuple[
+                int, List[dict]]:
         """
         搜索数据
         :param folder_id:
@@ -188,6 +190,7 @@ class StorageDB(TableBase):
             & (where(Storage.UPLOADER) == None)
         )
 
+    @lock_required(_lock)
     def get_folder_data(self, file_id: str) -> dict:
         """
         获取文件夹数据
@@ -205,3 +208,47 @@ class StorageDB(TableBase):
             result[Storage.FOLDERS] = list(reversed(parents))
             return result
         raise Exception("FOLDER NOT FOUND")
+
+    @lock_required(_lock)
+    def delete_folder(self, folder_id: str):
+        """
+        删除文件夹，文件夹内的文件/文件夹也会被移除
+        :param folder_id:
+        :return:
+        """
+        self._db.remove((where(Storage.FILE_ID) == folder_id) & (where(Storage.FILE_TYPE) == None))
+        delete_queue = [folder_id]
+        while len(delete_queue) > 0:
+            now_folder_id = delete_queue.pop()
+            query = where(Storage.FOLDER_ID) == now_folder_id
+            search = self._db.search(query)
+            for data_item in search:
+                if data_item.get(Storage.FILE_TYPE) is None:
+                    delete_queue.append(data_item.get(Storage.FILE_ID))
+                else:
+                    try:
+                        os.remove(data_item.get(Storage.FILE_PATH))
+                    except Exception as e:
+                        logger.warn(f"remove file: {data_item.get(Storage.FILE_PATH)}, error: {e}")
+            self._db.remove(query)
+
+    @lock_required(_lock)
+    def get_file_data(self, file_id: str):
+        """
+        获取文件数据
+        :param file_id:
+        :return:
+        """
+        result = self._db.get((where(Storage.FILE_ID) == file_id) & (where(Storage.FILE_TYPE) != None))
+        if result:
+            return result
+        raise Exception("FILE NOT FOUND")
+
+    @lock_required(_lock)
+    def delete_file(self, file_id: str):
+        """
+        删除文件
+        :param file_id:
+        :return:
+        """
+        self._db.remove((where(Storage.FILE_ID) == file_id) & (where(Storage.FILE_TYPE) != None))

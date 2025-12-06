@@ -48,6 +48,8 @@ class StorageController{
         this.bindUploadFile = this.bindUploadFile.bind(this);
         this.onClickUploadFile = this.onClickUploadFile.bind(this);
         this.onUploadFile = this.onUploadFile.bind(this);
+        this.bindDeleteConfirm = this.bindDeleteConfirm.bind(this);
+        this.bindFileNameEvent = this.bindFileNameEvent.bind(this);
 
         // 初始化页面选择器
         this.pageSelect = new PageSelect("storage", 20);
@@ -62,6 +64,7 @@ class StorageController{
         this.popupFileControl = new PopupContainerFloat("popupFileControl");
         this.popupEditFolder = new PopupContainer("popupEditFolder");
         this.popupUploadFile = new PopupContainer("popupUploadFile");
+        this.popupDeleteConfirm = new PopupContainer("popupDeleteConfirm");
 
         // 初始化文件上传的控件
         this.formFileUpload = new FormFileUploader("uploadFileLoader");
@@ -79,6 +82,45 @@ class StorageController{
         this.bindControlButton();
         this.bindEditFolder();
         this.bindUploadFile();
+        this.bindDeleteConfirm();
+    }
+
+    bindDeleteConfirm(){
+        callElement("deleteFileCancel", element=>{
+            element.addEventListener("click", (event)=>{
+                this.popupDeleteConfirm.hideContainer();
+            });
+        });
+        callElement("deleteFileConfirm", element=>{
+            element.addEventListener("click", async (event)=>{
+                let spinner = createSpinner("deleteFileConfirm");
+                try{
+                    let fileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"));
+                    let nowFileID = sessionStorage.getItem("nowFileID");
+                    let responseData = null;
+                    if(fileType=="folder"){
+                        responseData = await this.storagesView.deleteFolder(nowFileID);
+                    }else{
+                        responseData = await this.storagesView.deleteFile(nowFileID);
+                    }
+                    this.updateFileList();
+                    this.popupDeleteConfirm.hideContainer();
+                    this.popupMessage.displaySuccessMessage(responseData.message);
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
+        callElement("fileDownloadButton", element=>{
+            element.addEventListener("click", (event)=>{
+                let nowFileID = sessionStorage.getItem("nowFileID");
+                let accessToken = localStorage.getItem("accessToken");
+                downloadFile(`${API_PREFIX}/storages/files/${nowFileID}/download?accessToken=${accessToken}`);
+                this.popupFileControl.hideContainer();
+            });
+        });
     }
 
     bindUploadFile(){
@@ -209,6 +251,12 @@ class StorageController{
                 if(fileType=="folder"){
                     this.onClickEditFolder(event);
                 }
+            });
+        });
+        callElement("fileDeleteButton", element=>{
+            element.addEventListener("click", (event)=>{
+                this.popupFileControl.hideContainer();
+                this.popupDeleteConfirm.showContainer();
             });
         });
     }
@@ -470,8 +518,58 @@ class StorageController{
             this.onShowFileControl();
             this.popupFileControl.showContainer(event.pageX, event.pageY, "start", "end", 15);
         });
+
+        if(itemData.remark && itemData.remark.trim() !== ""){
+            let tooltip = document.createElement("div");
+            tooltip.classList.add("storage-tooltip", "hidden");
+            let tooltipText = document.createElement("div");
+            tooltipText.classList.add("storage-tooltip-text");
+            tooltipText.textContent = itemData.remark;
+            tooltip.appendChild(tooltipText);
+            fileItemDiv.appendChild(tooltip);
+        }
+
+        this.bindFileNameEvent(fileItemDiv, filenameDiv, itemData);
         this.bindFileItemEvent(fileItemDiv, itemData);
         return fileItemDiv;
+    }
+
+    bindFileNameEvent(fileItemDiv, filenameDiv, itemData){
+        let timeoutEvent = null;
+        let willShow = false;
+        filenameDiv.addEventListener("mouseenter",(event)=>{
+            timeoutEvent = setTimeout(()=>{
+                willShow = true;
+            }, 100);
+        });
+        filenameDiv.addEventListener("mousemove", debounce((event)=>{
+            let tooltip = fileItemDiv.querySelector(".storage-tooltip");
+            if(!tooltip || !tooltip.classList.contains("hidden") || !willShow){
+                return;
+            }
+            let rect = fileItemDiv.getBoundingClientRect();
+            let x = event.clientX - rect.left;
+            let y = event.clientY - rect.top;
+            tooltip.style.top = y + 8 + "px";
+            if(event.clientX > window.innerWidth * 0.75){
+                tooltip.style.left = x - 12 + "px";
+                tooltip.style.transform = "translateX(-100%)";
+            }else{
+                tooltip.style.left = x + 12 + "px";
+                tooltip.style.transform = "";
+            }
+            tooltip.classList.remove("hidden");
+        }, 100));
+        filenameDiv.addEventListener("mouseleave",(event)=>{
+            willShow = false;
+            let tooltip = fileItemDiv.querySelector(".storage-tooltip");
+            if(tooltip){
+                if(timeoutEvent){
+                    clearTimeout(timeoutEvent);
+                }
+                tooltip.classList.add("hidden");
+            }
+        });
     }
 
     bindFileItemEvent(fileItemDiv, itemData){

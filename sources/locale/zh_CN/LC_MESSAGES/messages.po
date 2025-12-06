@@ -230,3 +230,12 @@ msgstr "点击或拖动文件到此区域上传文件"
 msgid "UPLOAD DRAG HOLDER"
 msgstr "松开鼠标以确认上传"
 
+msgid "CONFIRM DELETE"
+msgstr "请确认删除？注意数据不可恢复"
+
+msgid "DELETE SUCCESS"
+msgstr "删除成功"
+
+msgid "FILE NOT FOUND"
+msgstr "文件不存在"
+

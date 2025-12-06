@@ -29,6 +29,14 @@ def verify_token(request_in: request) -> dict:
     :return: 解析过的token信息
     """
     token = get_bearer_token(request_in)
+    return verify_token_str(token)
+
+def verify_token_str(token:str)->dict:
+    """
+    校验token
+    :param token:
+    :return:
+    """
     if validate_str_empty(token):
         raise Exception("TOKEN INVALID")
     return SESSION_DB.verify_access_token(token)

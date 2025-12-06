@@ -19,16 +19,17 @@ def save_file(file: FileStorage):
     folder = os.path.join(STORAGE_DB.get_env("save_folder"), file_ext[1:])
     os.makedirs(folder, exist_ok=True)
     filepath = os.path.join(folder, f"{uuid4()}{file_ext}")
+    filepath = os.path.normpath(filepath)
     try:
         file.save(filepath)
-        filesize = os.path.getsize(filepath)
+        file_size = os.path.getsize(filepath)
     except Exception as e:
         logger.error(f"保存文件失败：{e}")
         raise Exception("FILE SAVE FAIL")
     return {
         Storage.FILE_TYPE: file_ext[1:],
         Storage.FILE_PATH: filepath,
-        Storage.SIZE: filesize
+        Storage.SIZE: file_size
     }
 
 

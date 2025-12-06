@@ -47,6 +47,13 @@
     </div>
 {% endmacro -%}
 
+{# 居中文本 #}
+{%- macro form_center_text(text) %}
+    <div class="form-center-text" >
+        <a>{{text}}</a>
+    </div>
+{% endmacro -%}
+
 {# 下拉选择 #}
 {%- macro select(id, required=False)%}
     <select class="form-select" id="{{id}}" {% if required %}required{% endif %}></select>

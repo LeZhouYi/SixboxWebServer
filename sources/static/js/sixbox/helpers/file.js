@@ -13,3 +13,11 @@ function formatFileSize(fileSize) {
         }
     }
 }
+
+function downloadFile(url){
+    /*下载文件*/
+    let downloadA = document.createElement("a");
+    downloadA.href = url;
+    downloadA.click();
+    downloadA.remove();
+}

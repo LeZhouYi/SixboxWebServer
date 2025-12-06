@@ -227,3 +227,12 @@ msgstr ""
 
 msgid "UPLOAD DRAG HOLDER"
 msgstr ""
+
+msgid "CONFIRM DELETE"
+msgstr ""
+
+msgid "DELETE SUCCESS"
+msgstr ""
+
+msgid "FILE NOT FOUND"
+msgstr ""

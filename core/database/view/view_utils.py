@@ -4,11 +4,14 @@ from flask import request
 
 from core.helpers.route import gen_fail_response
 from core.helpers.validate import validate_int_empty
+from core.log import logger
+
 
 class Params:
     PAGE = "_page"
     LIMIT = "_limit"
     SEARCH = "search"
+
 
 def catch_exception(func):
     """
@@ -21,6 +24,7 @@ def catch_exception(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
+            logger.error(e)
             return gen_fail_response(request, str(e))
 
     return decorator
