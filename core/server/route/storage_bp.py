@@ -34,13 +34,15 @@ def add_files():
     folder_id = request.form.get(Storage.FOLDER_ID)
     if not STORAGE_DB.is_folder_exist(folder_id):
         raise Exception("FOLDER NOT FOUND")
+    remarks = request.form.getlist(Storage.REMARK)
     for i, file in enumerate(files):
         data = save_file(file)
+        remark = remarks[i] if i < len(remarks) else None
         data.update({
             Storage.FOLDER_ID: folder_id,
             Storage.FILE_NAME: filenames[i],
             Storage.UPLOADER: decoded.get(Session.USER_ID),
-            Storage.REMARK: None
+            Storage.REMARK: remark
         })
         STORAGE_DB.add_data(data).get(Storage.FILE_ID)
     return gen_success_response(request, "CREATE SUCCESS", 201)
@@ -88,6 +90,14 @@ def get_folder(folder_id: str):
     return jsonify(search_storage_data(folder_id, None, 0, None))
 
 
+@STORAGE_BP.route(gen_prefix_api("/storages/files/<file_id>"), methods=["GET"])
+@catch_exception
+@token_required
+def get_file(file_id: str):
+    """获取文件详情"""
+    return jsonify(STORAGE_DB.get_file_data(file_id))
+
+
 @STORAGE_BP.route(gen_prefix_api("/storages/folders"), methods=["GET"])
 @catch_exception
 @token_required
@@ -120,6 +130,27 @@ def edit_folder(folder_id: str):
     STORAGE_DB.edit_data(data)
     return gen_success_response(request, "EDIT SUCCESS", 201)
 
+@STORAGE_BP.route(gen_prefix_api("/storages/files/<file_id>"), methods=["PUT"])
+@catch_exception
+def edit_file(file_id:str):
+    """编辑文件"""
+    verify_result = verify_token(request)
+    now_user_id = verify_result.get(Session.USER_ID)
+    file_data = STORAGE_DB.get_file_data(file_id)
+    if not USER_DB.match_role(now_user_id, Role.ADMIN) and now_user_id != file_data.get(Storage.UPLOADER):
+        raise Exception("PERMISSION DENIED")
+    data = request.json
+    if validate_str_empty(data.get(Storage.FILE_ID)):
+        raise Exception("FILE ID REQUIRED")
+    if validate_str_empty(data.get(Storage.FILE_NAME)):
+        raise Exception("FILENAME REQUIRED")
+    parent_folder_id = data.get(Storage.FOLDER_ID)
+    if validate_str_empty(parent_folder_id):
+        raise Exception("FOLDER REQUIRED")
+    if not STORAGE_DB.is_folder_exist(parent_folder_id):
+        raise Exception("FOLDER NOT FOUND")
+    STORAGE_DB.edit_data(data)
+    return gen_success_response(request, "EDIT SUCCESS", 201)
 
 @STORAGE_BP.route(gen_prefix_api("/storages/folders/<folder_id>"), methods=["DELETE"])
 @catch_exception

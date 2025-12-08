@@ -1,7 +1,5 @@
 class Sidebar{
     constructor(href, bodyWidth=1024){
-        this.initWithHref = this.initWithHref.bind(this);
-
         this.initWithHref(href);
         this.bindOverlay(bodyWidth);
     }

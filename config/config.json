@@ -41,7 +41,7 @@
                 {
                     "filepath": null,
                     "filename": "根目录",
-                    "filetype": null,
+                    "type": null,
                     "remark": "默认目录",
                     "folderID": null,
                     "uploader": null,
@@ -50,7 +50,7 @@
                 {
                     "filepath": null,
                     "filename": "音频",
-                    "filetype": null,
+                    "type": null,
                     "remark": "存放音乐文件",
                     "folderID": null,
                     "uploader": null,
@@ -59,7 +59,7 @@
                 {
                     "filepath": null,
                     "filename": "视频",
-                    "filetype": null,
+                    "type": null,
                     "remark": "存放视频文件",
                     "folderID": null,
                     "uploader": null,

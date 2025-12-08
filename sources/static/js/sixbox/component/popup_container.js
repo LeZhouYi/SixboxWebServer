@@ -3,11 +3,6 @@ class PopupContainer{
 
     constructor(containerID){
         this.containerID = containerID;
-
-        this.init = this.init.bind(this);
-        this.showContainer = this.showContainer.bind(this);
-        this.hideContainer = this.hideContainer.bind(this);
-
         this.init();
     }
 

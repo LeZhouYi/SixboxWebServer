@@ -1,8 +1,8 @@
 class StoragesView{
 
-    constructor(){
-        this.getStorageList = this.getStorageList.bind(this);
-        this.getFolderDetail = this.getFolderDetail.bind(this);
+    async getFileDetail(fileID){
+        /*获取文件详情*/
+        return fetchJsonWithAuth("GET", `/storages/files/${fileID}`);
     }
 
     async deleteFolder(folderID){
@@ -42,6 +42,16 @@ class StoragesView{
     async editFolder(folderID, filename, remark, fileID){
         /*编辑文件夹*/
         return fetchJsonWithAuth("PUT", `/storages/folders/${fileID}`, {
+            "folderID": folderID,
+            "filename": filename,
+            "remark": remark,
+            "fileID": fileID
+        });
+    }
+
+    async editFile(folderID, filename, remark, fileID){
+        /*编辑文件*/
+        return fetchJsonWithAuth("PUT", `/storages/files/${fileID}`, {
             "folderID": folderID,
             "filename": filename,
             "remark": remark,

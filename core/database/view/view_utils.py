@@ -24,7 +24,7 @@ def catch_exception(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            logger.error(e)
+            logger.error(e, exc_info=True)
             return gen_fail_response(request, str(e))
 
     return decorator

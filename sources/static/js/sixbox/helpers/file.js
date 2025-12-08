@@ -21,3 +21,10 @@ function downloadFile(url){
     downloadA.click();
     downloadA.remove();
 }
+
+function getFilename(filename) {
+    /*获取不含后缀的文件名*/
+    const lastDotIndex = filename.lastIndexOf('.');
+    if (lastDotIndex === -1) return filename; // 无.直接返回
+    return filename.substring(0, lastDotIndex);
+}

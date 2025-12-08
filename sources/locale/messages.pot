@@ -236,3 +236,6 @@ msgstr ""
 
 msgid "FILE NOT FOUND"
 msgstr ""
+
+msgid "EDIT FILE"
+msgstr ""

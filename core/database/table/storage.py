@@ -119,7 +119,8 @@ class StorageDB(TableBase):
         :return:
         """
         file_id = data.get(Storage.FILE_ID)
-        if self._db.get(where(Storage.FILE_ID) == file_id) is None:  # type: ignore
+        now_data = self._db.get(where(Storage.FILE_ID) == file_id)
+        if now_data is None:  # type: ignore
             raise Exception("DATA NOT FOUND")
         now_time = datetime.datetime.now().timestamp()
         data[Storage.EDITED_TIME] = now_time
@@ -132,7 +133,8 @@ class StorageDB(TableBase):
             Storage.FOLDER_ID,
             Storage.EDITED_TIME,
         ])
-        self._db.update(update_data, where(Storage.FILE_ID) == file_id)  # type: ignore
+        now_data.update(update_data)
+        self._db.update(now_data, where(Storage.FILE_ID) == file_id)  # type: ignore
 
     @lock_required(_lock)
     def is_folder_exist(self, folder_id: str):
@@ -241,6 +243,13 @@ class StorageDB(TableBase):
         """
         result = self._db.get((where(Storage.FILE_ID) == file_id) & (where(Storage.FILE_TYPE) != None))
         if result:
+            parents = []
+            parent_id = result.get(Storage.FOLDER_ID)
+            while parent_id:
+                folder_data = self._db.get((where(Storage.FILE_ID) == parent_id) & (where(Storage.FILE_TYPE) == None))
+                parents.append(folder_data)
+                parent_id = folder_data.get(Storage.FOLDER_ID)
+            result[Storage.FOLDERS] = list(reversed(parents))
             return result
         raise Exception("FILE NOT FOUND")
 
@@ -251,4 +260,10 @@ class StorageDB(TableBase):
         :param file_id:
         :return:
         """
-        self._db.remove((where(Storage.FILE_ID) == file_id) & (where(Storage.FILE_TYPE) != None))
+        query = (where(Storage.FILE_ID) == file_id) & (where(Storage.FILE_TYPE) != None)
+        file_data = self._db.get((where(Storage.FILE_ID) == file_id) & (where(Storage.FILE_TYPE) != None))
+        self._db.remove(query)
+        try:
+            os.remove(file_data.get(Storage.FILE_PATH))
+        except Exception as e:
+            logger.warn(f"remove file: {file_data.get(Storage.FILE_PATH)}, error: {e}")

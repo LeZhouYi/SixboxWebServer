@@ -11,14 +11,6 @@ class PageSelect{
     constructor(prefix, defaultLimit){
         this.prefix = prefix;
         this.defaultLimit = defaultLimit;
-
-        this.checkParams = this.checkParams.bind(this);
-        this.updateParams = this.updateParams.bind(this);
-        this.onPageChanged = this.onPageChanged.bind(this);
-        this.getMaxPage = this.getMaxPage.bind(this);
-        this.onLimitChanged = this.onLimitChanged.bind(this);
-        this.onNextPage = this.onNextPage.bind(this);
-        this.onPreviousPage = this.onPreviousPage.bind(this);
     }
 
     checkParams(){

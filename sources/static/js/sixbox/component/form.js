@@ -4,11 +4,6 @@ class FormFileUploader{
         this.containerID = containerID;
         this.tempFile = [];
 
-        this.init = this.init.bind(this);
-        this.bindOnDrop = this.bindOnDrop.bind(this);
-        this.bindOnClick = this.bindOnClick.bind(this);
-        this.reset = this.reset.bind(this);
-
         this.init();
     }
 

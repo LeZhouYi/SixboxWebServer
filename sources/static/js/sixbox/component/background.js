@@ -1,7 +1,6 @@
 class Background{
     constructor(){
         this.backgroundContainer = document.querySelector(".background-container");
-        this.init = this.init.bind(this);
     }
 
     async init(){

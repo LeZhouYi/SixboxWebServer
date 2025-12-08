@@ -239,3 +239,6 @@ msgstr "删除成功"
 msgid "FILE NOT FOUND"
 msgstr "文件不存在"
 
+msgid "EDIT FILE"
+msgstr "编辑文件"
+

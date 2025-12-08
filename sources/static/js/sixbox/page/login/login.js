@@ -13,12 +13,6 @@ class LoginController{
         this.buttonId = buttonId;
         this.formId = formId;
         this.eventCache = {};
-
-        this.bindEvent = this.bindEvent.bind(this);
-        this.init = this.init.bind(this);
-        this.login = this.login.bind(this);
-        this.onEnter = this.onEnter.bind(this);
-
         this.init();
     }
 

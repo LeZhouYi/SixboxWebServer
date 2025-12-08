@@ -31,26 +31,6 @@ class StorageController{
         // 数据
         this.storagesView = new StoragesView();
 
-        // 绑定
-        this.checkParams = this.checkParams.bind(this);
-        this.updateFileList = this.updateFileList.bind(this);
-        this.updatePathBar = this.updatePathBar.bind(this);
-        this.createFolderTextA = this.createFolderTextA.bind(this);
-        this.createFileItem = this.createFileItem.bind(this);
-        this.init = this.init.bind(this);
-        this.bindCreateFolder = this.bindCreateFolder.bind(this);
-        this.onAddFolder = this.onAddFolder.bind(this);
-        this.bindFileItemEvent = this.bindFileItemEvent.bind(this);
-        this.onShowFileControl = this.onShowFileControl.bind(this);
-        this.bindControlButton = this.bindControlButton.bind(this);
-        this.bindEditFolder = this.bindEditFolder.bind(this);
-        this.onEditFolder = this.onEditFolder.bind(this);
-        this.bindUploadFile = this.bindUploadFile.bind(this);
-        this.onClickUploadFile = this.onClickUploadFile.bind(this);
-        this.onUploadFile = this.onUploadFile.bind(this);
-        this.bindDeleteConfirm = this.bindDeleteConfirm.bind(this);
-        this.bindFileNameEvent = this.bindFileNameEvent.bind(this);
-
         // 初始化页面选择器
         this.pageSelect = new PageSelect("storage", 20);
         this.pageSelect.onPageChanged(this.updateFileList);
@@ -65,6 +45,7 @@ class StorageController{
         this.popupEditFolder = new PopupContainer("popupEditFolder");
         this.popupUploadFile = new PopupContainer("popupUploadFile");
         this.popupDeleteConfirm = new PopupContainer("popupDeleteConfirm");
+        this.popupEditFile = new PopupContainer("popupEditFile");
 
         // 初始化文件上传的控件
         this.formFileUpload = new FormFileUploader("uploadFileLoader");
@@ -83,6 +64,42 @@ class StorageController{
         this.bindEditFolder();
         this.bindUploadFile();
         this.bindDeleteConfirm();
+        this.bindEditFile();
+    }
+
+    bindEditFile(){
+        callElement("editFileCancel", element=>{
+            element.addEventListener("click", (event)=>{
+                this.popupEditFile.hideContainer();
+            })
+        });
+        callElement("editFileForm", element=>{
+            element.addEventListener("submit", (event)=>{
+                this.onEditFile();
+            })
+        });
+    }
+
+    async onEditFile(){
+        /*编辑文件*/
+        let spinner = createSpinner("editFileConfirm");
+        try{
+            event?.preventDefault();
+            let responseData = await this.storagesView.editFile(
+                document.getElementById("editFileSelect")?.value,
+                document.getElementById("editFilename")?.value,
+                document.getElementById("editFileRemark")?.value,
+                sessionStorage.getItem("nowFileID")
+            )
+            this.updateFileList();
+            this.popupEditFile.hideContainer();
+            document.getElementById("editFileForm")?.reset();
+            this.popupMessage.displaySuccessMessage(responseData.message);
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }finally{
+            spinner?.remove();
+        }
     }
 
     bindDeleteConfirm(){
@@ -138,7 +155,7 @@ class StorageController{
             if(this.formFileUpload.tempFile.length > 0){
                 callElement("uploadFileName", element=>{
                     let name = this.formFileUpload.tempFile[0].name;
-                    element.value = name.split(".")[0];
+                    element.value = getFilename(name);
                 });
             }
         });
@@ -146,7 +163,7 @@ class StorageController{
             if(this.formFileUpload.tempFile.length > 0){
                 callElement("uploadFileName", element=>{
                     let name = this.formFileUpload.tempFile[0].name;
-                    element.value = name.split(".")[0];
+                    element.value = getFilename(name);
                 });
             }
         });
@@ -250,6 +267,8 @@ class StorageController{
                 let fileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"));
                 if(fileType=="folder"){
                     this.onClickEditFolder(event);
+                }else{
+                    this.onClickEditFile(event);
                 }
             });
         });
@@ -259,6 +278,30 @@ class StorageController{
                 this.popupDeleteConfirm.showContainer();
             });
         });
+    }
+
+    async onClickEditFile(event){
+        /*点击编辑文件*/
+        let spinner = createSpinner("fileEditButton","spinner-container",0.75);
+        try{
+            let fileID = sessionStorage.getItem("nowFileID");
+            let fileData = await this.storagesView.getFileDetail(fileID);
+            let parentFolder = fileData.folders[0];
+            let parentData = await this.storagesView.getFolderDetail(parentFolder.fileID);
+            this.resetSelectFolder("editFileSelect", parentData);
+            callElement("editFilename", element=>{
+                element.value = fileData.filename;
+            });
+            callElement("editFileRemark", element=>{
+                element.value = fileData.remark;
+            });
+            this.popupEditFile.showContainer();
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }finally{
+            this.popupFileControl.hideContainer();
+            spinner?.remove();
+        }
     }
 
     async onClickEditFolder(event){
@@ -323,35 +366,29 @@ class StorageController{
                 this.popupAddFolder.hideContainer();
             });
         });
-        callElement("addFolderConfirm", element=>{
-            /*确认新增*/
-            element.addEventListener("submit", this.onAddFolder);
-        });
         callElement("addFolderForm", element=>{
             /*确认新增*/
-            element.addEventListener("submit", this.onAddFolder);
+            element.addEventListener("submit", async (event)=>{
+                /*点击新增文件夹*/
+                let spinner = createSpinner("addFolderConfirm");
+                try{
+                    event?.preventDefault();
+                    let responseData = await this.storagesView.addFolder(
+                        document.getElementById("addFolderSelect")?.value,
+                        document.getElementById("addFolderName")?.value,
+                        document.getElementById("addFolderRemark")?.value
+                    );
+                    this.updateFileList();
+                    this.popupAddFolder.hideContainer();
+                    document.getElementById("addFolderForm")?.reset();
+                    this.popupMessage.displaySuccessMessage(responseData.message);
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
         })
-    }
-
-    async onAddFolder(event){
-        /*点击新增文件夹*/
-        let spinner = createSpinner("addFolderConfirm");
-        try{
-            event?.preventDefault();
-            let responseData = await this.storagesView.addFolder(
-                document.getElementById("addFolderSelect")?.value,
-                document.getElementById("addFolderName")?.value,
-                document.getElementById("addFolderRemark")?.value
-            );
-            this.updateFileList();
-            this.popupAddFolder.hideContainer();
-            document.getElementById("addFolderForm")?.reset();
-            this.popupMessage.displaySuccessMessage(responseData.message);
-        }catch(error){
-            this.popupMessage.displayErrorMessage(error);
-        }finally{
-            spinner?.remove();
-        }
     }
 
     resetSelectFolder(elementID, folderData){

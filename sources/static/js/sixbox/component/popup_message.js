@@ -1,11 +1,6 @@
 class PopupMessage{
 
     constructor(){
-        this.addContainer = this.addContainer.bind(this);
-        this.displayMessage = this.displayMessage.bind(this);
-        this.displayErrorMessage = this.displayErrorMessage.bind(this);
-        this.displaySuccessMessage = this.displaySuccessMessage.bind(this);
-
         this.addContainer();
     }
 

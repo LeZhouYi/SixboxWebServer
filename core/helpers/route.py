@@ -3,7 +3,7 @@ import os
 from gettext import NullTranslations
 from typing import Generator, Any
 
-from flask import Response, jsonify, Request, request
+from flask import Response, jsonify, Request
 from flask_assets import Environment
 from webassets import Bundle
 
@@ -75,7 +75,8 @@ def extract_values(source_data: dict, keys: list) -> dict:
     """
     return_data = {}
     for key in keys:
-        return_data[key] = source_data.get(key)
+        if key in source_data:
+            return_data[key] = source_data.get(key)
     return return_data
 
 
