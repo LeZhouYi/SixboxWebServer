@@ -44,10 +44,14 @@
     {% include 'page/storage/popup_upload_file.jinja2' %}
     {% include 'page/storage/popup_delete_confirm.jinja2' %}
     {% include 'page/storage/popup_edit_file.jinja2' %}
+    {% include 'page/storage/popup_add_text.jinja2' %}
+    {% include 'page/storage/popup_display_text.jinja2' %}
 {% endblock %}
 
 {% block js_file %}
     {% assets "storage_js" %}
+        <script src="/static/js/tinymce/tinymce.min.js" referrerpolicy="origin" defer>
+        </script>
         <script type="module" src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock %}

@@ -67,9 +67,13 @@
                 }
             ],
             "extensions": [
-                ".pdf"
+                ".pdf",
+                ".html"
             ],
-            "save_folder": "data/storage"
+            "save_folder": "data/storage",
+            "corrections": {
+                ".htm": ".html"
+            }
         },
         "cover": {
             "save_folder": "data/static/cover",

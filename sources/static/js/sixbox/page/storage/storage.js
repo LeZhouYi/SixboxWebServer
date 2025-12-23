@@ -1,14 +1,19 @@
 window.addEventListener("DOMContentLoaded", function(){
     new Background().init(); //初始化background元素
+    FormUtils.adjustTextAreaHeight(4);
+
     let sidebar = new Sidebar("/home.html");
     sidebar.bindSidebarSwitch("navigation_sidebar");
+
     new SessionsView().checkAccessToken();
+
     let storageController = new StorageController();
 });
 
 const storageIconMapping = {
     "": "/static/icons/folder.png",
-    "pdf": "/static/icons/pdf.png"
+    "pdf": "/static/icons/pdf.png",
+    "html": "/static/icons/html.png"
 }
 
 const storageTexts = {
@@ -46,9 +51,17 @@ class StorageController{
         this.popupUploadFile = new PopupContainer("popupUploadFile");
         this.popupDeleteConfirm = new PopupContainer("popupDeleteConfirm");
         this.popupEditFile = new PopupContainer("popupEditFile");
+        this.popupAddText = new PopupContainer("popupAddText");
+        this.popupDisplayText = new PopupContainer("popupDisplayText");
 
         // 初始化文件上传的控件
         this.formFileUpload = new FormFileUploader("uploadFileLoader");
+
+        // TinyMCE控件
+        let lang = document.documentElement.lang || "zh-CN";
+        lang = lang.replace(/-/g, '_');
+        FormUtils.initEditTinyMce("addTextMce", lang);
+        FormUtils.initDisplayTinyMce("displayTextMce", lang);
 
         // 初始化页面
         this.checkParams();
@@ -65,6 +78,52 @@ class StorageController{
         this.bindUploadFile();
         this.bindDeleteConfirm();
         this.bindEditFile();
+        this.bindAddText();
+    }
+
+    bindAddText(){
+        callElement("createTextButton", element=>{
+            element.addEventListener("click", async (event)=>{
+                let spinner = createSpinner("createTextButton", "spinner-container", 0.75);
+                try{
+                    let folderID = sessionStorage.getItem("folderID");
+                    let parentData = await this.storagesView.getFolderDetail(folderID);
+                    this.resetSelectFolder("addTextSelect", parentData);
+                    this.popupAddText.showContainer();
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
+        callElement("addTextCancel", element=>{
+            element.addEventListener("click", (event)=>{
+                this.popupAddText.hideContainer();
+            });
+        });
+        callElement("addTextForm", element=>{
+            element.addEventListener("submit", async (event)=>{
+                let spinner = createSpinner("addTextConfirm");
+                try{
+                    event?.preventDefault();
+                    let responseData = await this.storagesView.addText(
+                        document.getElementById("addTextName")?.value,
+                        document.getElementById("addTextSelect")?.value,
+                        document.getElementById("addTextRemark")?.value,
+                        tinymce.get("addTextMce").getContent()
+                    );
+                    this.updateFileList();
+                    this.popupAddText.hideContainer();
+                    document.getElementById("addTextForm")?.reset();
+                    this.popupMessage.displaySuccessMessage(responseData.message);
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
     }
 
     bindEditFile(){
@@ -205,8 +264,8 @@ class StorageController{
         /*点击弹出上传文件窗口*/
         let spinner = createSpinner("uploadFileButton", "spinner-container", 0.75);
         try{
-            let fileID = sessionStorage.getItem("fileID");
-            let parentData = await this.storagesView.getFolderDetail(fileID);
+            let folderID = sessionStorage.getItem("folderID");
+            let parentData = await this.storagesView.getFolderDetail(folderID);
             this.resetSelectFolder("uploadFileSelect", parentData);
             this.popupUploadFile.showContainer();
         }catch(error){
@@ -225,7 +284,7 @@ class StorageController{
         });
         callElement("editFolderForm", element=>{
             /*确认编辑*/
-            element.addEventListener("submit", this.onEditFolder);
+            element.addEventListener("submit", this.onEditFolder.bind(this));
         });
     }
 
@@ -286,8 +345,8 @@ class StorageController{
         try{
             let fileID = sessionStorage.getItem("nowFileID");
             let fileData = await this.storagesView.getFileDetail(fileID);
-            let parentFolder = fileData.folders[0];
-            let parentData = await this.storagesView.getFolderDetail(parentFolder.fileID);
+            let parentFolder = fileData.folderID;
+            let parentData = await this.storagesView.getFolderDetail(parentFolder);
             this.resetSelectFolder("editFileSelect", parentData);
             callElement("editFilename", element=>{
                 element.value = fileData.filename;
@@ -310,9 +369,9 @@ class StorageController{
         try{
             let folderID = sessionStorage.getItem("nowFileID");
             let folderData = await this.storagesView.getFolderDetail(folderID);
-            let parentFolder = folderData.folders[0];
-            let parentData = await this.storagesView.getFolderDetail(parentFolder.fileID);
-            this.resetSelectFolder("editFolderSelect", parentData);
+            let parentFolder = folderData.folderID;
+            let parentData = await this.storagesView.getFolderDetail(parentFolder);
+            this.resetSelectFolder("editFolderSelect", parentData, folderID);
             callElement("editFolderName", element=>{
                 element.value = folderData.filename;
             });
@@ -391,7 +450,7 @@ class StorageController{
         })
     }
 
-    resetSelectFolder(elementID, folderData){
+    resetSelectFolder(elementID, folderData, nowFileID=null){
         /*重置文件选择*/
         callElement(elementID, element=>{
             element.innerHTML = "";
@@ -420,10 +479,12 @@ class StorageController{
             let childGroup = document.createElement("optgroup");
             childGroup.label = storageTexts[lang]["childFolder"];
             for(let childFolder of folderData.contents){
-                let childOption = document.createElement("option");
-                childOption.text = childFolder.filename;
-                childOption.value = childFolder.fileID;
-                childGroup.appendChild(childOption);
+                if(childFolder.fileID !== nowFileID){
+                    let childOption = document.createElement("option");
+                    childOption.text = childFolder.filename;
+                    childOption.value = childFolder.fileID;
+                    childGroup.appendChild(childOption);
+                }
             }
             if(childGroup.children.length > 0){
                 element.appendChild(childGroup);
@@ -506,7 +567,7 @@ class StorageController{
         /*创建路径元素并绑定点击事件*/
         let folderNameA = document.createElement("a");
         folderNameA.text = folderName || "";
-        folderNameA.classList.add("storage-path-item");
+        folderNameA.classList.add("storage-path-item", "ellipsis");
         folderNameA.addEventListener("click", (event)=>{
             storeSession("folderID", id);
             sessionStorage.removeItem("search");
@@ -521,7 +582,7 @@ class StorageController{
 
         //文件行
         let fileItemDiv = document.createElement("div");
-        fileItemDiv.classList.add("storage-file-item");
+        fileItemDiv.classList.add("storage-file-item", "spinner-holder");
 
         //文件图标
         let fileIconDiv = this.createFileIcon(storageIconMapping[fileType]);
@@ -617,6 +678,19 @@ class StorageController{
                 storeSession("folderID", itemData.fileID);
                 sessionStorage.removeItem("search");
                 this.updateFileList();
+            });
+        }else if (fileType=="html"){
+            fileItemDiv.addEventListener("click", async (event)=>{
+                let spinner = createSpinner(fileItemDiv);
+                try{
+                    let responseData = await this.storagesView.getText(itemData.fileID);
+                    tinymce.get("displayTextMce").setContent(responseData.content);
+                    this.popupDisplayText.showContainer();
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
             });
         }else{
             fileItemDiv.addEventListener("click", (event)=>{

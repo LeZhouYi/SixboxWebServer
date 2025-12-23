@@ -4,12 +4,14 @@
     max-height: 100%;
     overflow-y: auto;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     display: flex;
     flex-direction: column;
     position: absolute;
     z-index: 1;
     background-color: rgba(0,0,0,0.5);
+    padding: 15px;
+    box-sizing: border-box;
 }
 
 .popup-container{
@@ -43,4 +45,11 @@
     .popup-container{
         min-width: calc( 100% - 30px );
     }
+}
+
+.popup-empty-container{
+    min-width: 640px;
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
 }

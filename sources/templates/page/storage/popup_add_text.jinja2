@@ -1,0 +1,18 @@
+{% extends 'component/ui_popup_base.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+
+{% block popup_id %}popupAddText{% endblock %}
+
+{% block popup_content %}
+<form class="form-base" id="addTextForm">
+    {{ forms.form_title(_('ADD TEXT')) }}
+    {{ forms.label_line_input('addTextName',_('FILENAME'), 'text', _('FILENAME HOLDER'), 'required')}}
+    {{ forms.label_select('addTextSelect', _('FOLDER SELECT')) }}
+    {{ forms.label_textarea('addTextRemark', _('FOLDER REMARK'), '6em', _('FOLDER REMARK HOLDER')) }}
+    {{ forms.label_tinymce('addTextMce', _('TEXT CONTENT')) }}
+    <div class="form-buttons">
+        {{ forms.button('addTextConfirm', _('CONFIRM BUTTON'), 'submit') }}
+        {{ forms.warn_button('addTextCancel', _('CANCEL BUTTON')) }}
+    </div>
+</form>
+{% endblock %}

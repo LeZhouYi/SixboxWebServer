@@ -25,7 +25,9 @@ def catch_exception(func):
             return func(*args, **kwargs)
         except Exception as e:
             logger.error(e, exc_info=True)
-            return gen_fail_response(request, str(e))
+            if str(e) in ["TOKEN INVALID", "TOKEN EXPIRED"]:
+                return gen_fail_response(request, str(e), 401)
+            return gen_fail_response(request, str(e), 400)
 
     return decorator
 

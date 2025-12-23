@@ -1,5 +1,6 @@
 const API_PREFIX = "/api/v1";
 const ERROR_CODE = [400,401];
+const LOGIN_URL = "/login.html";
 
 async function getResponseJson(response){
     /*提取response的content并转为json*/
@@ -43,18 +44,17 @@ async function fetchWithRetry(requestFunc, retryTimes = 1) {
             return response;
         }else if (response.status === 401 && retryTimes) {
             retryTimes = retryTimes - 1;
-            let tokenResponse = await new SessionsView().refreshToken(localStorage.getItem("refreshToken"));
-            if(tokenResponse.ok){
+            try{
+                let tokenResponse = await new SessionsView().refreshToken(localStorage.getItem("refreshToken"));
                 localStorage.setItem("refreshToken",tokenResponse.refreshToken);
                 localStorage.setItem("accessToken",tokenResponse.accessToken);
+            }catch(error){
+                window.location.href=LOGIN_URL;
+                throw error;
             }
         }else{
-            let statusCode = response.status;
-            if (ERROR_CODE.includes(statusCode)) {
-                let data = await response.json();
-                throw new Error(data.message);
-            }
-            throw new Error(`HTTP ERROR: ${statusCode}`);
+            // 会检查状态并主动抛出错误
+            await getResponseJson(response);
         }
     }
 }

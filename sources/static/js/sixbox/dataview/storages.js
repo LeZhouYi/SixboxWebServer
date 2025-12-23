@@ -79,4 +79,19 @@ class StoragesView{
         return params;
     }
 
+    async addText(filename, folderID, remark, content){
+        /*新增文本*/
+        return fetchJsonWithAuth("POST", `/storages/texts`, {
+            "filename": filename,
+            "folderID": folderID,
+            "remark": remark,
+            "content": content
+        })
+    }
+
+    async getText(fileID){
+        /*获取文本*/
+        return fetchJsonWithAuth("GET", `/storages/texts/${fileID}`);
+    }
+
 }

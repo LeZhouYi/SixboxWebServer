@@ -6,7 +6,7 @@ authors = [
     {name = "skily"}
 ]
 readme = "README.md"
-requires-python = ">=3.12,<4.0"
+requires-python = ">=3.12,<3.15"
 dependencies = [
     "tinydb (>=4.8.2,<5.0.0)",  # 数据库
     "flask (>=3.1.2,<4.0.0)",   # 核心
@@ -15,6 +15,7 @@ dependencies = [
     "flask-assets (>=2.1.0,<3.0.0)",  # web资源管理
     "cssmin (>=0.2.0,<0.3.0)", # web css 管理
     "jsmin (>=3.0.1,<4.0.0)", # web js 管理
+    "pyinstaller (>=6.17.0,<7.0.0)",
 ]
 
 

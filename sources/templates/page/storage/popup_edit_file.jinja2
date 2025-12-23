@@ -6,9 +6,9 @@
 {% block popup_content %}
 <form class="form-base" id="editFileForm">
     {{ forms.form_title(_('EDIT FILE')) }}
-    {{ forms.label_line_input('editFilename',_('FILENAME'), 'text', _('FILENAME HOLDER'), True)}}
+    {{ forms.label_line_input('editFilename',_('FILENAME'), 'text', _('FILENAME HOLDER'), 'required')}}
     {{ forms.label_select('editFileSelect', _('FOLDER SELECT')) }}
-    {{ forms.label_textarea('editFileRemark', _('FOLDER REMARK'), 5, _('FOLDER REMARK HOLDER'), True) }}
+    {{ forms.label_textarea('editFileRemark', _('FOLDER REMARK'), '10em', _('FOLDER REMARK HOLDER'), 'required') }}
     <div class="form-buttons">
         {{ forms.button('editFileConfirm', _('CONFIRM BUTTON'), 'submit') }}
         {{ forms.warn_button('editFileCancel', _('CANCEL BUTTON')) }}

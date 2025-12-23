@@ -31,6 +31,7 @@ class Storage:
     CONTENTS = "contents"  # 该文件夹下包含的内容
     TOTAL = "total"  # 该文件夹下包含的内容的总数或搜索的总数
     FOLDERS = "folders"  # 文件夹列表，表示当前文件/文件夹的嵌套关系
+    CONTENT = "content" # 文本一类的内容
 
 
 class DefaultFolder:

@@ -9,7 +9,7 @@ from core.database.table.session import Session
 from core.database.table.storage import Storage
 from core.database.table.user import Role
 from core.database.view.session_view import verify_token, token_required, verify_token_str
-from core.database.view.storage_view import save_file, search_storage_data
+from core.database.view.storage_view import save_file, search_storage_data, save_text
 from core.database.view.view_utils import catch_exception, page_args_required, Params
 from core.helpers.route import gen_prefix_api, gen_success_response, get_stream_io
 from core.helpers.validate import validate_str_empty
@@ -130,9 +130,10 @@ def edit_folder(folder_id: str):
     STORAGE_DB.edit_data(data)
     return gen_success_response(request, "EDIT SUCCESS", 201)
 
+
 @STORAGE_BP.route(gen_prefix_api("/storages/files/<file_id>"), methods=["PUT"])
 @catch_exception
-def edit_file(file_id:str):
+def edit_file(file_id: str):
     """编辑文件"""
     verify_result = verify_token(request)
     now_user_id = verify_result.get(Session.USER_ID)
@@ -151,6 +152,7 @@ def edit_file(file_id:str):
         raise Exception("FOLDER NOT FOUND")
     STORAGE_DB.edit_data(data)
     return gen_success_response(request, "EDIT SUCCESS", 201)
+
 
 @STORAGE_BP.route(gen_prefix_api("/storages/folders/<folder_id>"), methods=["DELETE"])
 @catch_exception
@@ -195,4 +197,41 @@ def download_file(file_id: str):
     mime_type, _ = mimetypes.guess_type(filepath)
     return Response(get_stream_io(filepath), mimetype=mime_type, headers={
         "Content-Disposition": "attachment;filename=%s" % quote(filename)
+    })
+
+
+@STORAGE_BP.route(gen_prefix_api("/storages/texts"), methods=["POST"])
+@catch_exception
+def add_texts():
+    """新增文本"""
+    verify_result = verify_token(request)
+    now_user_id = verify_result.get(Session.USER_ID)
+    data = request.json
+    filename = data.get(Storage.FILE_NAME)
+    if validate_str_empty(filename):
+        raise Exception("FILENAME EMPTY")
+    folder_id = data.get(Storage.FOLDER_ID)
+    if not STORAGE_DB.is_folder_exist(folder_id):
+        raise Exception("FOLDER NOT FOUND")
+    content = data.get(Storage.CONTENT)
+    if validate_str_empty(content):
+        raise Exception("CONTENT EMPTY")
+    save_data = save_text(content)
+    data.update(save_data)
+    data.update({
+        Storage.UPLOADER: now_user_id
+    })
+    STORAGE_DB.add_data(data).get(Storage.FILE_ID)
+    return gen_success_response(request, "CREATE SUCCESS", 201)
+
+@STORAGE_BP.route(gen_prefix_api("/storages/texts/<file_id>"), methods=["GET"])
+@catch_exception
+@token_required
+def get_text(file_id: str):
+    """获取文本内容"""
+    file_data = STORAGE_DB.get_file_data(file_id)
+    with open(file_data.get(Storage.FILE_PATH), 'r', encoding='utf-8') as file:
+        content = file.read()
+    return jsonify({
+        Storage.CONTENT: content
     })

@@ -1,18 +1,18 @@
 {# 左侧带图标的输入框 #}
-{%- macro icon_input(id, type, icon, placeholder='', required=False) %}
+{%- macro icon_input(id, type, icon, placeholder='', extract='') %}
     <div class="form-icon-input">
         <div class="form-icon">
             <img src="{{icon}}" alt="user">
         </div>
-        <input type="{{type}}" id="{{id}}" placeholder="{{placeholder}}" {% if required %}required{% endif %}>
+        <input type="{{type}}" id="{{id}}" placeholder="{{placeholder}}" {{extract}}>
     </div>
 {% endmacro -%}
 
 {# 左侧带图标的，上侧有标签的输入框 #}
-{%- macro label_input(id, name, type, icon, placeholder='', required=False) %}
+{%- macro label_input(id, name, type, icon, placeholder='', extract='') %}
     <div class="form-line-item">
         <label for="{{id}}">{{name}}</label>
-        {{icon_input(id, type, icon, placeholder, required)}}
+        {{icon_input(id, type, icon, placeholder, extract)}}
     </div>
 {% endmacro -%}
 
@@ -55,8 +55,8 @@
 {% endmacro -%}
 
 {# 下拉选择 #}
-{%- macro select(id, required=False)%}
-    <select class="form-select" id="{{id}}" {% if required %}required{% endif %}></select>
+{%- macro select(id, extract='')%}
+    <select class="form-select" id="{{id}}" {{extract}}></select>
 {% endmacro -%}
 
 {# 带标签的下拉选择 #}
@@ -68,28 +68,28 @@
 {% endmacro -%}
 
 {# 普通的单行输入框 #}
-{%- macro input(id, type, placeholder='', required=False) %}
-    <input class="form-input" id="{{id}}" type="{{type}}" placeholder="{{placeholder}}" {% if required %}required{% endif %}>
+{%- macro input(id, type, placeholder='', extract='') %}
+    <input class="form-input" id="{{id}}" type="{{type}}" placeholder="{{placeholder}}" {{extract}}>
 {% endmacro -%}
 
 {# 上侧有标签的输入框 #}
-{%- macro label_line_input(id, name, type, placeholder='', required=False) %}
+{%- macro label_line_input(id, name, type, placeholder='', extract='') %}
     <div class="form-line-item">
         <label for="{{id}}">{{name}}</label>
-        {{ input(id, type, placeholder, required) }}
+        {{ input(id, type, placeholder, extract) }}
     </div>
 {% endmacro -%}
 
 {# 普通多行文本输入框 #}
-{%- macro textarea(id, min_line, placeholder='', required=False) %}
-    <textarea id="{{id}}" class="form-textarea" rows="{{min_line}}" placeholder="{{placeholder}}" {% if required %}required{% endif %}></textarea>
+{%- macro textarea(id, min_line, placeholder='', extract='') %}
+    <textarea id="{{id}}" class="form-textarea" style="min-height:{{min_line}};" placeholder="{{placeholder}}" {{extract}}></textarea>
 {% endmacro -%}
 
 {# 带标签的普通多行文本输入框 #}
-{%- macro label_textarea(id, name, min_line, placeholder='', required=False) %}
+{%- macro label_textarea(id, name, min_line, placeholder='', extract='') %}
     <div class="form-line-item">
         <label for="{{id}}">{{name}}</label>
-        {{ textarea(id, min_line, placeholder, False) }}
+        {{ textarea(id, min_line, placeholder, extract) }}
     </div>
 {% endmacro -%}
 
@@ -131,5 +131,19 @@
                 <img src="/static/icons/close.png">
             </div>
         </div>
+    </div>
+{% endmacro -%}
+
+{# tinymce 控件 #}
+{%- macro tinymce(id) %}
+    <div id="{{id}}" class="form_tinymce_field">
+    </div>
+{% endmacro -%}
+
+{# 带label的tinymce 控件 #}
+{%- macro label_tinymce(id, name) %}
+    <div class="form-line-item">
+        <label for="{{id}}">{{name}}</label>
+        {{ tinymce(id) }}
     </div>
 {% endmacro -%}

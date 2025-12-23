@@ -239,3 +239,12 @@ msgstr ""
 
 msgid "EDIT FILE"
 msgstr ""
+
+msgid "ADD TEXT"
+msgstr ""
+
+msgid "CONTENT EMPTY"
+msgstr ""
+
+msgid "TEXT CONTENT"
+msgstr ""

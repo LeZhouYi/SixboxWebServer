@@ -17,10 +17,10 @@ class LoginController{
     }
 
     init(){
-        this.bindEvent(this.buttonId, "submit", this.login);
-        this.bindEvent(this.formId, "submit", this.login);
-        this.bindEvent(this.accountId, "keydown", this.onEnter);
-        this.bindEvent(this.passwordId, "keydown", this.onEnter);
+        this.bindEvent(this.buttonId, "submit", this.login.bind(this));
+        this.bindEvent(this.formId, "submit", this.login.bind(this));
+        this.bindEvent(this.accountId, "keydown", this.onEnter.bind(this));
+        this.bindEvent(this.passwordId, "keydown", this.onEnter.bind(this));
     }
 
     onEnter(event){

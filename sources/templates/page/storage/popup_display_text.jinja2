@@ -1,0 +1,10 @@
+{% extends 'component/ui_popup_no_padding.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+
+{% block popup_id %}popupDisplayText{% endblock %}
+
+{% block popup_content %}
+<form class="form-base" id="displayTextForm">
+    {{ forms.tinymce('displayTextMce') }}
+</form>
+{% endblock %}

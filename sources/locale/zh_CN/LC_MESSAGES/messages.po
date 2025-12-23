@@ -242,3 +242,12 @@ msgstr "文件不存在"
 msgid "EDIT FILE"
 msgstr "编辑文件"
 
+msgid "ADD TEXT"
+msgstr "新增文本"
+
+msgid "CONTENT EMPTY"
+msgstr "内容不能为空"
+
+msgid "TEXT CONTENT"
+msgstr "正文"
+

@@ -6,7 +6,6 @@ from core.helpers.route import register_assets
 from core.server.route.cover_bp import COVER_PB
 from core.server.route.page_bp import PAGE_BP
 from core.server.route.session_bp import SESSION_BP
-from core.server.route.static_bp import STATIC_BP
 from core.server.route.storage_bp import STORAGE_BP
 from core.server.route.user_bp import USER_BP
 from core.server.template.template import register_template
@@ -20,7 +19,6 @@ _app.register_blueprint(SESSION_BP)
 _app.register_blueprint(STORAGE_BP)
 _app.register_blueprint(PAGE_BP)
 _app.register_blueprint(COVER_PB)
-_app.register_blueprint(STATIC_BP)
 
 # 注册资源
 register_assets(Environment(_app))
