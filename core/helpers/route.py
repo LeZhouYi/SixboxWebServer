@@ -1,5 +1,6 @@
 import gettext
 import os
+import shutil
 from gettext import NullTranslations
 from typing import Generator, Any
 
@@ -128,3 +129,9 @@ def get_stream_io(filepath: str, chunk_size: int = None) -> Generator[bytes, Any
             if not data:
                 break
             yield data
+
+def clear_webasset_cache():
+    """清除webasset缓存"""
+    cache_path = os.path.join(os.getcwd(), __config.get("static_folder"), ".webassets-cache")
+    if os.path.exists(cache_path):
+        shutil.rmtree(cache_path, ignore_errors=True)

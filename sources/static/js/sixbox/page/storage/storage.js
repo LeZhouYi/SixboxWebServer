@@ -10,12 +10,6 @@ window.addEventListener("DOMContentLoaded", function(){
     let storageController = new StorageController();
 });
 
-const storageIconMapping = {
-    "": "/static/icons/folder.png",
-    "pdf": "/static/icons/pdf.png",
-    "html": "/static/icons/html.png"
-}
-
 const storageTexts = {
     "zh-CN":{
         "rootFolder":"根目录",
@@ -25,10 +19,22 @@ const storageTexts = {
     }
 }
 
+// 表示对应的操作类型会显示的操作列表
 const storageControlMapping = {
     "folder": ["fileEditButton","fileDeleteButton"],
-    "file": ["fileEditButton","fileDeleteButton","fileDownloadButton"],
-    "html": ["fileEditButton","fileDeleteButton","fileDownloadButton"]
+    "file": ["fileEditButton","fileDeleteButton","fileDownloadButton"]
+}
+
+//第一个值表示操作类型，用于控制操作弹窗的具体行为
+//第二个值表示弹窗的操作列表
+//第三个值表示对应的图标
+const fileTypeMapping = {
+    "": ["folder", "folder", "/static/icons/folder.png"],
+    "html": ["html","file","/static/icons/html.png"],
+    "pdf": ["pdf", "file", "/static/icons/pdf.png"],
+    "png": ["image", "file", "/static/icons/image.png"],
+    "jpg": ["image", "file", "/static/icons/image.png"],
+    "jpeg": ["image", "file", "/static/icons/image.png"]
 }
 
 class StorageController{
@@ -206,7 +212,7 @@ class StorageController{
             element.addEventListener("click", async (event)=>{
                 let spinner = createSpinner("deleteFileConfirm");
                 try{
-                    let fileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"));
+                    let fileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"))[0];
                     let nowFileID = sessionStorage.getItem("nowFileID");
                     let responseData = null;
                     if(fileType=="folder"){
@@ -347,20 +353,14 @@ class StorageController{
 
     getSuitFileType(type){
         /*获取匹配的FileType*/
-        if(!type){
-            return "folder";
-        } else if(type in storageControlMapping){
-            return type;
-        }else{
-            return "file";
-        }
+        return fileTypeMapping[type];
     }
 
     bindControlButton(){
         /*操作按钮事件绑定*/
         callElement("fileEditButton", element=>{
             element.addEventListener("click", (event)=>{
-                let fileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"));
+                let fileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"))[0];
                 if(fileType=="folder"){
                     this.onClickEditFolder(event);
                 }else if(fileType=="html"){
@@ -454,7 +454,7 @@ class StorageController{
 
     onShowFileControl(){
         /*当操作弹窗显示时，调整显示项*/
-        let nowFileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"));
+        let nowFileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"))[1];
         for(let element of document.querySelectorAll("#popupFileControl .storage-control-list>*")){
             let elementID = element.id;
             if(elementID){
@@ -643,14 +643,15 @@ class StorageController{
 
     createFileItem(itemData){
         /*创建并附加文件/文件夹*/
-        let fileType = itemData.type || "";
+        let fileType = itemData.type || "";  // 文件本身后缀
+        let fileTypeInfo = this.getSuitFileType(fileType);  //映影后的操作数据
 
         //文件行
         let fileItemDiv = document.createElement("div");
         fileItemDiv.classList.add("storage-file-item", "spinner-holder");
 
         //文件图标
-        let fileIconDiv = this.createFileIcon(storageIconMapping[fileType]);
+        let fileIconDiv = this.createFileIcon(fileTypeInfo[2]);
         fileItemDiv.appendChild(fileIconDiv);
 
         //文件名
@@ -677,7 +678,7 @@ class StorageController{
         controlDiv.addEventListener("click", (event)=>{
             event.stopPropagation();
             storeSession("nowFileID",itemData.fileID);
-            storeSession("nowFileType", itemData.type);
+            storeSession("nowFileType", fileType);
             this.onShowFileControl();
             this.popupFileControl.showContainer(event.pageX, event.pageY, "start", "end", 15);
         });

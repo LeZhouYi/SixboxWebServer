@@ -175,6 +175,7 @@ class FormUtils{
             menubar: false,
             toolbar: false,
             min_height: 400,
+            plugins: "autoresize",
             fontsize_formats: "12px 14px 16px 18px 24px 36px 48px 56px 72px",
             font_formats: "微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;"+
                 "苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;"+

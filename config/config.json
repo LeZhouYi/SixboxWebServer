@@ -68,7 +68,10 @@
             ],
             "extensions": [
                 ".pdf",
-                ".html"
+                ".html",
+                ".png",
+                ".jpg",
+                ".jpeg"
             ],
             "save_folder": "data/storage",
             "corrections": {

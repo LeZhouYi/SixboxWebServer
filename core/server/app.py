@@ -2,7 +2,7 @@ from flask import Flask
 from flask_assets import Environment
 
 from core.config import get_section
-from core.helpers.route import register_assets
+from core.helpers.route import register_assets, clear_webasset_cache
 from core.server.route.cover_bp import COVER_PB
 from core.server.route.page_bp import PAGE_BP
 from core.server.route.session_bp import SESSION_BP
@@ -21,11 +21,11 @@ _app.register_blueprint(PAGE_BP)
 _app.register_blueprint(COVER_PB)
 
 # 注册资源
+clear_webasset_cache()
 register_assets(Environment(_app))
 
 # 注册宏
 register_template(_app)
-
 
 def run_app():
     """
