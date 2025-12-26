@@ -1,34 +1,38 @@
 from typing import Union
 
 
-def validate_str_empty(value: str) -> bool:
+def validate_str_empty(value: str, message: str):
     """
     校验字符串是否为空
+    :param message: 为空时抛出的Exception信息
     :param value: 要检查的值
-    :return: True 表示字符串为空
     """
-    return value is None or value.strip() == ""
+    if value is None or value.strip() == "":
+        raise Exception(message)
 
 
-def validate_dict_str_empty(data: dict, key: str) -> bool:
+def validate_dict_str_empty(data: dict, key: str, message: str):
     """
     校验dict中key对应的字符串是否为空
+    :param message:
     :param data:
     :param key:
     :return:
     """
-    return validate_str_empty(data.get(key))
+    validate_str_empty(data.get(key), message)
 
 
-def validate_int_empty(value: Union[str, int, None], min_value: int = None, max_value: int = None) -> bool:
+def validate_int(value: Union[str, int, None], min_value: int = None, max_value: int = None, messages: str = ""):
     """
     校验整数
+    :param messages:
     :param value:
     :param min_value:
     :param max_value:
     :return:
     """
     if value is None:
-        return True
+        raise Exception(messages)
     value = int(value)
-    return (min_value is not None and value < min_value) or (max_value is not None and value > max_value)
+    if (min_value is not None and value < min_value) or (max_value is not None and value > max_value):
+        raise Exception(messages)

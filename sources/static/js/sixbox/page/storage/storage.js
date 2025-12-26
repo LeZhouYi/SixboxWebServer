@@ -27,7 +27,8 @@ const storageTexts = {
 
 const storageControlMapping = {
     "folder": ["fileEditButton","fileDeleteButton"],
-    "file": ["fileEditButton","fileDeleteButton","fileDownloadButton"]
+    "file": ["fileEditButton","fileDeleteButton","fileDownloadButton"],
+    "html": ["fileEditButton","fileDeleteButton","fileDownloadButton"]
 }
 
 class StorageController{
@@ -53,6 +54,7 @@ class StorageController{
         this.popupEditFile = new PopupContainer("popupEditFile");
         this.popupAddText = new PopupContainer("popupAddText");
         this.popupDisplayText = new PopupContainer("popupDisplayText");
+        this.popupEditText = new PopupContainer("popupEditText");
 
         // 初始化文件上传的控件
         this.formFileUpload = new FormFileUploader("uploadFileLoader");
@@ -62,6 +64,7 @@ class StorageController{
         lang = lang.replace(/-/g, '_');
         FormUtils.initEditTinyMce("addTextMce", lang);
         FormUtils.initDisplayTinyMce("displayTextMce", lang);
+        FormUtils.initEditTinyMce("editTextMce", lang);
 
         // 初始化页面
         this.checkParams();
@@ -79,6 +82,38 @@ class StorageController{
         this.bindDeleteConfirm();
         this.bindEditFile();
         this.bindAddText();
+        this.bindEditText();
+    }
+
+    bindEditText(){
+        callElement("editTextCancel", element=>{
+            element.addEventListener("click", (event)=>{
+                this.popupEditText.hideContainer();
+            });
+        });
+        callElement("editTextForm", element=>{
+            element.addEventListener("submit", async(event)=>{
+                let spinner = createSpinner("editTextConfirm");
+                try{
+                    event?.preventDefault();
+                    let responseData = await this.storagesView.editText(
+                        sessionStorage.getItem("nowFileID"),
+                        document.getElementById("editTextName")?.value,
+                        document.getElementById("editTextSelect")?.value,
+                        document.getElementById("editTextRemark")?.value,
+                        tinymce.get("editTextMce").getContent()
+                    );
+                    this.updateFileList();
+                    this.popupEditText.hideContainer();
+                    document.getElementById("editTextForm")?.reset();
+                    this.popupMessage.displaySuccessMessage(responseData.message);
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
     }
 
     bindAddText(){
@@ -202,7 +237,7 @@ class StorageController{
     bindUploadFile(){
         callElement("uploadFileButton", element=>{
             element.addEventListener("click",(event)=>{
-                this.onClickUploadFile();
+                this.onClickUploadFile(event);
             });
         });
         callElement("uploadFileCancel", element=>{
@@ -228,12 +263,12 @@ class StorageController{
         });
         callElement("uploadFileForm", element=>{
             element.addEventListener("submit", (event)=>{
-                this.onUploadFile();
+                this.onUploadFile(event);
             })
         });
     }
 
-    async onUploadFile(){
+    async onUploadFile(event){
         /*点击上传文件*/
         let spinner = createSpinner("uploadFileConfirm");
         try{
@@ -260,7 +295,7 @@ class StorageController{
         }
     }
 
-    async onClickUploadFile(){
+    async onClickUploadFile(event){
         /*点击弹出上传文件窗口*/
         let spinner = createSpinner("uploadFileButton", "spinner-container", 0.75);
         try{
@@ -314,6 +349,8 @@ class StorageController{
         /*获取匹配的FileType*/
         if(!type){
             return "folder";
+        } else if(type in storageControlMapping){
+            return type;
         }else{
             return "file";
         }
@@ -326,6 +363,8 @@ class StorageController{
                 let fileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"));
                 if(fileType=="folder"){
                     this.onClickEditFolder(event);
+                }else if(fileType=="html"){
+                    this.onClickEditText(event);
                 }else{
                     this.onClickEditFile(event);
                 }
@@ -337,6 +376,32 @@ class StorageController{
                 this.popupDeleteConfirm.showContainer();
             });
         });
+    }
+
+    async onClickEditText(event){
+        /*点击编辑文本*/
+        let spinner = createSpinner("fileEditButton","spinner-container",0.75);
+        try{
+            let fileID = sessionStorage.getItem("nowFileID");
+            let fileData = await this.storagesView.getFileDetail(fileID);
+            let parentFolder = fileData.folderID;
+            let parentData = await this.storagesView.getFolderDetail(parentFolder);
+            this.resetSelectFolder("editTextSelect", parentData);
+            callElement("editTextName", element=>{
+                element.value = fileData.filename;
+            });
+            callElement("editTextRemark", element=>{
+                element.value = fileData.remark;
+            });
+            let responseData = await this.storagesView.getText(fileID);
+            tinymce.get("editTextMce").setContent(responseData.content);
+            this.popupEditText.showContainer();
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }finally{
+            this.popupFileControl.hideContainer();
+            spinner?.remove();
+        }
     }
 
     async onClickEditFile(event){

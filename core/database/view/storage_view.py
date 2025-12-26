@@ -1,5 +1,5 @@
 import os.path
-from typing import Union, Optional
+from typing import Union, Optional, LiteralString
 from uuid import uuid4
 
 from werkzeug.datastructures import FileStorage
@@ -40,7 +40,7 @@ def save_file(file: FileStorage):
         Storage.SIZE: file_size
     }
 
-def save_text(content: str):
+def save_text(content: str, rewrite_path: Union[LiteralString, str, None] = None):
     """保存文件"""
     file_ext = correct_extension(".html")
     if file_ext not in STORAGE_DB.get_env("extensions"):
@@ -48,7 +48,7 @@ def save_text(content: str):
 
     folder = os.path.join(STORAGE_DB.get_env("save_folder"), file_ext[1:])
     os.makedirs(folder, exist_ok=True)
-    filepath = os.path.join(folder, f"{uuid4()}{file_ext}")
+    filepath = os.path.join(folder, f"{uuid4()}{file_ext}") if rewrite_path is None else rewrite_path
     filepath = os.path.normpath(filepath)
     with open(filepath, "w", encoding="utf-8") as file:
         file.write(content)
@@ -60,8 +60,8 @@ def save_text(content: str):
 
 def search_storage_data(file_id: Union[str, None], search: Union[str, None], page: int, limit: Optional[int]) -> dict:
     """搜索文件/文件夹"""
-    if validate_str_empty(search):
-        if validate_str_empty(file_id):
+    if search is None or search.strip() == "":
+        if file_id is None or file_id.strip() == "":
             folder_data = STORAGE_DB.get_default_folder(DefaultFolder.ROOT_FOLDER)
         else:
             folder_data = STORAGE_DB.get_folder_data(file_id)

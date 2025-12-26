@@ -37,8 +37,7 @@ def verify_token_str(token:str)->dict:
     :param token:
     :return:
     """
-    if validate_str_empty(token):
-        raise Exception("TOKEN INVALID")
+    validate_str_empty(token, "TOKEN INVALID")
     return SESSION_DB.verify_access_token(token)
 
 

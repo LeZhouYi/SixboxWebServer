@@ -3,7 +3,7 @@ from functools import wraps
 from flask import request
 
 from core.helpers.route import gen_fail_response
-from core.helpers.validate import validate_int_empty
+from core.helpers.validate import validate_int
 from core.log import logger
 
 
@@ -41,12 +41,8 @@ def page_args_required(func):
 
     @wraps(func)
     def decorator(*args, **kwargs):
-        page = request.args.get(Params.PAGE)
-        if validate_int_empty(page, 0):
-            raise Exception("PARAM PAGE REQUIRED / ERROR")
-        limit = request.args.get(Params.LIMIT)
-        if validate_int_empty(limit, 1):
-            raise Exception("PARAM LIMIT REQUIRED / ERROR")
+        validate_int(request.args.get(Params.PAGE), 0, messages="PARAM PAGE REQUIRED / ERROR")
+        validate_int(request.args.get(Params.LIMIT), 1, messages="PARAM LIMIT REQUIRED / ERROR")
         return func(*args, **kwargs)
 
     return decorator

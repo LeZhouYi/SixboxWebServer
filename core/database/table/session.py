@@ -76,8 +76,7 @@ class SessionDB(TableBase):
             decoded = jwt.decode(access_token, self.get_env("jwt_secret_key"),
                                  algorithms=[self.get_env("jwt_algorithm")], options={"require_exp": True})
             user_id = decoded.get(Session.USER_ID)
-            if validate_str_empty(user_id):
-                raise Exception("TOKEN INVALID")
+            validate_str_empty(user_id, "TOKEN INVALID")
             result = self._db.get(
                 (where(Session.USER_ID) == user_id) & (where(Session.ACCESS_TOKEN) == access_token))  # type: ignore
             if result is None:

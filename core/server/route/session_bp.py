@@ -20,12 +20,9 @@ def login():
     password = data.get(User.PASSWORD)
     device_id = data.get(Session.DEVICE_ID)
 
-    if validate_str_empty(username):
-        raise Exception("USERNAME REQUIRED")
-    if validate_str_empty(password):
-        raise Exception("PASSWORD REQUIRED")
-    if validate_str_empty(device_id):
-        raise Exception("DEVICE ID REQUIRED")
+    validate_str_empty(username, "USERNAME REQUIRED")
+    validate_str_empty(password, "PASSWORD REQUIRED")
+    validate_str_empty(device_id, "DEVICE ID REQUIRED")
 
     user = USER_DB.verify_user(username, password)
     if user is None:
@@ -55,6 +52,5 @@ def refresh():
     """刷新token"""
     data = request.json
     refresh_token = data.get(Session.REFRESH_TOKEN)
-    if validate_str_empty(refresh_token):
-        raise Exception("REFRESH TOKEN REQUIRED")
+    validate_str_empty(refresh_token, "REFRESH TOKEN REQUIRED")
     return jsonify(SESSION_DB.update_token(refresh_token))

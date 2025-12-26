@@ -7,7 +7,7 @@ from core.database.view.session_view import verify_token
 from core.database.view.user_view import role_required
 from core.database.view.view_utils import catch_exception
 from core.helpers.route import gen_prefix_api, extract_values, gen_success_response
-from core.helpers.validate import validate_str_empty
+from core.helpers.validate import validate_str_empty, validate_dict_str_empty
 
 USER_BP = Blueprint("user", __name__)
 
@@ -18,10 +18,8 @@ USER_BP = Blueprint("user", __name__)
 def add_user():
     """新增用户"""
     data = request.json
-    if validate_str_empty(data.get(User.USERNAME)):
-        raise Exception("USERNAME REQUIRED")
-    if validate_str_empty(data.get(User.PASSWORD)):
-        raise Exception("PASSWORD REQUIRED")
+    validate_dict_str_empty(data, User.USERNAME, "USERNAME REQUIRED")
+    validate_dict_str_empty(data, User.PASSWORD, "PASSWORD REQUIRED")
     role = data.get(User.ROLE)
     if not isinstance(role, int):
         raise Exception("ROLE REQUIRED")
