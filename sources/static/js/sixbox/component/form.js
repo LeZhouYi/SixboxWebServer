@@ -142,7 +142,7 @@ class FormUtils{
             visualblocks_default_state: true,
             plugins: "preview searchreplace autolink directionality visualblocks visualchars fullscreen image link " +
                 "media code codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists " +
-                "wordcount help emoticons autosave autoresize",
+                "wordcount help emoticons autoresize",
             toolbar: "code undo redo restoredraft | cut copy paste pastetext | forecolor backcolor bold italic " +
                 "underline strikethrough link anchor | alignleft aligncenter alignright alignjustify outdent indent " +
                 " | styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript "+

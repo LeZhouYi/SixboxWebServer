@@ -28,14 +28,13 @@ class Storage:
     SIZE = "size"  # 文件大小，空表示文件夹
 
     FILES = "files"  # request form-data 的文件列表
-    CONTENTS = "contents"  # 该文件夹下包含的内容
-    TOTAL = "total"  # 该文件夹下包含的内容的总数或搜索的总数
     FOLDERS = "folders"  # 文件夹列表，表示当前文件/文件夹的嵌套关系
-    CONTENT = "content" # 文本一类的内容
+    CONTENT = "content"  # 文本一类的内容
 
 
-class DefaultFolder:
+class AudioFolder:
     ROOT_FOLDER = 0  # 根目录
+    AUDIO_FOLDER = 1  # 音频页面所用目录
 
 
 class StorageDB(TableBase):
@@ -148,8 +147,7 @@ class StorageDB(TableBase):
 
     @lock_required(_lock)
     def search_data(self, folder_id: Union[str, None], search: Union[str, None], page: int, limit: Optional[int]) -> \
-            Tuple[
-                int, List[dict]]:
+            Tuple[int, List[dict]]:
         """
         搜索数据
         :param folder_id:
@@ -268,3 +266,16 @@ class StorageDB(TableBase):
             os.remove(file_data.get(Storage.FILE_PATH))
         except Exception as e:
             logger.warn(f"remove file: {file_data.get(Storage.FILE_PATH)}, error: {e}")
+
+    @lock_required(_lock)
+    def get_child_folder(self, parent_folder_id: str, folder_name: str):
+        """
+        是否存在子文件夹
+        :param folder_name:
+        :param parent_folder_id:
+        :return:
+        """
+        search = self._db.get(
+            (where(Storage.FOLDER_ID) == parent_folder_id) & (where(Storage.FILE_NAME) == folder_name) & (
+                    where(Storage.FILE_TYPE) == None))
+        return search

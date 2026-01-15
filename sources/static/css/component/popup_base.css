@@ -41,15 +41,29 @@
     max-width: calc( 100% - 30px );
 }
 
-@media (max-width: 1024px), (max-device-width: 1024px){
-    .popup-container{
-        min-width: calc( 100% - 30px );
-    }
-}
-
 .popup-empty-container{
     min-width: 640px;
     max-width: 70%;
     display: flex;
     flex-direction: column;
+}
+
+.popup-image{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.popup-image>img{
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+@media (max-width: 1024px), (max-device-width: 1024px){
+    .popup-container{
+        min-width: calc( 100% - 30px );
+    }
 }

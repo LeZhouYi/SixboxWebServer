@@ -5,8 +5,8 @@ from uuid import uuid4
 from werkzeug.datastructures import FileStorage
 
 from core.database.table import STORAGE_DB
-from core.database.table.storage import Storage, DefaultFolder
-from core.helpers.validate import validate_str_empty
+from core.database.table.storage import Storage, AudioFolder
+from core.database.view.view_utils import Params
 from core.log import logger
 
 def correct_extension(file_ext:str) -> str:
@@ -62,16 +62,16 @@ def search_storage_data(file_id: Union[str, None], search: Union[str, None], pag
     """搜索文件/文件夹"""
     if search is None or search.strip() == "":
         if file_id is None or file_id.strip() == "":
-            folder_data = STORAGE_DB.get_default_folder(DefaultFolder.ROOT_FOLDER)
+            folder_data = STORAGE_DB.get_default_folder(AudioFolder.ROOT_FOLDER)
         else:
             folder_data = STORAGE_DB.get_folder_data(file_id)
         count, search_data = STORAGE_DB.search_data(folder_data.get(Storage.FILE_ID), None, page, limit)
-        folder_data[Storage.TOTAL] = count
-        folder_data[Storage.CONTENTS] = search_data
+        folder_data[Params.TOTAL] = count
+        folder_data[Params.CONTENTS] = search_data
         return folder_data
     else:
-        count, search_data = STORAGE_DB.search_data(None, search, page, limit)
+        count, search_data = STORAGE_DB.search_data(None, search.lower(), page, limit)
         return {
-            Storage.TOTAL: count,
-            Storage.CONTENTS: search_data
+            Params.TOTAL: count,
+            Params.CONTENTS: search_data
         }

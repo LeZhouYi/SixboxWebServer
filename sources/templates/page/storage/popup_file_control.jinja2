@@ -1,7 +1,9 @@
-{% extends 'component/ui_popup_float.jinja2' %}
+{% extends 'component/ui_popup_base.jinja2' %}
 {% import 'component/ui_forms.jinja2' as forms %}
 
 {% block popup_id %}popupFileControl{% endblock %}
+{% block overlay_class %}popup-overlay-float hidden{% endblock %}
+{% block container_class %}popup-container-float{% endblock %}
 
 {% block popup_content %}
     <div class="storage-control-list">

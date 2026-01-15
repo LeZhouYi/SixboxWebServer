@@ -5,8 +5,9 @@ import subprocess
 from core.helpers.route import clear_webasset_cache
 
 if __name__ == "__main__":
+    ## 用于本地打包
     dist_folder = os.path.join(os.getcwd(), "dist")
-    if dist_folder:
+    if os.path.exists(dist_folder):
         shutil.rmtree(dist_folder)
     source_path = os.path.join(os.getcwd(), "sources")
     des_path = os.path.join(dist_folder, "sources")

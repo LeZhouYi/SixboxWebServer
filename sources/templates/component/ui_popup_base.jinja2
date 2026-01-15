@@ -1,5 +1,5 @@
-<div class="popup-overlay {% block popup_hidden %}hidden{% endblock %}">
-    <div class="popup-container" id="{% block popup_id %}popupContainer{% endblock %}">
+<div class="{% block overlay_class %}popup-overlay hidden{% endblock %}">
+    <div class="{% block container_class %}popup-container{% endblock %}" id="{% block popup_id %}popupContainer{% endblock %}" {% block container_style %}{% endblock %}>
         {% block popup_content %}
         {% endblock %}
     </div>

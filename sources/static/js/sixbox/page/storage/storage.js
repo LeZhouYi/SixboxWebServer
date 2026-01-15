@@ -34,7 +34,8 @@ const fileTypeMapping = {
     "pdf": ["pdf", "file", "/static/icons/pdf.png"],
     "png": ["image", "file", "/static/icons/image.png"],
     "jpg": ["image", "file", "/static/icons/image.png"],
-    "jpeg": ["image", "file", "/static/icons/image.png"]
+    "jpeg": ["image", "file", "/static/icons/image.png"],
+    "zip": ["zip", "file", "/static/icons/zip.png"]
 }
 
 class StorageController{
@@ -61,6 +62,7 @@ class StorageController{
         this.popupAddText = new PopupContainer("popupAddText");
         this.popupDisplayText = new PopupContainer("popupDisplayText");
         this.popupEditText = new PopupContainer("popupEditText");
+        this.popupImage = new PopupImage("popupImage");
 
         // 初始化文件上传的控件
         this.formFileUpload = new FormFileUploader("uploadFileLoader");
@@ -89,6 +91,19 @@ class StorageController{
         this.bindEditFile();
         this.bindAddText();
         this.bindEditText();
+        this.bindSearch();
+    }
+
+    bindSearch(){
+        callElement("storageSearch", element=>{
+            element.addEventListener("keydown", (event)=>{
+                if (event.key === "Enter" || event.keyCode === 13){
+                    event.preventDefault();
+                    storeSession("search", element.value);
+                    this.updateFileList();
+                }
+            });
+        });
     }
 
     bindEditText(){
@@ -454,7 +469,7 @@ class StorageController{
 
     onShowFileControl(){
         /*当操作弹窗显示时，调整显示项*/
-        let nowFileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"))[1];
+        let nowFileType = this.getSuitFileType(sessionStorage.getItem("nowFileType")||"")[1];
         for(let element of document.querySelectorAll("#popupFileControl .storage-control-list>*")){
             let elementID = element.id;
             if(elementID){
@@ -574,7 +589,7 @@ class StorageController{
 
     async updateFileList(){
         /*更新文件列表*/
-        let fileListContainer = document.querySelector(".storage-filelist");
+        let fileListContainer = document.querySelector(".audio-set-list");
         if(fileListContainer){
             fileListContainer.innerHTML = "";
         }
@@ -737,9 +752,9 @@ class StorageController{
     }
 
     bindFileItemEvent(fileItemDiv, itemData){
-        let fileType = itemData.type;
+        let fileType = this.getSuitFileType(itemData.type||"")[0];
         //如果对特殊的文件类型如图片/视频/文本，则在else if中添加和实现
-        if(fileType === null){
+        if(fileType === "folder"){
             fileItemDiv.addEventListener("click", (event)=>{
                 storeSession("folderID", itemData.fileID);
                 sessionStorage.removeItem("search");
@@ -757,6 +772,11 @@ class StorageController{
                 }finally{
                     spinner?.remove();
                 }
+            });
+        }else if (fileType=="image"){
+            fileItemDiv.addEventListener("click", (event)=>{
+                let accessToken = localStorage.getItem("accessToken");
+                this.popupImage.showImage(`${API_PREFIX}/storages/files/${itemData.fileID}/download?accessToken=${accessToken}`);
             });
         }else{
             fileItemDiv.addEventListener("click", (event)=>{

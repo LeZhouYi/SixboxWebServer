@@ -248,3 +248,9 @@ msgstr ""
 
 msgid "TEXT CONTENT"
 msgstr ""
+
+msgid "AUDIO REQUIRED"
+msgstr ""
+
+msgid "DUPLICATE FILE"
+msgstr ""

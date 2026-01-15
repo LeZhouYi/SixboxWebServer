@@ -1,0 +1,123 @@
+{% extends 'base/page_navigation_base.jinja2' %}
+{% set navigation_title = _('MUSIC BOX') %}
+
+{% block css_file %}
+    {% assets "music_css" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+{% endblock %}
+
+{% block page_content %}
+<div class="audio-page">
+    <div class="audio-set-part">
+        <div class="audio-set-container">
+            <div class="audio-set-bar"></div>
+            <div class="audio-set-list">
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+                <div class="audio-set-item">
+                    <img src="/static/audios/default.png">
+                    <a>默认合集</a>
+                </div>
+            </div>
+        </div>
+        <div class="audio-list-container">
+            <div class="audio-list-bar"></div>
+            <div class="audio-list"></div>
+        </div>
+    </div>
+    <div class="audio-play-bar"></div>
+</div>
+{% endblock %}
+
+{% block js_file %}
+    {% assets "audio_js" %}
+        <script type="module" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}

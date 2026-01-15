@@ -71,7 +71,8 @@
                 ".html",
                 ".png",
                 ".jpg",
-                ".jpeg"
+                ".jpeg",
+                ".zip"
             ],
             "save_folder": "data/storage",
             "corrections": {
@@ -85,14 +86,61 @@
                 ".jpg",
                 ".jpeg"
             ]
+        },
+        "audio": {
+            "db_path": "data/db/audio.json",
+            "db_init": {},
+            "defaults": [
+                {
+                    "filepath": null,
+                    "filename": "音频",
+                    "type": null,
+                    "remark": "存放音频文件",
+                    "folderID": null,
+                    "uploader": null,
+                    "size": null
+                },
+                {
+                    "filepath": null,
+                    "filename": "歌词",
+                    "type": null,
+                    "remark": "存放歌词文件",
+                    "folderID": null,
+                    "uploader": null,
+                    "size": null
+                },
+                {
+                    "filepath": null,
+                    "filename": "封面",
+                    "type": null,
+                    "remark": "存放封面文件",
+                    "folderID": null,
+                    "uploader": null,
+                    "size": null
+                }
+            ],
+            "default_cover": "data/static/audio/default.png"
+        },
+        "audio_set": {
+            "db_path": "data/db/audio_set.json",
+            "db_init": {},
+            "defaults": [
+                {
+                    "setName": "默认合集",
+                    "remark": "默认合集",
+                    "coverID": null,
+                    "audios": [
+                    ]
+                }
+            ]
         }
     },
     "flask": {
         "static_folder": "sources/static",
         "app_init": {
             "import_name": "sixbox",
-            "template_folder": "sources/templates",
-            "static_folder": "sources/static"
+                "template_folder": "sources/templates",
+                "static_folder": "sources/static"
         },
         "app_run": {
             "debug": false,
@@ -134,7 +182,8 @@
                     "sources": [
                         "css/component/*",
                         "css/default.css",
-                        "css/theme.css"
+                        "css/theme.css",
+                        "css/page/audio.css"
                     ]
                 },
                 "pdf_editor_css": {
@@ -170,15 +219,15 @@
                         "js/sixbox/page/storage/*"
                     ]
                 },
-                "music_js": {
-                    "output": "js/generate/music.js",
+                "audio_js": {
+                    "output": "js/generate/audio.js",
                     "sources": [
                         "js/spinner/spinner.js",
                         "js/sixbox/helpers/*",
                         "js/sixbox/init/*",
                         "js/sixbox/component/*",
                         "js/sixbox/dataview/*",
-                        "js/sixbox/page/music/*"
+                        "js/sixbox/page/audio/*"
                     ]
                 },
                 "pdf_editor_js": {

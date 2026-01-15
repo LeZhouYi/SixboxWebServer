@@ -11,7 +11,8 @@ class Params:
     PAGE = "_page"
     LIMIT = "_limit"
     SEARCH = "search"
-
+    TOTAL = "total"  # 内容的总数或搜索的总数
+    CONTENTS = "contents"  # 内容
 
 def catch_exception(func):
     """

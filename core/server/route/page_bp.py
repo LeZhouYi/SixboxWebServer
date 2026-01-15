@@ -18,12 +18,12 @@ def home():
 @PAGE_BP.route("/", methods=["GET"])
 def default():
     """主页"""
-    return render_template("page/storage.html")
+    return render_template("page/storage/storage.html")
 
-@PAGE_BP.route("/music.html", methods=["GET"])
+@PAGE_BP.route("/audio.html", methods=["GET"])
 def music():
     """音乐盒"""
-    return render_template("page/music.html")
+    return render_template("page/audio/audio.html")
 
 @PAGE_BP.route("/tools/pdf_editor.html", methods=["GET"])
 def pdf_editor():
