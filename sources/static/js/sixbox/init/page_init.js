@@ -1,5 +1,5 @@
 window.addEventListener("DOMContentLoaded", function(){
-    checkLocalDefault("deviceID",crypto.randomUUID());  //设备ID
+    checkLocalDefault("deviceID",generateUUID());  //设备ID
     resizeFullScreen(); //初始化全屏
 });
 

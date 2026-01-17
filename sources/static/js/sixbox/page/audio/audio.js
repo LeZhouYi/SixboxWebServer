@@ -20,7 +20,7 @@ class AudioController{
 
     async updateAudioSet(){
         /*更新合集列表*/
-        let audioSetContainer = document.querySelector("audio-set-list");
+        let audioSetContainer = document.querySelector(".audio-set-list");
         if(audioSetContainer){
             audioSetContainer.innerHTML = "";
         }
@@ -28,10 +28,8 @@ class AudioController{
         try{
             let setData = await this.audioView.getSetList();
             if(setData.total > 0){
-                let audioSetDiv = document.querySelector(".audio-set-list");
-                audioSetDiv.innerHTML = "";
                 for(let setItem of setData.contents){
-
+                    audioSetContainer.appendChild(this.createAudioSetItem(setItem));
                 }
             }
         }catch(error){
@@ -41,6 +39,20 @@ class AudioController{
         }
     }
 
-        ``
+    createAudioSetItem(itemData){
+        /*创建单个合集元素*/
+        let setItemDiv = document.createElement("div");
+        setItemDiv.classList.add("audio-set-item");
+
+        let img = document.createElement("img");
+        img.src = itemData.coverID || "/static/audios/default.png";
+        setItemDiv.appendChild(img);
+
+        let setName = document.createElement("a");
+        setName.textContent = itemData.setName;
+        setItemDiv.appendChild(setName);
+
+        return setItemDiv;
+    }
 
 }

@@ -35,7 +35,11 @@ const fileTypeMapping = {
     "png": ["image", "file", "/static/icons/image.png"],
     "jpg": ["image", "file", "/static/icons/image.png"],
     "jpeg": ["image", "file", "/static/icons/image.png"],
-    "zip": ["zip", "file", "/static/icons/zip.png"]
+    "zip": ["zip", "file", "/static/icons/zip.png"],
+    "xlsx": ["excel", "file", "/static/icons/ms_excel.png"],
+    "pdf": ["pdf", "file", "/static/icons/pdf.png"],
+    "docx": ["doc", "file", "/static/icons/docx.png"],
+    "doc": ["doc", "file", "/static/icons/docx.png"]
 }
 
 class StorageController{
@@ -589,7 +593,7 @@ class StorageController{
 
     async updateFileList(){
         /*更新文件列表*/
-        let fileListContainer = document.querySelector(".audio-set-list");
+        let fileListContainer = document.querySelector(".storage-filelist");
         if(fileListContainer){
             fileListContainer.innerHTML = "";
         }

@@ -72,7 +72,11 @@
                 ".png",
                 ".jpg",
                 ".jpeg",
-                ".zip"
+                ".zip",
+                ".xlsx",
+                ".pdf",
+                ".docx",
+                ".doc"
             ],
             "save_folder": "data/storage",
             "corrections": {

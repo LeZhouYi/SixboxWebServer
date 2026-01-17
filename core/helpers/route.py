@@ -135,3 +135,9 @@ def clear_webasset_cache():
     cache_path = os.path.join(os.getcwd(), __config.get("static_folder"), ".webassets-cache")
     if os.path.exists(cache_path):
         shutil.rmtree(cache_path, ignore_errors=True)
+    css_generate_path = os.path.join(os.getcwd(), __config.get("static_folder"), "css/generate")
+    if os.path.exists(css_generate_path):
+        shutil.rmtree(css_generate_path, ignore_errors=True)
+    js_generate_path = os.path.join(os.getcwd(), __config.get("static_folder"), "js/generate")
+    if os.path.exists(js_generate_path):
+        shutil.rmtree(js_generate_path, ignore_errors=True)

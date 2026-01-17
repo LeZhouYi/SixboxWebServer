@@ -9,6 +9,7 @@ body{
     background-color: var(--background-color);
     display: flex;
     position: relative;
+    overflow: hidden;
 }
 
 .ellipsis{
