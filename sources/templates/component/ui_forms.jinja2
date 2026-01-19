@@ -143,7 +143,7 @@
 {# 带label的tinymce 控件 #}
 {%- macro label_tinymce(id, name) %}
     <div class="form-line-item">
-        <label for="{{id}}">{{name}}</label>
+        <a>{{name}}</a>
         {{ tinymce(id) }}
     </div>
 {% endmacro -%}

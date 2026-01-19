@@ -188,7 +188,13 @@ class FormUtils{
             branding: false,
             promotion: false,
             license_key: "gpl",
-            fullscreen_native: true
+            fullscreen_native: true,
+            setup: function(editor) {
+                editor.on('init', function() {
+                    // 初始化后手动调整高度
+                    editor.execCommand('mceAutoResize');
+                });
+            }
         });
     }
 }

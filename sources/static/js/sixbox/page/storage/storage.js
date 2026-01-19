@@ -50,10 +50,10 @@ class StorageController{
 
         // 初始化页面选择器
         this.pageSelect = new PageSelect("storage", 20);
-        this.pageSelect.onPageChanged(this.updateFileList);
-        this.pageSelect.onLimitChanged(this.updateFileList);
-        this.pageSelect.onNextPage(this.updateFileList);
-        this.pageSelect.onPreviousPage(this.updateFileList);
+        this.pageSelect.onPageChanged(this.updateFileList.bind(this));
+        this.pageSelect.onLimitChanged(this.updateFileList.bind(this));
+        this.pageSelect.onNextPage(this.updateFileList.bind(this));
+        this.pageSelect.onPreviousPage(this.updateFileList.bind(this));
 
         // 初始化弹窗
         this.popupAddFolder = new PopupContainer("popupAddFolder");
@@ -96,6 +96,21 @@ class StorageController{
         this.bindAddText();
         this.bindEditText();
         this.bindSearch();
+        this.bindUpFolder();
+    }
+
+    bindUpFolder(){
+        /*返回上一级目录*/
+        callElement("upFolderButton", element=>{
+            element.addEventListener("click", (event)=>{
+                let pathTexts = document.querySelectorAll(".storage-path-bar .storage-path-item");
+                console.log(pathTexts.length);
+                if(pathTexts.length<2){
+                    return;
+                }
+                pathTexts[pathTexts.length-2].click();
+            });
+        })
     }
 
     bindSearch(){
@@ -584,8 +599,8 @@ class StorageController{
         let params = new URLSearchParams(url.search);
         let newParams = new URLSearchParams();
         addParams(newParams, "folderID", storeSession("folderID",params.get("folderID"), null));
-        addParams(newParams, "_page", sessionStorage.getItem("_page"));
-        addParams(newParams, "_limit", sessionStorage.getItem("_limit"));
+        addParams(newParams, "_page", sessionStorage.getItem("storagePage"));
+        addParams(newParams, "_limit", sessionStorage.getItem("storageLimit"));
         addParams(newParams, "search", storeSession("search",params.get("search"), null));
         url.search = newParams.toString();
         window.history.pushState({path:url.href},'',url.href);
@@ -604,8 +619,8 @@ class StorageController{
                 fileListContainer.appendChild(this.createFileItem(contentItem));
             }
             this.pageSelect.updateParams(
-                sessionStorage.getItem("_page"),
-                sessionStorage.getItem("_limit"),
+                sessionStorage.getItem("storagePage"),
+                sessionStorage.getItem("storageLimit"),
                 searchData.total
             );
             this.updatePathBar(searchData);
@@ -651,10 +666,11 @@ class StorageController{
         /*创建路径元素并绑定点击事件*/
         let folderNameA = document.createElement("a");
         folderNameA.text = folderName || "";
-        folderNameA.classList.add("storage-path-item", "ellipsis");
+        folderNameA.classList.add("storage-path-item");
         folderNameA.addEventListener("click", (event)=>{
             storeSession("folderID", id);
             sessionStorage.removeItem("search");
+            this.pageSelect.updateParams(0,sessionStorage.getItem(this.prefix+"Limit"),0);
             this.updateFileList();
         });
         return folderNameA;
@@ -762,6 +778,7 @@ class StorageController{
             fileItemDiv.addEventListener("click", (event)=>{
                 storeSession("folderID", itemData.fileID);
                 sessionStorage.removeItem("search");
+                this.pageSelect.updateParams(0,sessionStorage.getItem(this.prefix+"Limit"),0);
                 this.updateFileList();
             });
         }else if (fileType=="html"){

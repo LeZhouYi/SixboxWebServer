@@ -13,11 +13,16 @@
 {% block page_content %}
     <div class="storage-page">
         <div class="storage-control-bar">
-            {{ storages.storage_path_bar() }}
-            {{ forms.search_bar('storageSearch', _('STORAGE SEARCH')) }}
-            {{ forms.icon_button('createFolderButton','/static/icons/folder_create.png') }}
-            {{ forms.icon_button('createTextButton', '/static/icons/file_create.png') }}
-            {{ forms.icon_button('uploadFileButton', '/static/icons/upload.png') }}
+            <div>
+                {{ forms.icon_button('upFolderButton','/static/icons/up.png') }}
+                {{ storages.storage_path_bar() }}
+            </div>
+            <div>
+                {{ forms.search_bar('storageSearch', _('STORAGE SEARCH')) }}
+                {{ forms.icon_button('createFolderButton','/static/icons/folder_create.png') }}
+                {{ forms.icon_button('createTextButton', '/static/icons/file_create.png') }}
+                {{ forms.icon_button('uploadFileButton', '/static/icons/upload.png') }}
+            </div>
         </div>
         <div class="storage-file-container">
             <div class="storage-file-header">

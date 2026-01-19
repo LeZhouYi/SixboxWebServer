@@ -73,8 +73,8 @@ class StoragesView{
         /*获取URL的query参数*/
         let params = new URLSearchParams();
         addParams(params, "folderID", sessionStorage.getItem("folderID"));
-        addParams(params, "_page", sessionStorage.getItem("_page"));
-        addParams(params, "_limit", sessionStorage.getItem("_limit"));
+        addParams(params, "_page", sessionStorage.getItem("storagePage"));
+        addParams(params, "_limit", sessionStorage.getItem("storageLimit"));
         addParams(params, "search", sessionStorage.getItem("search"));
         return params;
     }

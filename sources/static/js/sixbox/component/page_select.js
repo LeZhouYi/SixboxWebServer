@@ -16,16 +16,16 @@ class PageSelect{
     checkParams(){
         /*检查session的参数*/
         let params = new URLSearchParams(new URL(window.location.href).search);
-        storeSession("_page",params.get("_page"), 0);
-        storeSession("_limit",params.get("_limit"), this.defaultLimit);
+        storeSession(this.prefix+"Page",params.get("_page"), 0);
+        storeSession(this.prefix+"Limit",params.get("_limit"), this.defaultLimit);
         storeSession("total", params.get("total"), 0);
     }
 
     updateParams(page, limit, total){
         /*更新参数并设置到对应位置*/
-        storeSession("_page", page, 0);
-        storeSession("_limit", limit, this.defaultLimit);
-        storeSession("total", total, 0);
+        storeSession(this.prefix+"Page", page, 0);
+        storeSession(this.prefix+"Limit", limit, this.defaultLimit);
+        storeSession(this.prefix+"Total", total, 0);
         let lang = document.documentElement.lang || "zh-CN";
 
         callElement(this.prefix+"PrefixText", element=>{
@@ -47,8 +47,8 @@ class PageSelect{
 
     getMaxPage(){
         /*获取最大页数*/
-        let total = Number(sessionStorage.getItem("_total") || 0);
-        let limit = Number(sessionStorage.getItem("_limit") || this.defaultLimit);
+        let total = Number(sessionStorage.getItem(this.prefix+"Total") || 0);
+        let limit = Number(sessionStorage.getItem(this.prefix+"Limit") || this.defaultLimit);
         let maxPage = Math.ceil(total/limit);
         return maxPage == 0 ? 1 : maxPage;
     }
@@ -56,12 +56,12 @@ class PageSelect{
     #onPageChanged(func){
         /*当page input数值发生变化*/
         callElement(this.prefix+"PageText", element=>{
-            let storePage =  Number(sessionStorage.getItem("_page") || 0);
+            let storePage =  Number(sessionStorage.getItem(this.prefix+"Page") || 0);
             let nowPage = this.#getNowPage();
             if(nowPage!==undefined){
                 nowPage = nowPage - 1;
                 if(nowPage > -1 && nowPage!=storePage && nowPage<=this.getMaxPage()-1){
-                    storeSession("_page", nowPage);
+                    storeSession(this.prefix+"Page", nowPage);
                     func?.();
                 }
             }
@@ -99,10 +99,10 @@ class PageSelect{
         callElement(this.prefix+"Limit", element=>{
             element.addEventListener("change", (event) => {
                 /*数值发生变化时*/
-                let nowLimit = Number(sessionStorage.getItem("_limit") || this.defaultLimit);
+                let nowLimit = Number(sessionStorage.getItem(this.prefix+"Limit") || this.defaultLimit);
                 let nowSelect = element.value;
                 if(nowSelect && nowSelect!=nowLimit){
-                    storeSession("_limit", nowSelect);
+                    storeSession(this.prefix+"Limit", nowSelect);
                     func?.();
                 }
             });
@@ -113,13 +113,12 @@ class PageSelect{
         /*点击下一页*/
         callElement(this.prefix+"Next", element=>{
             element.addEventListener("click", (event) => {
-                let storePage =  Number(sessionStorage.getItem("_page") || 0);
-                let nowPage = this.#getNowPage();
+                let nowPage =  Number(sessionStorage.getItem(this.prefix+"Page") || 0);
                 if(nowPage !== undefined){
-                    nowPage = nowPage - 1;
+                    nowPage = nowPage + 1;
                     if(nowPage > -1 && nowPage<=this.getMaxPage()-1){
-                        storeSession("_page", nowPage);
-                        element.value = nowPage;
+                        storeSession(this.prefix+"Page", nowPage);
+                        element.value = nowPage+1;
                         func?.();
                     }
                 }
@@ -131,13 +130,12 @@ class PageSelect{
         /*点击上一页*/
         callElement(this.prefix+"Previous", element=>{
             element.addEventListener("click", (event)=>{
-                let storePage = Number(sessionStorage.getItem("_page") || 0);
-                let nowPage= this.#getNowPage();
+                let nowPage = Number(sessionStorage.getItem(this.prefix+"Page") || 0);
                 if(nowPage != undefined){
                     nowPage = nowPage - 1;
-                    if(nowPage > 0 && nowPage<=this.getMaxPage()-1){
-                        storeSession("_page", nowPage-1);
-                        element.value = nowPage-1;
+                    if(nowPage > -1 && nowPage<=this.getMaxPage()-1){
+                        storeSession(this.prefix+"Page", nowPage);
+                        element.value = nowPage+1;
                         func?.();
                     }
                 }
