@@ -12,7 +12,11 @@
 <div class="audio-page">
     <div class="audio-control-bar">
         <div class="audio-set-bar">
-            <div class="audio-set-info"></div>
+            <div class="audio-set-info">
+                <img src="/static/icons/audio_set.png">
+                <a>{{ _('NOW AUDIO SET') }}</a>
+                <a id="audioSetInfo"></a>
+            </div>
             {{ forms.icon_button('editSetButton','/static/icons/edit.png') }}
             {{ forms.icon_button('deleteSetButton','/static/icons/trash.png') }}
             {{ forms.icon_button('createSetButton','/static/icons/folder_create.png') }}

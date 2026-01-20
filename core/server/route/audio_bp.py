@@ -5,6 +5,7 @@ from flask import Blueprint, request, Response, jsonify
 
 from core.database.table import STORAGE_DB, AUDIO_DB, AUDIO_SET_DB
 from core.database.table.audio import AudioFolder, Audio
+from core.database.table.audio_set import AudioSet
 from core.database.table.session import Session
 from core.database.table.storage import Storage
 from core.database.view.audio_view import AUDIO_FOLDERS
@@ -85,3 +86,15 @@ def get_audio_set_list():
         Params.TOTAL: total,
         Params.CONTENTS: search_data
     })
+
+
+@AUDIO_BP.route(gen_prefix_api("/audioSet/<set_id>"), methods=["GET"])
+@catch_exception
+@token_required
+def get_audio_set_info(set_id: str):
+    """获取合集详情"""
+    # 校验
+    validate_str_empty(set_id, "SET ID REQUIRED")
+    set_data = AUDIO_SET_DB.get_set_detail(set_id)
+    set_data[AudioSet.AUDIOS] = AUDIO_DB.get_datas(set_data.get(AudioSet.AUDIOS, []))
+    return jsonify(set_data)

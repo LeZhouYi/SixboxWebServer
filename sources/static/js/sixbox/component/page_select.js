@@ -18,7 +18,7 @@ class PageSelect{
         let params = new URLSearchParams(new URL(window.location.href).search);
         storeSession(this.prefix+"Page",params.get("_page"), 0);
         storeSession(this.prefix+"Limit",params.get("_limit"), this.defaultLimit);
-        storeSession("total", params.get("total"), 0);
+        storeSession(this.prefix+"Total", params.get("total"), 0);
     }
 
     updateParams(page, limit, total){

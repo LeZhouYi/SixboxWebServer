@@ -71,7 +71,7 @@ class AudioSetDB(TableBase):
             search_data = self._db.all()
         else:
             search = re.compile(search, re.IGNORECASE)
-            search_data = self._db.search(where(AudioSet.SET_NAME).search(search)) #type:ignore
+            search_data = self._db.search(where(AudioSet.SET_NAME).search(search))  # type:ignore
         # 统计/切片
         count = len(search_data)
         print(search_data)
@@ -79,3 +79,15 @@ class AudioSetDB(TableBase):
         if limit is not None:
             search_data = search_data[page * limit:(page + 1) * limit]
         return count, search_data
+
+    @lock_required(_lock)
+    def get_set_detail(self, set_id: str):
+        """
+        获取合集详情
+        :param set_id:
+        :return:
+        """
+        result = self._db.get(where(AudioSet.SET_ID) == set_id)  # type:ignore
+        if result:
+            return result
+        raise Exception("SET NOT FOUND")

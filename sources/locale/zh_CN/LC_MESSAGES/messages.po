@@ -251,3 +251,21 @@ msgstr "内容不能为空"
 msgid "TEXT CONTENT"
 msgstr "正文"
 
+msgid "AUDIO REQUIRED"
+msgstr "音频不能为空"
+
+msgid "DUPLICATE FILE"
+msgstr "文件重复"
+
+msgid "AUDIO SEARCH"
+msgstr "输入文本搜索"
+
+msgid "SET ID REQUIRED"
+msgstr "必须指定合集ID"
+
+msgid "SET NOT FOUND"
+msgstr "合集不存在"
+
+msgid "NOW AUDIO SET"
+msgstr "当前合集："
+

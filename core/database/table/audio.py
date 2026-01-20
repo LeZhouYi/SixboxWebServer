@@ -53,3 +53,17 @@ class AudioDB(TableBase):
             Audio.LYRICS_ID
         ])
         self._db.insert(insert_data)
+
+    @lock_required(_lock)
+    def get_datas(self, ids:list[str]):
+        """
+        通过id列表获取详情
+        :param ids:
+        :return:
+        """
+        details = []
+        for audio_id in ids:
+            result = self._db.search(where(Audio.FILE_ID)==audio_id) # type:ignore
+            if result:
+                details.append(result)
+        return details

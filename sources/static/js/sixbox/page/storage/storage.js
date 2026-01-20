@@ -119,8 +119,26 @@ class StorageController{
                 if (event.key === "Enter" || event.keyCode === 13){
                     event.preventDefault();
                     storeSession("search", element.value);
+                    // 搜索时重置页数
+                    this.pageSelect.updateParams(
+                        0,
+                        sessionStorage.getItem("storageLimit"),
+                        0
+                    );
                     this.updateFileList();
                 }
+            });
+            let icon = element.previousElementSibling;
+            icon?.addEventListener("click", (event)=>{
+                event.preventDefault();
+                storeSession("search", element.value);
+                // 搜索时重置页数
+                this.pageSelect.updateParams(
+                    0,
+                    sessionStorage.getItem("storageLimit"),
+                    0
+                );
+                this.updateFileList();
             });
         });
     }
