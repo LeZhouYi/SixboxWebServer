@@ -17,4 +17,15 @@ class PopupImage extends PopupContainer{
         popupImage.appendChild(image);
         this.showContainer();
     }
+
+    checkWillHidden(target){
+        /*判断是否在容器范围内*/
+        callElement(this.containerID, element=>{
+            let child = element.querySelector(".popup-image");
+            if(child && !child.contains(target)){
+                let popupOverlay = element.parentNode;
+                popupOverlay?.classList.add("hidden");
+            }
+        });
+    }
 }

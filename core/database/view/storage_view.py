@@ -70,7 +70,7 @@ def search_storage_data(file_id: Union[str, None], search: Union[str, None], pag
         folder_data[Params.CONTENTS] = search_data
         return folder_data
     else:
-        count, search_data = STORAGE_DB.search_data(None, search.lower(), page, limit)
+        count, search_data = STORAGE_DB.search_data(None, search, page, limit)
         return {
             Params.TOTAL: count,
             Params.CONTENTS: search_data

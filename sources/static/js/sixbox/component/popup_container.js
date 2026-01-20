@@ -10,15 +10,20 @@ class PopupContainer{
         /*初始化，绑定一些必要事件*/
         callElement(this.containerID, element=>{
             let popupOverlay = element.parentNode;
-            if(!popupOverlay){
-                return;
-            }
-            popupOverlay.addEventListener("click", (event)=>{
-                if(!element.contains(event.target)){
-                    popupOverlay.classList.add("hidden");
-                }
+            popupOverlay?.addEventListener("click", (event)=>{
+                this.checkWillHidden(event.target);
                 event.stopPropagation();
             });
+        });
+    }
+
+    checkWillHidden(target){
+        /*判断是否在容器范围内*/
+        callElement(this.containerID, element=>{
+            if(!element.contains(target)){
+                let popupOverlay = element.parentNode;
+                popupOverlay?.classList.add("hidden");
+            }
         });
     }
 

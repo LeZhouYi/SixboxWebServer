@@ -1,5 +1,6 @@
 import datetime
 import os
+import re
 import threading
 from typing import Union, LiteralString, Tuple, List, Optional
 from uuid import uuid4
@@ -159,7 +160,8 @@ class StorageDB(TableBase):
         if search is None:
             query = where(Storage.FOLDER_ID) == folder_id
         else:
-            query = where(Storage.FILE_NAME).search(search) | where(Storage.REMARK).search(search)
+            search = re.compile(search, re.IGNORECASE)
+            query = where(Storage.FILE_NAME).search(search) | where(Storage.REMARK).search(search) #type:ignore
         # 分别搜索文件夹和文件，按名称排序后拼接
         # noinspection PyComparisonWithNone
         search_data = self._db.search(query & (where(Storage.FILE_TYPE) == None))

@@ -1,4 +1,5 @@
 import os
+import re
 import threading
 from typing import Union, LiteralString, Optional, Tuple, List
 from uuid import uuid4
@@ -69,7 +70,8 @@ class AudioSetDB(TableBase):
         if search is None:
             search_data = self._db.all()
         else:
-            search_data = self._db.search(where(AudioSet.SET_NAME).search(search))
+            search = re.compile(search, re.IGNORECASE)
+            search_data = self._db.search(where(AudioSet.SET_NAME).search(search)) #type:ignore
         # 统计/切片
         count = len(search_data)
         print(search_data)
