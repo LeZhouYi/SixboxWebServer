@@ -266,3 +266,27 @@ msgstr ""
 
 msgid "NOW AUDIO SET"
 msgstr ""
+
+msgid "SET NAME"
+msgstr ""
+
+msgid "SET NAME HOLDER"
+msgstr ""
+
+msgid "SET REMARK"
+msgstr ""
+
+msgid "SET REMARK HOLDER"
+msgstr ""
+
+msgid "SET COVER"
+msgstr ""
+
+msgid "COVER UPLOAD HOLDER"
+msgstr ""
+
+msgid "ADD SET"
+msgstr ""
+
+msgid "SET NAME REQUIRED"
+msgstr ""

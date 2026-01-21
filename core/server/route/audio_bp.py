@@ -95,6 +95,38 @@ def get_audio_set_info(set_id: str):
     """获取合集详情"""
     # 校验
     validate_str_empty(set_id, "SET ID REQUIRED")
+    # 处理
     set_data = AUDIO_SET_DB.get_set_detail(set_id)
     set_data[AudioSet.AUDIOS] = AUDIO_DB.get_datas(set_data.get(AudioSet.AUDIOS, []))
     return jsonify(set_data)
+
+
+@AUDIO_BP.route(gen_prefix_api("/audioSet"), methods=["POST"])
+@catch_exception
+def add_set():
+    """新增合集"""
+    # 校验
+    decoded = verify_token(request)
+    set_name = request.form.get(AudioSet.SET_NAME)
+    validate_str_empty(set_name, "SET NAME REQUIRED")
+    ## 处理文件
+    files = request.files.getlist(Storage.FILES)
+    cover_id = None
+    if len(files) > 0:
+        folder_id = AUDIO_FOLDERS[AudioFolder.COVER_FOLDER]
+        folder_path = STORAGE_DB.get_folder_data(folder_id).get(Storage.FILE_PATH)
+        file_data = save_file(files[0], folder_path)
+        file_data.update({
+            Storage.FOLDER_ID: folder_id,
+            Storage.FILE_NAME: f"{set_name}_cover",
+            Storage.UPLOADER: decoded.get(Session.USER_ID),
+            Storage.REMARK: ""
+        })
+        cover_id = STORAGE_DB.add_data(file_data).get(Storage.FILE_ID)
+    AUDIO_SET_DB.add_data({
+        AudioSet.SET_NAME: set_name,
+        AudioSet.REMARK: request.form.get(AudioSet.REMARK),
+        AudioSet.COVER_ID: cover_id,
+        AudioSet.AUDIOS: []
+    })
+    return gen_success_response(request, "CREATE SUCCESS", 201)

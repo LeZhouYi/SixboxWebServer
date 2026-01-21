@@ -269,3 +269,24 @@ msgstr "合集不存在"
 msgid "NOW AUDIO SET"
 msgstr "当前合集："
 
+msgid "SET NAME"
+msgstr "名称"
+
+msgid "SET NAME HOLDER"
+msgstr "请输入合集名"
+
+msgid "SET REMARK"
+msgstr "备注"
+
+msgid "SET REMARK HOLDER"
+msgstr "请输入备注"
+
+msgid "SET COVER"
+msgstr "封面"
+
+msgid "COVER UPLOAD HOLDER"
+msgstr "点击或拖动文件到此区域上传文件，仅支持图片"
+
+msgid "ADD SET"
+msgstr "新增合集"
+

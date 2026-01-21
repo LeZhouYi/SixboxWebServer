@@ -104,7 +104,7 @@
 {# 带label的拖动上传文件控件 #}
 {%- macro label_form_upload(id,name,accept,holder) %}
     <div class="form-line-item">
-        <label for="{{id}}">{{name}}</label>
+        <a>{{name}}</a>
         {{ form_upload(id, accept, holder) }}
     </div>
 {% endmacro -%}

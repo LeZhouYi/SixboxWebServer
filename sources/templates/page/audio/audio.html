@@ -34,6 +34,10 @@
 </div>
 {% endblock %}
 
+{% block popup_pending %}
+    {% include 'page/audio/popup_add_set.jinja2' %}
+{% endblock %}
+
 {% block js_file %}
     {% assets "audio_js" %}
         <script type="module" src="{{ ASSET_URL }}"></script>

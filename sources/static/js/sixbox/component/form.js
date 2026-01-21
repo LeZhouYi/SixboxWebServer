@@ -86,6 +86,7 @@ class FormFileUploader{
             if(input){
                 input.addEventListener("change", (event)=>{
                     let files = event.target.files;
+                    console.log(files);
                     if (files.length > 0) {
                         element.classList.add("form-file-drop");
                         let inputDisplay = element.querySelector(".form-file-input");

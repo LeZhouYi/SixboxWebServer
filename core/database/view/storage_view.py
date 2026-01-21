@@ -9,14 +9,16 @@ from core.database.table.storage import Storage, AudioFolder
 from core.database.view.view_utils import Params
 from core.log import logger
 
-def correct_extension(file_ext:str) -> str:
+
+def correct_extension(file_ext: str) -> str:
     """修正文件后缀，如.htm修正为.html"""
     corrections = STORAGE_DB.get_env("corrections")
     if file_ext in corrections:
         file_ext = corrections[file_ext]
     return file_ext
 
-def save_file(file: FileStorage):
+
+def save_file(file: FileStorage, folder: Union[LiteralString, str] = None):
     """保存文件"""
     if file.filename is None:
         raise Exception("FILENAME EMPTY")
@@ -24,7 +26,8 @@ def save_file(file: FileStorage):
     file_ext = correct_extension(file_ext)
     if file_ext not in STORAGE_DB.get_env("extensions"):
         raise Exception("FILE FORMAT UNSUPPORTED")
-    folder = os.path.join(STORAGE_DB.get_env("save_folder"), file_ext[1:])
+    if folder is None:
+        folder = os.path.join(STORAGE_DB.get_env("save_folder"), file_ext[1:])
     os.makedirs(folder, exist_ok=True)
     filepath = os.path.join(folder, f"{uuid4()}{file_ext}")
     filepath = os.path.normpath(filepath)
@@ -39,6 +42,7 @@ def save_file(file: FileStorage):
         Storage.FILE_PATH: filepath,
         Storage.SIZE: file_size
     }
+
 
 def save_text(content: str, rewrite_path: Union[LiteralString, str, None] = None):
     """保存文件"""
@@ -57,6 +61,7 @@ def save_text(content: str, rewrite_path: Union[LiteralString, str, None] = None
         Storage.FILE_PATH: filepath,
         Storage.SIZE: os.path.getsize(filepath)
     }
+
 
 def search_storage_data(file_id: Union[str, None], search: Union[str, None], page: int, limit: Optional[int]) -> dict:
     """搜索文件/文件夹"""

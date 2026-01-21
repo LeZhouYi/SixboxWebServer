@@ -16,6 +16,55 @@ class AudioController{
 
         // 初始化
         this.init();
+        this.popupAddSet = new PopupContainer("popupAddSet");
+
+        // 初始化文件上传的控件
+        this.addCoverUpload = new FormFileUploader("addCoverLoader");
+        this.addCoverUpload.bindOnDrop(null);
+        this.addCoverUpload.bindOnClick(null);
+
+        // 初始化弹窗
+        this.bindAddSet();
+    }
+
+    bindAddSet(){
+        callElement("createSetButton", element=>{
+            /*点击新增合集*/
+            element.addEventListener("click", (event)=>{
+                this.popupAddSet.showContainer();
+            });
+        });
+        callElement("addSetCancel", element=>{
+            /*点击取消新增*/
+            element.addEventListener("click", (event)=>{
+                this.popupAddSet.hideContainer();
+            });
+        });
+        callElement("addSetForm", element=>{
+            element.addEventListener("submit", async(event)=>{
+                let spinner = createSpinner("addSetConfirm");
+                try{
+                    event?.preventDefault();
+                    let coverFile = null;
+                    if(this.addCoverUpload.tempFile.length > 0){
+                        coverFile = this.addCoverUpload.tempFile[0];
+                    }
+                    let responseData = await this.audioView.addSet(
+                        coverFile,
+                        document.getElementById("addSetName")?.value,
+                        document.getElementById("addSetRemark")?.value
+                    );
+                    this.updateAudioSet();
+                    this.popupAddSet.hideContainer();
+                    document.getElementById("addSetForm")?.reset();
+                    this.popupMessage.displaySuccessMessage(responseData.message);
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
     }
 
     async init(){
@@ -71,12 +120,21 @@ class AudioController{
         setItemDiv.classList.add("audio-set-item");
 
         let img = document.createElement("img");
-        img.src = itemData.coverID || "/static/audios/default.png";
+        if (itemData.coverID){
+            img.src = `/api/v1/storages/files/${itemData.coverID}/download?accessToken=${localStorage.getItem("accessToken")}`;
+        }else{
+            img.src = "/static/audios/default.png";
+        }
         setItemDiv.appendChild(img);
 
         let setName = document.createElement("a");
         setName.textContent = itemData.setName;
         setItemDiv.appendChild(setName);
+
+        setItemDiv.addEventListener("click", (event)=>{
+            storeSession("audioSetID", itemData.setID);
+            this.updateAudioList();
+        });
 
         return setItemDiv;
     }
