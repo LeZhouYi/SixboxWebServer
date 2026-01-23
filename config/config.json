@@ -76,11 +76,13 @@
                 ".xlsx",
                 ".pdf",
                 ".docx",
-                ".doc"
+                ".doc",
+                ".md"
             ],
             "save_folder": "data/storage",
             "corrections": {
-                ".htm": ".html"
+                ".htm": ".html",
+                ".markdown": ".md"
             }
         },
         "cover": {

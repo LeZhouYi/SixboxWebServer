@@ -39,7 +39,8 @@ const fileTypeMapping = {
     "xlsx": ["excel", "file", "/static/icons/ms_excel.png"],
     "pdf": ["pdf", "file", "/static/icons/pdf.png"],
     "docx": ["doc", "file", "/static/icons/docx.png"],
-    "doc": ["doc", "file", "/static/icons/docx.png"]
+    "doc": ["doc", "file", "/static/icons/docx.png"],
+    "md": ["md", "file", "/static/icons/docx.png"]
 }
 
 class StorageController{
