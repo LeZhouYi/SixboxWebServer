@@ -40,7 +40,10 @@ const fileTypeMapping = {
     "pdf": ["pdf", "file", "/static/icons/pdf.png"],
     "docx": ["doc", "file", "/static/icons/docx.png"],
     "doc": ["doc", "file", "/static/icons/docx.png"],
-    "md": ["md", "file", "/static/icons/docx.png"]
+    "md": ["md", "file", "/static/icons/text.png"],
+    "json": ["code", "file", "/static/icons/json.png"],
+    "exe": ["exe", "file", "/static/icons/app.png"],
+    "msi": ["exe", "file", "/static/icons/app.png"]
 }
 
 class StorageController{
@@ -105,7 +108,6 @@ class StorageController{
         callElement("upFolderButton", element=>{
             element.addEventListener("click", (event)=>{
                 let pathTexts = document.querySelectorAll(".storage-path-bar .storage-path-item");
-                console.log(pathTexts.length);
                 if(pathTexts.length<2){
                     return;
                 }

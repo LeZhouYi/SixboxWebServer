@@ -77,7 +77,10 @@
                 ".pdf",
                 ".docx",
                 ".doc",
-                ".md"
+                ".md",
+                ".json",
+                ".msi",
+                ".exe"
             ],
             "save_folder": "data/storage",
             "corrections": {
