@@ -1,3 +1,5 @@
+/*函数调用相关*/
+
 function throttle(func, limit) {
     /*节流*/
     let inThrottle = false;  //标志位

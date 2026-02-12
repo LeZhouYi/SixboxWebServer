@@ -1,0 +1,20 @@
+{% extends 'component/ui_popup_base.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+
+{% block popup_id %}popupAddAudio{% endblock %}
+
+{% block popup_content %}
+<form class="form-base" id="addAudioForm">
+    {{ forms.form_title(_('ADD AUDIO')) }}
+    {{ forms.form_upload('addAudioLoader', 'audio/*', _('AUDIO UPLOAD HOLDER')) }}
+    {{ forms.label_line_input('addAudioName',_('AUDIO NAME'), 'text', _('AUDIO NAME HOLDER'), 'required')}}
+    {{ forms.label_line_input('addAudioSinger',_('AUDIO SINGER'), 'text', _('AUDIO SINGER HOLDER'), 'required')}}
+    {{ forms.label_line_input('addAudioAlbum',_('AUDIO ALBUM'), 'text', _('AUDIO ALBUM HOLDER'))}}
+    {{ forms.label_textarea('addAudioRemark', _('AUDIO REMARK'), '10em', _('AUDIO REMARK HOLDER')) }}
+    {{ forms.label_form_upload('addAudioLyrics', _('LYRICS FILE'), '*', _('LYRICS UPLOAD HOLDER')) }}
+    <div class="form-buttons">
+        {{ forms.button('addAudioConfirm', _('CONFIRM BUTTON'), 'submit') }}
+        {{ forms.warn_button('addAudioCancel', _('CANCEL BUTTON')) }}
+    </div>
+</form>
+{% endblock %}

@@ -80,12 +80,16 @@
                 ".md",
                 ".json",
                 ".msi",
-                ".exe"
+                ".exe",
+                ".yaml",
+                ".mp3",
+                ".lrc"
             ],
             "save_folder": "data/storage",
             "corrections": {
                 ".htm": ".html",
-                ".markdown": ".md"
+                ".markdown": ".md",
+                ".yml": ".yaml"
             }
         },
         "cover": {

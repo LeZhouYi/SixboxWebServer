@@ -262,9 +262,11 @@ class StorageDB(TableBase):
         :return:
         """
         query = (where(Storage.FILE_ID) == file_id) & (where(Storage.FILE_TYPE) != None)
-        file_data = self._db.get((where(Storage.FILE_ID) == file_id) & (where(Storage.FILE_TYPE) != None))
-        self._db.remove(query)
+        file_data = self._db.get(query)
+        if file_data is None:
+            raise Exception("FILE NOT FOUND")
         try:
+            self._db.remove(query)
             os.remove(file_data.get(Storage.FILE_PATH))
         except Exception as e:
             logger.warn(f"remove file: {file_data.get(Storage.FILE_PATH)}, error: {e}")

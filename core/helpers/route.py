@@ -87,15 +87,18 @@ def get_translator(request_in: Request) -> NullTranslations:
     :param request_in:
     :return:
     """
-    best_match = request_in.accept_languages.best_match(get_route_env("langs")) or "zh_CN"
+    lang = request_in.cookies.get('user_lang')
+    if lang is None or lang not in get_route_env("langs"):
+        lang = "zh_CN"
     translator = gettext.translation(
         domain=get_route_env("domain"),
         localedir=get_route_env("locale_dir"),
-        languages=[best_match],
+        languages=[lang],
         fallback=True
     )
     translator.install()
     return translator
+
 
 def register_assets(assets: Environment):
     """注册web assets"""
@@ -129,6 +132,7 @@ def get_stream_io(filepath: str, chunk_size: int = None) -> Generator[bytes, Any
             if not data:
                 break
             yield data
+
 
 def clear_webasset_cache():
     """清除webasset缓存"""

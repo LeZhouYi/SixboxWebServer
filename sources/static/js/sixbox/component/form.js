@@ -49,6 +49,11 @@ class FormFileUploader{
         });
     }
 
+    initBind(){
+        this.bindOnDrop(null);
+        this.bindOnClick(null);
+    }
+
     bindOnDrop(callback){
         /*绑定释放事件*/
         callElement(this.containerID, element=>{
@@ -86,7 +91,6 @@ class FormFileUploader{
             if(input){
                 input.addEventListener("change", (event)=>{
                     let files = event.target.files;
-                    console.log(files);
                     if (files.length > 0) {
                         element.classList.add("form-file-drop");
                         let inputDisplay = element.querySelector(".form-file-input");
@@ -103,6 +107,27 @@ class FormFileUploader{
                         callback?.();
                     }
                 });
+            }
+        });
+    }
+
+    setData(filedata){
+        /*设置数据*/
+        callElement(this.containerID, element=>{
+            let input = element.querySelector("input");
+            if(input&&filedata){
+                element.classList.add("form-file-drop");
+                let inputDisplay = element.querySelector(".form-file-input");
+                inputDisplay?.classList.add("hidden");
+                let fileDisplay = element.querySelector(".form-file-display");
+                if(!fileDisplay){
+                    return;
+                }
+                fileDisplay.classList.remove("hidden");
+                let nameDiv = fileDisplay.querySelector(".form-filename");
+                nameDiv.textContent = filedata;
+                this.tempFile = [];
+                this.tempFile.push(filedata);
             }
         });
     }

@@ -22,5 +22,7 @@ def register_template(app: Flask):
         获取当前语言
         :return:
         """
-        best_match = request.accept_languages.best_match(get_route_env("langs")) or "zh_CN"
-        return best_match.replace("_", "-")
+        lang = request.cookies.get('user_lang')
+        if lang is None or lang not in get_route_env("langs"):
+            lang = "zh_CN"
+        return lang.replace("_", "-")

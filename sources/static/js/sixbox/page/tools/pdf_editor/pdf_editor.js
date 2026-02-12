@@ -3,4 +3,5 @@ window.addEventListener("DOMContentLoaded", function(){
     let sidebar = new Sidebar("/tools/pdf_editor.html");
     sidebar.bindSidebarSwitch("navigation_sidebar");
     new SessionsView().checkAccessToken();
+    let navigation = new Navigation();
 });

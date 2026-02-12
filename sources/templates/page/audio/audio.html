@@ -1,4 +1,4 @@
-{% extends 'base/page_navigation_base.jinja2' %}
+{% extends 'base/navigation/page_navigation_base.jinja2' %}
 {% import 'component/ui_forms.jinja2' as forms %}
 {% set navigation_title = _('MUSIC BOX') %}
 
@@ -28,7 +28,18 @@
     </div>
     <div class="audio-set-part">
         <div class="audio-set-list"></div>
-        <div class="audio-list"></div>
+        <div class="audio-list">
+            <div class="audio-list-header">
+                <div class="audio-header-text"></div>
+                <div class="audio-header-text">{{ _('AUDIO NAME') }}</div>
+                <div class="audio-header-text">{{ _('AUDIO SINGER') }}</div>
+                <div class="audio-header-text">{{ _('AUDIO CONTROL') }}</div>
+            </div>
+            <div class="audio-list-container">
+                <div class="audio-list-item">
+                </div>
+            </div>
+        </div>
     </div>
     <div class="audio-play-bar"></div>
 </div>
@@ -36,6 +47,12 @@
 
 {% block popup_pending %}
     {% include 'page/audio/popup_add_set.jinja2' %}
+    {% include 'page/audio/popup_delete_set.jinja2' %}
+    {% include 'page/audio/popup_edit_set.jinja2' %}
+    {% include 'page/audio/popup_upload_audio.jinja2' %}
+    {% include 'page/audio/popup_audio_control.jinja2' %}
+    {% include 'page/audio/popup_delete_audio.jinja2' %}
+    {% include 'page/audio/popup_remove_audio.jinja2' %}
 {% endblock %}
 
 {% block js_file %}

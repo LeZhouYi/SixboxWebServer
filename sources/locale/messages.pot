@@ -290,3 +290,72 @@ msgstr ""
 
 msgid "SET NAME REQUIRED"
 msgstr ""
+
+msgid "DEFAULT DATA"
+msgstr ""
+
+msgid "EDIT SET"
+msgstr ""
+
+msgid "AUDIO NAME"
+msgstr ""
+
+msgid "AUDIO SINGER"
+msgstr ""
+
+msgid "AUDIO CONTROL"
+msgstr ""
+
+msgid "ADD AUDIO"
+msgstr ""
+
+msgid "AUDIO UPLOAD HOLDER"
+msgstr ""
+
+msgid "AUDIO NAME HOLDER"
+msgstr ""
+
+msgid "AUDIO SINGER HOLDER"
+msgstr ""
+
+msgid "AUDIO ALBUM"
+msgstr ""
+
+msgid "AUDIO ALBUM HOLDER"
+msgstr ""
+
+msgid "AUDIO REMARK"
+msgstr ""
+
+msgid "AUDIO REMARK HOLDER"
+msgstr ""
+
+msgid "LYRICS FILE"
+msgstr ""
+
+msgid "LYRICS UPLOAD HOLDER"
+msgstr ""
+
+msgid "AUDIO NAME REQUIRED"
+msgstr ""
+
+msgid "SINGER REQUIRED"
+msgstr ""
+
+msgid "DUPLICATE ADD"
+msgstr ""
+
+msgid "REMOVE FORM SET"
+msgstr ""
+
+msgid "AUDIO NOT FOUND"
+msgstr ""
+
+msgid "AUDIO ID REQUIRED"
+msgstr ""
+
+msgid "CONFIRM DELETE AUDIO"
+msgstr ""
+
+msgid "CONFIRM REMOVE AUDIO"
+msgstr ""

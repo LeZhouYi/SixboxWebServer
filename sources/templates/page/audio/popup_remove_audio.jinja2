@@ -1,0 +1,13 @@
+{% extends 'component/ui_popup_base.jinja2' %}
+
+{% block popup_id %}popupRemoveAudio{% endblock %}
+
+{% block popup_content %}
+<form class="form-center">
+    {{ forms.form_center_text(_('CONFIRM REMOVE AUDIO')) }}
+    <div class="form-center-buttons">
+        {{ forms.button('removeAudioConfirm', _('CONFIRM BUTTON')) }}
+        {{ forms.warn_button('removeAudioCancel', _('CANCEL BUTTON')) }}
+    </div>
+</form>
+{% endblock %}

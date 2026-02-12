@@ -1,0 +1,12 @@
+{% extends 'component/ui_popup_base.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+
+{% block popup_id %}popupSetting{% endblock %}
+{% block overlay_class %}popup-overlay-float hidden{% endblock %}
+{% block container_class %}popup-container-float{% endblock %}
+
+{% block popup_content %}
+<div>
+    {{ forms.label_select('langSelect', _('LANG SELECT')) }}
+</div>
+{% endblock %}

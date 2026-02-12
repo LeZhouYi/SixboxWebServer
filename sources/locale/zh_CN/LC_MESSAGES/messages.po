@@ -290,3 +290,75 @@ msgstr "点击或拖动文件到此区域上传文件，仅支持图片"
 msgid "ADD SET"
 msgstr "新增合集"
 
+msgid "SET NAME REQUIRED"
+msgstr "合集名称不能为空"
+
+msgid "DEFAULT DATA"
+msgstr "默认数据不可删除"
+
+msgid "EDIT SET"
+msgstr "编辑合集"
+
+msgid "AUDIO NAME"
+msgstr "歌曲"
+
+msgid "AUDIO SINGER"
+msgstr "歌手"
+
+msgid "AUDIO CONTROL"
+msgstr "操作"
+
+msgid "ADD AUDIO"
+msgstr "新增歌曲"
+
+msgid "AUDIO UPLOAD HOLDER"
+msgstr "点击或拖动文件到此区域上传文件，只支持音频文件"
+
+msgid "AUDIO NAME HOLDER"
+msgstr "请输入歌曲名"
+
+msgid "AUDIO SINGER HOLDER"
+msgstr "请输入歌手"
+
+msgid "AUDIO ALBUM"
+msgstr "专辑"
+
+msgid "AUDIO ALBUM HOLDER"
+msgstr "请输入专辑"
+
+msgid "AUDIO REMARK"
+msgstr "标签"
+
+msgid "AUDIO REMARK HOLDER"
+msgstr "请输入标签"
+
+msgid "LYRICS FILE"
+msgstr "歌词文件"
+
+msgid "LYRICS UPLOAD HOLDER"
+msgstr "点击或拖动文件到此区域上传文件，只支持.lrc格式"
+
+msgid "AUDIO NAME REQUIRED"
+msgstr "歌曲名不能为空"
+
+msgid "SINGER REQUIRED"
+msgstr "歌手不能为空"
+
+msgid "DUPLICATE ADD"
+msgstr "重复添加"
+
+msgid "REMOVE FORM SET"
+msgstr "移出合集"
+
+msgid "AUDIO NOT FOUND"
+msgstr "音频不存在"
+
+msgid "AUDIO ID REQUIRED"
+msgstr "音频ID不能为空"
+
+msgid "CONFIRM DELETE AUDIO"
+msgstr "请确认删除？注意数据不可恢复，并从所有合集中移除"
+
+msgid "CONFIRM REMOVE AUDIO"
+msgstr "请确认从当前合集中移除？注意移除不会删除文件。"
+

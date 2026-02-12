@@ -1,3 +1,5 @@
+/*请求相关*/
+
 const API_PREFIX = "/api/v1";
 const ERROR_CODE = [400,401];
 const LOGIN_URL = "/login.html";
@@ -38,16 +40,18 @@ async function fetchJson(method, url, jsonData={}) {
 
 async function fetchWithRetry(requestFunc, retryTimes = 1) {
     /*出现401则重试，成功则返回response*/
-    while(retryTimes){
+    while(retryTimes>=0){
         let response = await requestFunc();
         if (response.ok){
             return response;
         }else if (response.status === 401 && retryTimes) {
+            console.log("ok1");
             retryTimes = retryTimes - 1;
             try{
                 let tokenResponse = await new SessionsView().refreshToken(localStorage.getItem("refreshToken"));
                 localStorage.setItem("refreshToken",tokenResponse.refreshToken);
                 localStorage.setItem("accessToken",tokenResponse.accessToken);
+                console.log("ok");
             }catch(error){
                 window.location.href=LOGIN_URL;
                 throw error;
@@ -96,4 +100,11 @@ async function fetchFormWithAuth(method, url, formData){
     }
     const response = await fetchWithRetry(fetchFunc);
     return getResponseJson(response);
+}
+
+function addParams(params, key, value){
+    /*如果value为空，则不添加到url params*/
+    if(value !== null && value !== undefined){
+        params.set(key, value);
+    }
 }

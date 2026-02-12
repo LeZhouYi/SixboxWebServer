@@ -1,0 +1,15 @@
+{% extends 'component/ui_popup_base.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+
+{% block popup_id %}popupAudioControl{% endblock %}
+{% block overlay_class %}popup-overlay-float hidden{% endblock %}
+{% block container_class %}popup-container-float{% endblock %}
+
+{% block popup_content %}
+    <div class="audio-control-list">
+        {{ forms.icon_text_button('audioEditButton', _('FILE EDIT'), '/static/icons/edit.png') }}
+        {{ forms.icon_text_button('audioDownloadButton', _('FILE DOWNLOAD'), '/static/icons/download.png') }}
+        {{ forms.icon_text_button('audioRemoveButton', _('REMOVE FORM SET'), '/static/icons/link_remove.png') }}
+        {{ forms.icon_text_button('audioDeleteButton', _('FILE DELETE'), '/static/icons/trash.png') }}
+    </div>
+{% endblock %}

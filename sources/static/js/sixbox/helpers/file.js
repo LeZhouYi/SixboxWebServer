@@ -1,3 +1,5 @@
+/*文件相关*/
+
 function formatFileSize(fileSize) {
     /*返回对应的格式的存储大小文本*/
     fileSize = parseInt(fileSize);

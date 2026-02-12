@@ -1,12 +1,10 @@
 window.addEventListener("DOMContentLoaded", function(){
     new Background().init(); //初始化background元素
     FormUtils.adjustTextAreaHeight(4);
-
     let sidebar = new Sidebar("/home.html");
     sidebar.bindSidebarSwitch("navigation_sidebar");
-
     new SessionsView().checkAccessToken();
-
+    let navigation = new Navigation();
     let storageController = new StorageController();
 });
 
@@ -43,7 +41,10 @@ const fileTypeMapping = {
     "md": ["md", "file", "/static/icons/text.png"],
     "json": ["code", "file", "/static/icons/json.png"],
     "exe": ["exe", "file", "/static/icons/app.png"],
-    "msi": ["exe", "file", "/static/icons/app.png"]
+    "msi": ["exe", "file", "/static/icons/app.png"],
+    "yaml": ["yaml", "file", "/static/icons/text.png"],
+    "mp3": ["audio", "file", "/static/icons/music.png"],
+    "lrc": ["text", "file", "/static/icons/text.png"]
 }
 
 class StorageController{
@@ -109,6 +110,7 @@ class StorageController{
             element.addEventListener("click", (event)=>{
                 let pathTexts = document.querySelectorAll(".storage-path-bar .storage-path-item");
                 if(pathTexts.length<2){
+                    window.location.href = "/home.html";
                     return;
                 }
                 pathTexts[pathTexts.length-2].click();
@@ -636,6 +638,7 @@ class StorageController{
         let spinner = createSpinnerByElement(fileListContainer);
         try{
             let searchData = await this.storagesView.getStorageList();
+            storeSession("folderID", searchData.fileID);
             for(let contentItem of searchData.contents){
                 fileListContainer.appendChild(this.createFileItem(contentItem));
             }
@@ -653,6 +656,9 @@ class StorageController{
             });
         }catch(error){
             this.popupMessage.displayErrorMessage(error);
+            setTimeout(()=>{
+                window.location.href = "/home.html";
+            }, 1000);
         }finally{
             spinner?.remove();
         }
@@ -808,6 +814,7 @@ class StorageController{
                 try{
                     let responseData = await this.storagesView.getText(itemData.fileID);
                     tinymce.get("displayTextMce").setContent(responseData.content);
+                    tinymce.get("displayTextMce").execCommand('mceAutoResize');
                     this.popupDisplayText.showContainer();
                 }catch(error){
                     this.popupMessage.displayErrorMessage(error);

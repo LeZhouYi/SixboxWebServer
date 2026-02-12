@@ -1,3 +1,5 @@
+/*处理HTML元素*/
+
 function callElement(elementId, callback) {
     /*获取元素并校验是否存在，存在则执行callback*/
     let element = document.getElementById(elementId);
@@ -38,4 +40,11 @@ function adjustBorderRadius(element, offset=2){
         const unit = borderRadius.replace(numValue.toString(), "");
         return (numValue - offset) + unit;
     }
+}
+
+function resizeFullScreen() {
+    /*计算并调整页页使用适应全屏*/
+    let bodyContainer = document.body;
+    let height = Math.max(window.innerHeight,document.documentElement.clientHeight);
+    bodyContainer.style.height = String(height) + "px";
 }
