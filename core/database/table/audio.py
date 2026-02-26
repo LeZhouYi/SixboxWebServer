@@ -1,4 +1,5 @@
 import threading
+from uuid import uuid4
 
 from tinydb import where
 
@@ -12,6 +13,7 @@ class Audio:
     """
     音频键名
     """
+    AUDIO_ID = "audioID"
     FILE_ID = Storage.FILE_ID
     FILE_NAME = "filename"
     SINGER = "singer"
@@ -39,15 +41,12 @@ class AudioDB(TableBase):
         super().__init__("database", "audio")
 
     @lock_required(_lock)
-    def add_data(self, data: dict):
+    def add_data(self, data: dict) -> str:
         """
         新增数据
         :param data:
         :return:
         """
-        search = self._db.get(where(Audio.FILE_ID) == data.get(Audio.FILE_ID))  # type: ignore
-        if search:
-            raise Exception("DUPLICATE FILE")
         insert_data = extract_values(data, [
             Audio.FILE_ID,
             Audio.SINGER,
@@ -56,7 +55,9 @@ class AudioDB(TableBase):
             Audio.REMARK,
             Audio.FILE_NAME
         ])
+        insert_data[Audio.AUDIO_ID] = str(uuid4())
         self._db.insert(insert_data)
+        return insert_data[Audio.AUDIO_ID]
 
     @lock_required(_lock)
     def get_datas(self, ids: list[str]):
@@ -67,7 +68,7 @@ class AudioDB(TableBase):
         """
         details = []
         for audio_id in ids:
-            result = self._db.get(where(Audio.FILE_ID) == audio_id)  # type:ignore
+            result = self._db.get(where(Audio.AUDIO_ID) == audio_id)  # type:ignore
             if result:
                 details.append(result)
         return details
@@ -79,8 +80,42 @@ class AudioDB(TableBase):
         :param audio_id:
         :return:
         """
-        result = self._db.get(where(Audio.FILE_ID) == audio_id)  # type:ignore
+        result = self._db.get(where(Audio.AUDIO_ID) == audio_id)  # type:ignore
         if result:
-            self._db.remove(where(Audio.FILE_ID) == audio_id)  # type:ignore
+            self._db.remove(where(Audio.AUDIO_ID) == audio_id)  # type:ignore
             return result
         raise Exception("AUDIO NOT FOUND")
+
+    @lock_required(_lock)
+    def get_data(self, audio_id: str) -> dict:
+        """
+        获取数据
+        :param audio_id:
+        :return:
+        """
+        result = self._db.get(where(Audio.AUDIO_ID) == audio_id)  # type:ignore
+        if result:
+            return result
+        raise Exception("AUDIO NOT FOUND")
+
+    @lock_required(_lock)
+    def edit_data(self, audio_id: str, data: dict):
+        """
+        编辑数据
+        :param audio_id:
+        :param data:
+        :return:
+        """
+        result = self._db.get(where(Audio.AUDIO_ID) == audio_id)  # type:ignore
+        if result:
+            result.update(extract_values(data, [
+                Audio.FILE_ID,
+                Audio.SINGER,
+                Audio.ALBUM,
+                Audio.LYRICS_ID,
+                Audio.REMARK,
+                Audio.FILE_NAME
+            ]))
+            self._db.update(result, where(Audio.AUDIO_ID) == audio_id)  # type:ignore
+        else:
+            raise Exception("AUDIO NOT FOUND")

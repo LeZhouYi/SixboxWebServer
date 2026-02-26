@@ -25,6 +25,7 @@ class AudioController{
         this.popupAudioControl = new PopupContainerFloat("popupAudioControl");
         this.popupDeleteAudio = new PopupContainer("popupDeleteAudio");
         this.popupRemoveAudio = new PopupContainer("popupRemoveAudio");
+        this.popupEditAudio = new PopupContainer("popupEditAudio");
 
         // 初始化文件上传的控件
         this.addCoverUpload = new FormFileUploader("addCoverLoader");
@@ -35,6 +36,10 @@ class AudioController{
         this.addAudioLoader.initBind();
         this.addAudioLyrics = new FormFileUploader("addAudioLyrics");
         this.addAudioLyrics.initBind();
+        this.editAudioLoader = new FormFileUploader("editAudioLoader");
+        this.editAudioLoader.initBind();
+        this.editAudioLyrics = new FormFileUploader("editAudioLyrics");
+        this.editAudioLyrics.initBind();
 
         // 初始化弹窗
         this.bindAddSet();
@@ -44,6 +49,99 @@ class AudioController{
         this.bindControl();
         this.bindDeleteAudio();
         this.bindRemoveAudio();
+        this.bindEditAudio();
+    }
+
+    bindEditAudio(){
+        callElement("audioEditButton", element=>{
+            /*点击编辑音频*/
+            element.addEventListener("click", async (event)=>{
+                let spinner = createSpinner("audioEditButton");
+                try{
+                    let controlAudioID = sessionStorage.getItem("controlAudioID");
+                    if(!controlAudioID){
+                        return;
+                    }
+                    let responseData = await this.audioView.getAudioInfo(controlAudioID);
+                    callElement("editAudioName", formElement=>{
+                        formElement.value = responseData.filename;
+                    });
+                    callElement("editAudioSinger", formElement=>{
+                        formElement.value = responseData.singer;
+                    });
+                    callElement("editAudioAlbum", formElement=>{
+                        formElement.value = responseData.album;
+                    });
+                    callElement("editAudioRemark", formElement=>{
+                        formElement.value = responseData.remark;
+                    });
+                    this.editAudioLoader.reset();
+                    this.editAudioLoader.setData(responseData.fileID);
+                    this.editAudioLyrics.reset();
+                    this.editAudioLyrics.setData(responseData.lyricsID);
+                    this.popupEditAudio.showContainer();
+                    this.popupAudioControl.hideContainer();
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
+        callElement("editAudioCancel", element=>{
+            /*点击取消编辑*/
+            element.addEventListener("click", (event)=>{
+                this.popupEditAudio.hideContainer();
+            });
+        });
+        callElement("editAudioForm", element=>{
+            /*点击确认编辑*/
+            element.addEventListener("submit", async (event)=>{
+                let spinner = createSpinner("editAudioConfirm");
+                try{
+                    event?.preventDefault();
+                    let fileID = null;
+                    let audioFile = null;
+                    if(this.editAudioLoader.tempFile.length > 0){
+                        let fileData = this.editAudioLoader.tempFile[0];
+                        if(typeof fileData !== "string"){
+                            audioFile = fileData;
+                        }else{
+                            fileID = fileData;
+                        }
+                    }
+                    let lyricsFile = null;
+                    let lyricsID = null;
+                    if(this.editAudioLyrics.tempFile.length > 0){
+                        let fileData = this.editAudioLoader.tempFile[0];
+                        if(typeof fileData !== "string"){
+                            lyricsFile = fileData;
+                        }else{
+                            lyricsID = fileData;
+                        }
+                    }
+                    let controlAudioID = sessionStorage.getItem("controlAudioID");
+                    let responseData = await this.audioView.editAudio(
+                        controlAudioID,
+                        audioFile,
+                        fileID,
+                        document.getElementById("editAudioName")?.value,
+                        document.getElementById("editAudioSinger")?.value,
+                        document.getElementById("editAudioAlbum")?.value,
+                        document.getElementById("editAudioRemark")?.value,
+                        lyricsFile,
+                        lyricsID
+                    );
+                    this.updateAudioList();
+                    this.popupEditAudio.hideContainer();
+                    this.popupMessage.displaySuccessMessage(responseData.message);
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
     }
 
     bindRemoveAudio(){
@@ -377,7 +475,6 @@ class AudioController{
             //更新音频列表
             audioListContainer.innerHTML = "";
             for(let audioData of audioSetData.audios){
-                console.log(audioData);
                 audioListContainer.appendChild(this.createAudioItem(audioData));
             }
         }catch(error){
@@ -456,7 +553,7 @@ class AudioController{
         /*为音频控制图标绑定事件*/
         controlDiv?.addEventListener("click", (event)=>{
             event.stopPropagation();
-            storeSession("controlAudioID", audioData.fileID);
+            storeSession("controlAudioID", audioData.audioID);
             this.popupAudioControl.showContainer(event.pageX, event.pageY, "start", "end", 15);
         });
     }

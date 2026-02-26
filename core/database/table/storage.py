@@ -255,16 +255,19 @@ class StorageDB(TableBase):
         raise Exception("FILE NOT FOUND")
 
     @lock_required(_lock)
-    def delete_file(self, file_id: str):
+    def delete_file(self, file_id: str, ignore_error: bool = False):
         """
         删除文件
+        :param ignore_error:
         :param file_id:
         :return:
         """
         query = (where(Storage.FILE_ID) == file_id) & (where(Storage.FILE_TYPE) != None)
         file_data = self._db.get(query)
         if file_data is None:
-            raise Exception("FILE NOT FOUND")
+            if not ignore_error:
+                raise Exception("FILE NOT FOUND")
+            return
         try:
             self._db.remove(query)
             os.remove(file_data.get(Storage.FILE_PATH))

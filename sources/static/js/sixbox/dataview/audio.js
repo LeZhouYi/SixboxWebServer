@@ -62,4 +62,31 @@ class AudioView{
         return fetchJsonWithAuth("DELETE", `/audios/${audioID}`);
     }
 
+    async getAudioInfo(audioID){
+        /*获取音频详情*/
+        return fetchJsonWithAuth("GET", `/audios/${audioID}`);
+    }
+
+    async editAudio(audioID, audioFile, fileID, audioName, audioSinger, audioAlbum, audioRemark, lyricsFile, lyricsID){
+        /*编辑音频*/
+        let formData = new FormData();
+        if(audioFile){
+            formData.append("audio", audioFile);
+        }
+        if(fileID){
+            formData.append("fileID", fileID);
+        }
+        formData.append("filename", audioName);
+        formData.append("singer", audioSinger);
+        formData.append("album", audioAlbum);
+        formData.append("remark", audioRemark);
+        if(lyricsFile){
+            formData.append("lyrics", lyricsFile);
+        }
+        if(lyricsID){
+            formData.append("lyricsID", lyricsID);
+        }
+        return fetchFormWithAuth("PUT", `/audios/${audioID}`, formData);
+    }
+
 }

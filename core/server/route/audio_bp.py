@@ -54,21 +54,23 @@ def add_audio():
         Storage.FILE_NAME: f"{singer}-{audio_name}",
         Storage.REMARK: request.form.get(Storage.REMARK)
     })
-    audio_id = STORAGE_DB.add_data(audio_data).get(Storage.FILE_ID)
+    file_id = STORAGE_DB.add_data(audio_data).get(Storage.FILE_ID)
     # 保存歌词
+    lyrics_id = None
     lyrics = request.files.get(Audio.LYRICS)
-    lyrics_data = save_file(lyrics, ext_filter=[".lrc"])
-    lyrics_data.update({
-        Storage.UPLOADER: decoded.get(Session.USER_ID),
-        Storage.FOLDER_ID: AUDIO_FOLDERS[AudioFolder.LYRICS_FOLDER],
-        Storage.FILE_NAME: f"{singer}-{audio_name}",
-        Storage.REMARK: request.form.get(Storage.REMARK)
-    })
-    lyrics_id = STORAGE_DB.add_data(lyrics_data).get(Storage.FILE_ID)
+    if lyrics:
+        lyrics_data = save_file(lyrics, ext_filter=[".lrc"])
+        lyrics_data.update({
+            Storage.UPLOADER: decoded.get(Session.USER_ID),
+            Storage.FOLDER_ID: AUDIO_FOLDERS[AudioFolder.LYRICS_FOLDER],
+            Storage.FILE_NAME: f"{singer}-{audio_name}",
+            Storage.REMARK: request.form.get(Storage.REMARK)
+        })
+        lyrics_id = STORAGE_DB.add_data(lyrics_data).get(Storage.FILE_ID)
     # 保存音频整体数据
-    AUDIO_DB.add_data({
+    audio_id = AUDIO_DB.add_data({
         Audio.FILE_NAME: audio_name,
-        Audio.FILE_ID: audio_id,
+        Audio.FILE_ID: file_id,
         Audio.SINGER: singer,
         Audio.ALBUM: request.form.get(Audio.ALBUM),
         Audio.LYRICS_ID: lyrics_id,
@@ -168,8 +170,7 @@ def edit_set(set_id: str):
     if cover_id is None:
         # 当cover_id为空时，表示清空原来的cover
         delete_id = AUDIO_SET_DB.get_set_detail(set_id).get(AudioSet.COVER_ID)
-        if delete_id:
-            STORAGE_DB.delete_file(delete_id)  # 移除旧有的封面
+        STORAGE_DB.delete_file(delete_id, ignore_error=True)  # 移除旧有的封面
     if len(files) > 0:
         # 处理新上传的cover
         folder_id = AUDIO_FOLDERS[AudioFolder.COVER_FOLDER]
@@ -194,15 +195,81 @@ def edit_set(set_id: str):
 
 
 @AUDIO_BP.route(gen_prefix_api("/audios/<audio_id>"), methods=["DELETE"])
+@catch_exception
+@token_required
 def delete_audio(audio_id: str):
     """删除音频"""
     # 校验
     validate_str_empty(audio_id, "AUDIO ID REQUIRED")
     # 处理
     delete_data = AUDIO_DB.delete_data(audio_id)
-    lyrics_id = delete_data.get(Audio.LYRICS_ID)
-    STORAGE_DB.delete_file(audio_id)
-    STORAGE_DB.delete_file(lyrics_id)
+    STORAGE_DB.delete_file(delete_data.get(Audio.FILE_ID))
+    STORAGE_DB.delete_file(delete_data.get(Audio.LYRICS_ID))
     # 从合集中移除
     AUDIO_SET_DB.patch_remove_audio(audio_id)
     return gen_success_response(request, "DELETE SUCCESS")
+
+
+@AUDIO_BP.route(gen_prefix_api("/audios/<audio_id>"), methods=["GET"])
+@catch_exception
+@token_required
+def get_audio_info(audio_id: str):
+    """获取音频详情"""
+    # 校验
+    validate_str_empty(audio_id, "AUDIO ID REQUIRED")
+    return jsonify(AUDIO_DB.get_data(audio_id))
+
+
+@AUDIO_BP.route(gen_prefix_api("/audios/<audio_id>"), methods=["PUT"])
+@catch_exception
+def edit_audio(audio_id: str):
+    """编辑音频"""
+    # 校验
+    decoded = verify_token(request)
+
+    audio_name = request.form.get(Audio.FILE_NAME)
+    validate_str_empty(audio_name, "AUDIO NAME REQUIRED")
+    singer = request.form.get(Audio.SINGER)
+    validate_str_empty(singer, "SINGER REQUIRED")
+
+    # 处理文件
+    file_id = request.form.get(Audio.FILE_ID)
+    if file_id is None:
+        file = request.files.get(Audio.AUDIO)
+        if file is None:
+            raise Exception("AUDIO REQUIRED")
+        audio_data = save_file(file)
+        audio_data.update({
+            Storage.UPLOADER: decoded.get(Session.USER_ID),
+            Storage.FOLDER_ID: AUDIO_FOLDERS[AudioFolder.AUDIO_FOLDER],
+            Storage.FILE_NAME: f"{singer}-{audio_name}",
+            Storage.REMARK: request.form.get(Storage.REMARK)
+        })
+        STORAGE_DB.delete_file(audio_id, ignore_error=True)
+        file_id = STORAGE_DB.add_data(audio_data).get(Storage.FILE_ID)  # 保存为新的文件
+
+    # 处理歌词
+    lyrics_id = request.form.get(Audio.LYRICS_ID)
+    if lyrics_id is None:
+        delete_id = AUDIO_DB.get_data(audio_id).get(Audio.LYRICS_ID)
+        STORAGE_DB.delete_file(delete_id, ignore_error=True)  # 移除旧歌词文件
+        lyrics = request.files.get(Audio.LYRICS)
+        if lyrics:
+            lyrics_data = save_file(lyrics, ext_filter=[".lrc"])
+            lyrics_data.update({
+                Storage.UPLOADER: decoded.get(Session.USER_ID),
+                Storage.FOLDER_ID: AUDIO_FOLDERS[AudioFolder.LYRICS_FOLDER],
+                Storage.FILE_NAME: f"{singer}-{audio_name}",
+                Storage.REMARK: request.form.get(Storage.REMARK)
+            })
+            lyrics_id = STORAGE_DB.add_data(lyrics_data).get(Storage.FILE_ID)
+    # 编辑
+    AUDIO_DB.edit_data(audio_id, {
+        Audio.FILE_ID: file_id,
+        Audio.FILE_NAME: audio_name,
+        Audio.SINGER: singer,
+        Audio.ALBUM: request.form.get(Audio.ALBUM),
+        Audio.REMARK: request.form.get(Audio.REMARK),
+        Audio.LYRICS_ID: lyrics_id
+    })
+    return gen_success_response(request, "EDIT SUCCESS", 200)

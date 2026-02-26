@@ -252,9 +252,6 @@ msgstr ""
 msgid "AUDIO REQUIRED"
 msgstr ""
 
-msgid "DUPLICATE FILE"
-msgstr ""
-
 msgid "AUDIO SEARCH"
 msgstr ""
 
@@ -358,4 +355,7 @@ msgid "CONFIRM DELETE AUDIO"
 msgstr ""
 
 msgid "CONFIRM REMOVE AUDIO"
+msgstr ""
+
+msgid "EDIT AUDIO"
 msgstr ""
