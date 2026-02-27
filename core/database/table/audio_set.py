@@ -116,17 +116,19 @@ class AudioSetDB(TableBase):
         """
         result = self._db.get(where(AudioSet.SET_ID) == set_id)  # type:ignore
         if result:
+            if result.get(AudioSet.SET_ID) == self._db.all()[0].get(AudioSet.SET_ID):
+                raise Exception("DEFAULT DATA")
             result.update(data)
             self._db.update(result, where(AudioSet.SET_ID) == set_id)  # type:ignore
         else:
             raise Exception("SET NOT FOUND")
 
     @lock_required(_lock)
-    def add_audio(self, set_id: Optional[str], audio_id: str):
+    def add_audios(self, set_id: Optional[str], audio_ids: list):
         """
         新增音频到合集
         :param set_id:
-        :param audio_id:
+        :param audio_ids:
         :return:
         """
         if set_id is None:
@@ -135,26 +137,27 @@ class AudioSetDB(TableBase):
         if not set_search:
             raise Exception("SET NOT FOUND")
         audios = set_search.get(AudioSet.AUDIOS)
-        if audio_id in audios:
-            raise Exception("DUPLICATE ADD")
-        audios.append(audio_id)
+        for audio_id in audio_ids:
+            if audio_id not in audios:
+                audios.append(audio_id)
         set_search[AudioSet.AUDIOS] = audios
         self._db.update(set_search, where(AudioSet.SET_ID) == set_id)  # type:ignore
 
     @lock_required(_lock)
-    def remove_audio(self, set_id: str, audio_id: str):
+    def remove_audios(self, set_id: str, audio_ids: list):
         """
         从合集中移除音频
         :param set_id:
-        :param audio_id:
+        :param audio_ids:
         :return:
         """
         if set_id is None:
             raise Exception("SET NOT FOUND")
-        set_search = self._db.get((where(AudioSet.SET_ID) == set_id) & (Query().audios.any(audio_id)))  # type:ignore
+        set_search = self._db.get(where(AudioSet.SET_ID) == set_id)  # type:ignore
         if not set_search:
             raise Exception("AUDIO NOT FOUND")
-        set_search[AudioSet.AUDIOS].remove(audio_id)
+        for audio_id in audio_ids:
+            set_search[AudioSet.AUDIOS].remove(audio_id)
         self._db.update(set_search, where(AudioSet.SET_ID) == set_id)
 
     @lock_required(_lock)
@@ -168,3 +171,13 @@ class AudioSetDB(TableBase):
         for set_data in set_search:
             set_data[AudioSet.AUDIOS].remove(audio_id)
             self._db.update(set_data, where(AudioSet.SET_ID) == set_data.get(AudioSet.SET_ID))  # type:ignore
+
+    @lock_required(_lock)
+    def is_default_set(self, set_id: str):
+        """判断是否是默认合集"""
+        return set_id == self._db.all()[0].get(AudioSet.SET_ID)
+
+    @lock_required(_lock)
+    def exists(self, set_id: str):
+        """判断是否存在"""
+        return self._db.get(where(AudioSet.SET_ID) == set_id) is not None

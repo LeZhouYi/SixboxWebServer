@@ -41,7 +41,7 @@ class AudioView{
         return fetchFormWithAuth("PUT", `/audioSet/${setID}`, formData);
     }
 
-    async addAudio(audioFile, audioName, audioSinger, audioAlbum, audioRemark, lyricsFile){
+    async addAudio(audioFile, audioName, audioSinger, audioAlbum, audioRemark, lyricsFile, setID){
         /*新增音频*/
         let formData = new FormData();
         if(audioFile){
@@ -54,6 +54,7 @@ class AudioView{
         if(lyricsFile){
             formData.append("lyrics", lyricsFile);
         }
+        formData.append("setID", setID);
         return fetchFormWithAuth("POST", `/audios`, formData);
     }
 
@@ -87,6 +88,16 @@ class AudioView{
             formData.append("lyricsID", lyricsID);
         }
         return fetchFormWithAuth("PUT", `/audios/${audioID}`, formData);
+    }
+
+    async removeAudio(setID, audioID){
+        /*从合集中移除音频*/
+        return fetchJsonWithAuth("POST", `/audioSet/${setID}/patchRemove`, [audioID]);
+    }
+
+    async addAudioToSet(setID, audioID){
+        /*从合集中移除音频*/
+        return fetchJsonWithAuth("POST", `/audioSet/${setID}/patchAdd`, [audioID]);
     }
 
 }

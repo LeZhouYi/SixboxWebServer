@@ -291,7 +291,7 @@ msgid "SET NAME REQUIRED"
 msgstr "合集名称不能为空"
 
 msgid "DEFAULT DATA"
-msgstr "默认数据不可删除"
+msgstr "默认数据不可编辑/删除"
 
 msgid "EDIT SET"
 msgstr "编辑合集"
@@ -341,9 +341,6 @@ msgstr "歌曲名不能为空"
 msgid "SINGER REQUIRED"
 msgstr "歌手不能为空"
 
-msgid "DUPLICATE ADD"
-msgstr "重复添加"
-
 msgid "REMOVE FORM SET"
 msgstr "移出合集"
 
@@ -361,4 +358,22 @@ msgstr "请确认从当前合集中移除？注意移除不会删除文件。"
 
 msgid "EDIT AUDIO"
 msgstr "编辑歌曲"
+
+msgid "DATA FORMAT ERROR"
+msgstr "数据格式错误"
+
+msgid "REMOVE SUCCESS"
+msgstr "移除成功"
+
+msgid "DEFAULT SET"
+msgstr "不可以从默认合集中移除"
+
+msgid "ADD TO SET"
+msgstr "添加至.."
+
+msgid "SET SELECT"
+msgstr "选择合集"
+
+msgid "ADD SUCCESS"
+msgstr "添加成功"
 

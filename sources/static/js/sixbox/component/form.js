@@ -148,6 +148,19 @@ class FormFileUploader{
 }
 
 class FormUtils{
+    static initFormSelect(){
+        for(let element of document.querySelectorAll(".form-select")){
+            element.addEventListener("click", () => {
+                if(element.classList.contains("is-open")){
+                    element.classList.remove("is-open");
+                }else{
+                    element.classList.add("is-open");
+                }
+            });
+            element.addEventListener("blur", () => element.classList.remove("is-open"));
+        }
+    }
+
     static adjustTextAreaHeight(padding=10){
         for(let element of document.querySelectorAll(".form-textarea")){
             function adjustHeight() {

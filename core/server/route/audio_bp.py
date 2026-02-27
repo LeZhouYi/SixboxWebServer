@@ -13,7 +13,7 @@ from core.database.view.session_view import verify_token, token_required
 from core.database.view.storage_view import save_file
 from core.database.view.view_utils import catch_exception, page_args_required, Params
 from core.helpers.route import gen_prefix_api, gen_success_response, get_stream_io
-from core.helpers.validate import validate_str_empty
+from core.helpers.validate import validate_str_empty, validate_str_list
 
 AUDIO_BP = Blueprint("audio", __name__)
 
@@ -41,6 +41,10 @@ def add_audio():
     validate_str_empty(audio_name, "AUDIO NAME REQUIRED")
     singer = request.form.get(Audio.SINGER)
     validate_str_empty(singer, "SINGER REQUIRED")
+    set_id = request.form.get(AudioSet.SET_ID)
+    validate_str_empty(set_id, "SET ID REQUIRED")
+    if not AUDIO_SET_DB.exists(set_id):
+        raise Exception("SET NOT FOUND")
 
     file = request.files.get(Audio.AUDIO)
     if file is None:
@@ -76,8 +80,10 @@ def add_audio():
         Audio.LYRICS_ID: lyrics_id,
         Audio.REMARK: request.form.get(Audio.REMARK)
     })
-    # 保存至默认合集
-    AUDIO_SET_DB.add_audio(None, audio_id)
+    # 保存至合集
+    AUDIO_SET_DB.add_audios(set_id, [audio_id])
+    if not AUDIO_SET_DB.is_default_set(set_id):
+        AUDIO_SET_DB.add_audio(None, [audio_id])
     return gen_success_response(request, "CREATE SUCCESS", 201)
 
 
@@ -204,7 +210,9 @@ def delete_audio(audio_id: str):
     # 处理
     delete_data = AUDIO_DB.delete_data(audio_id)
     STORAGE_DB.delete_file(delete_data.get(Audio.FILE_ID))
-    STORAGE_DB.delete_file(delete_data.get(Audio.LYRICS_ID))
+    lyrics_id = delete_data.get(Audio.LYRICS_ID)
+    if lyrics_id:
+        STORAGE_DB.delete_file(delete_data.get(Audio.LYRICS_ID))
     # 从合集中移除
     AUDIO_SET_DB.patch_remove_audio(audio_id)
     return gen_success_response(request, "DELETE SUCCESS")
@@ -273,3 +281,31 @@ def edit_audio(audio_id: str):
         Audio.LYRICS_ID: lyrics_id
     })
     return gen_success_response(request, "EDIT SUCCESS", 200)
+
+
+@AUDIO_BP.route(gen_prefix_api("/audioSet/<set_id>/patchRemove"), methods=["POST"])
+@catch_exception
+@token_required
+def remove_audios_form_set(set_id: str):
+    """从合集中移除音频"""
+    # 校验
+    data = request.json
+    validate_str_list(data, "DATA FORMAT ERROR")
+    # 处理
+    if AUDIO_SET_DB.is_default_set(set_id):
+        raise Exception("DEFAULT SET")
+    AUDIO_SET_DB.remove_audios(set_id, data)
+    return gen_success_response(request, "REMOVE SUCCESS", 200)
+
+
+@AUDIO_BP.route(gen_prefix_api("/audioSet/<set_id>/patchAdd"), methods=["POST"])
+@catch_exception
+@token_required
+def add_audios_to_set(set_id: str):
+    """从合集中添加音频"""
+    # 校验
+    data = request.json
+    validate_str_list(data, "DATA FORMAT ERROR")
+    # 处理
+    AUDIO_SET_DB.add_audios(set_id, data)
+    return gen_success_response(request, "ADD SUCCESS", 200)

@@ -36,3 +36,16 @@ def validate_int(value: Union[str, int, None], min_value: int = None, max_value:
     value = int(value)
     if (min_value is not None and value < min_value) or (max_value is not None and value > max_value):
         raise Exception(messages)
+
+
+def validate_str_list(data: list, message: str = ""):
+    """
+    校验列表及列表内容是否为str且非空
+    :param message:
+    :param data:
+    :return:
+    """
+    if not isinstance(data, list):
+        raise Exception(message)
+    for item in data:
+        validate_str_empty(item, message)

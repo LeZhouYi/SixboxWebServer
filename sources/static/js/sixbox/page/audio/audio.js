@@ -1,8 +1,11 @@
 window.addEventListener("DOMContentLoaded", function(){
     new Background().init(); //初始化background元素
+
     let sidebar = new Sidebar("/audio.html");
     sidebar.bindSidebarSwitch("navigation_sidebar");
+
     new SessionsView().checkAccessToken();
+
     let navigation = new Navigation();
     let audioController = new AudioController();
 });
@@ -26,6 +29,7 @@ class AudioController{
         this.popupDeleteAudio = new PopupContainer("popupDeleteAudio");
         this.popupRemoveAudio = new PopupContainer("popupRemoveAudio");
         this.popupEditAudio = new PopupContainer("popupEditAudio");
+        this.popupAddToSet = new PopupContainer("popupAddToSet");
 
         // 初始化文件上传的控件
         this.addCoverUpload = new FormFileUploader("addCoverLoader");
@@ -50,6 +54,67 @@ class AudioController{
         this.bindDeleteAudio();
         this.bindRemoveAudio();
         this.bindEditAudio();
+        this.bindAddToSet();
+    }
+
+    bindAddToSet(){
+        callElement("audioAppendButton", element=>{
+            element.addEventListener("click", async (event)=>{
+                let spinner = createSpinner("audioAppendButton");
+                try{
+                    let nowAudioSetID = sessionStorage.getItem("audioSetID");
+                    if (!nowAudioSetID){
+                        return;
+                    }
+                    let responseData = await this.audioView.getSetList();
+                    callElement("addToSetSelect", selectElement=>{
+                        selectElement.innerHTML = "";
+                        for(let setData of responseData.contents){
+                            let option = document.createElement("option");
+                            option.text = setData.setName;
+                            option.value = setData.setID;
+                            selectElement.appendChild(option);
+                        }
+                        if(responseData.contents.length > 0){
+                            selectElement.value = responseData.contents[0].setID;
+                        }
+                    });
+                    this.popupAudioControl.hideContainer();
+                    this.popupAddToSet.showContainer();
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
+        callElement("addToSetCancel", element=>{
+            /*点击取消*/
+            element.addEventListener("click", (event)=>{
+                this.popupAddToSet.hideContainer();
+            });
+        });
+        callElement("addToSetConfirm", element=>{
+            /*点击确认添加*/
+            element.addEventListener("click", async (event)=>{
+                let spinner = createSpinner("addToSetConfirm");
+                try{
+                    event?.preventDefault();
+                    let setID = document.getElementById("addToSetSelect").value;
+                    let controlAudioID = sessionStorage.getItem("controlAudioID");
+                    if(!setID || !controlAudioID){
+                        return;
+                    }
+                    let responseData = await this.audioView.addAudioToSet(setID, controlAudioID);
+                    this.popupAddToSet.hideContainer();
+                    this.popupMessage.displaySuccessMessage(responseData.message);
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
     }
 
     bindEditAudio(){
@@ -153,7 +218,7 @@ class AudioController{
         });
         callElement("removeAudioConfirm", element=>{
             /*确认移出*/
-            element.addEventListener("click", (event)=>{
+            element.addEventListener("click", async (event)=>{
                 let spinner = createSpinner("removeAudioConfirm");
                 try{
                     let nowAudioSetID = sessionStorage.getItem("audioSetID");
@@ -161,6 +226,10 @@ class AudioController{
                     if(!nowAudioSetID || !controlAudioID){
                         return;
                     }
+                    let responseData = await this.audioView.removeAudio(nowAudioSetID, controlAudioID);
+                    this.updateAudioList();
+                    this.popupRemoveAudio.hideContainer();
+                    this.popupMessage.displaySuccessMessage(responseData.message);
                 }catch(error){
                     this.popupMessage.displayErrorMessage(error);
                 }finally{
@@ -243,13 +312,15 @@ class AudioController{
                     if(this.addAudioLyrics.tempFile.length > 0){
                         lyricsFile = this.addAudioLyrics.tempFile[0];
                     }
+                    let nowAudioSetID = sessionStorage.getItem("audioSetID");
                     let responseData = await this.audioView.addAudio(
                         audioFile,
                         document.getElementById("addAudioName")?.value,
                         document.getElementById("addAudioSinger")?.value,
                         document.getElementById("addAudioAlbum")?.value,
                         document.getElementById("addAudioRemark")?.value,
-                        lyricsFile
+                        lyricsFile,
+                        nowAudioSetID
                     );
                     this.updateAudioList();
                     this.popupAddAudio.hideContainer();

@@ -228,6 +228,10 @@
     background-color: var(--background-color);
 }
 
+.form-select.is-open{
+    border-radius: 12px 12px 0 0;
+}
+
 .form-textarea{
     height: auto;
     max-height: 100%;

@@ -339,9 +339,6 @@ msgstr ""
 msgid "SINGER REQUIRED"
 msgstr ""
 
-msgid "DUPLICATE ADD"
-msgstr ""
-
 msgid "REMOVE FORM SET"
 msgstr ""
 
@@ -358,4 +355,22 @@ msgid "CONFIRM REMOVE AUDIO"
 msgstr ""
 
 msgid "EDIT AUDIO"
+msgstr ""
+
+msgid "DATA FORMAT ERROR"
+msgstr ""
+
+msgid "REMOVE SUCCESS"
+msgstr ""
+
+msgid "DEFAULT SET"
+msgstr ""
+
+msgid "ADD TO SET"
+msgstr ""
+
+msgid "SET SELECT"
+msgstr ""
+
+msgid "ADD SUCCESS"
 msgstr ""
