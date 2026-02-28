@@ -374,3 +374,12 @@ msgstr ""
 
 msgid "ADD SUCCESS"
 msgstr ""
+
+msgid "LANG SELECT"
+msgstr ""
+
+msgid "LANG ZH-CN"
+msgstr ""
+
+msgid "LANG ENGLISH"
+msgstr ""

@@ -377,3 +377,12 @@ msgstr "选择合集"
 msgid "ADD SUCCESS"
 msgstr "添加成功"
 
+msgid "LANG SELECT"
+msgstr "切换语言"
+
+msgid "LANG ZH-CN"
+msgstr "中文"
+
+msgid "LANG ENGLISH"
+msgstr "英文"
+

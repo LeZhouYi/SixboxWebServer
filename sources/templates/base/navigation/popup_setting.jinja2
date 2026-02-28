@@ -6,7 +6,10 @@
 {% block container_class %}popup-container-float{% endblock %}
 
 {% block popup_content %}
-<div>
-    {{ forms.label_select('langSelect', _('LANG SELECT')) }}
+<div class="navigation-popup">
+    {{ forms.label_select('langSelect', _('LANG SELECT'), '', [
+        {'name': _('LANG ZH-CN'), 'value': 'zh-CN'},
+        {'name': _('LANG ENGLISH'), 'value': 'en'}
+    ]) }}
 </div>
 {% endblock %}

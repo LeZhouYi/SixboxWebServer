@@ -1,8 +1,18 @@
 const pageTexts = {
+    "default":{
+        "prefixText": "Page",
+        "postfixText": "of %s",
+        "limitText": "Items/Page"
+    },
     "zh-CN":{
         "prefixText": "第",
         "postfixText": "页/共%s页",
         "limitText": "项/每页"
+    },
+    "en":{
+        "prefixText": "Page",
+        "postfixText": "of %s",
+        "limitText": "Items/Page"
     }
 }
 
@@ -27,21 +37,22 @@ class PageSelect{
         storeSession(this.prefix+"Limit", limit, this.defaultLimit);
         storeSession(this.prefix+"Total", total, 0);
         let lang = document.documentElement.lang || "zh-CN";
+        let texts = pageTexts[lang] || pageTexts["default"]
 
         callElement(this.prefix+"PrefixText", element=>{
-            element.textContent = pageTexts[lang]["prefixText"]
+            element.textContent = texts["prefixText"]
         });
         callElement(this.prefix+"PageText", element=>{
             element.value = Number(page)+1;
         });
         callElement(this.prefix+"PostfixText", element=>{
-            element.textContent = formatString(pageTexts[lang]["postfixText"], this.getMaxPage());
+            element.textContent = formatString(texts["postfixText"], this.getMaxPage());
         });
         callElement(this.prefix+"Limit", element=>{
             element.value = limit;
         });
         callElement(this.prefix+"LimitText", element=>{
-            element.textContent = pageTexts[lang]["limitText"];
+            element.textContent = texts["limitText"];
         });
     }
 

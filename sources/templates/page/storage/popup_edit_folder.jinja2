@@ -7,7 +7,7 @@
 <form class="form-base" id="editFolderForm">
     {{ forms.form_title(_('EDIT FOLDER')) }}
     {{ forms.label_line_input('editFolderName',_('FOLDER NAME'), 'text', _('FOLDER NAME HOLDER'), 'required')}}
-    {{ forms.label_select('editFolderSelect', _('FOLDER SELECT')) }}
+    {{ forms.label_select('editFolderSelect', _('FOLDER SELECT'), 'required') }}
     {{ forms.label_textarea('editFolderRemark', _('FOLDER REMARK'), '10em', _('FOLDER REMARK HOLDER')) }}
     <div class="form-buttons">
         {{ forms.button('editFolderConfirm', _('CONFIRM BUTTON'), 'submit') }}

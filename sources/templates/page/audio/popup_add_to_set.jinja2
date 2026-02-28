@@ -5,7 +5,7 @@
 
 {% block popup_content %}
 <form class="form-base" id="addToSetForm">
-    {{ forms.label_select('addToSetSelect', _('SET SELECT')) }}
+    {{ forms.label_select('addToSetSelect', _('SET SELECT'), 'required') }}
     <div class="form-buttons">
         {{ forms.button('addToSetConfirm', _('CONFIRM BUTTON'), 'submit') }}
         {{ forms.warn_button('addToSetCancel', _('CANCEL BUTTON')) }}

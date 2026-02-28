@@ -55,15 +55,19 @@
 {% endmacro -%}
 
 {# 下拉选择 #}
-{%- macro select(id, extract='')%}
-    <select class="form-select" id="{{id}}" {{extract}}></select>
+{%- macro select(id, extract='', options=[])%}
+    <select class="form-select" id="{{id}}" {{extract}}>
+        {% for option_item in options %}
+            <option value="{{option_item.value}}">{{option_item.name}}</option>
+        {% endfor %}
+    </select>
 {% endmacro -%}
 
 {# 带标签的下拉选择 #}
-{%- macro label_select(id, name) %}
+{%- macro label_select(id, name, extract='', options=[]) %}
     <div class="form-line-item">
-        <label for="{{id}}">{{name}}</label>
-        {{ select(id) }}
+        <a>{{name}}</a>
+        {{ select(id, extract, options) }}
     </div>
 {% endmacro -%}
 

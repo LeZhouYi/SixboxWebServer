@@ -7,7 +7,7 @@
 <form class="form-base" id="editTextForm">
     {{ forms.form_title(_('ADD TEXT')) }}
     {{ forms.label_line_input('editTextName',_('FILENAME'), 'text', _('FILENAME HOLDER'), 'required')}}
-    {{ forms.label_select('editTextSelect', _('FOLDER SELECT')) }}
+    {{ forms.label_select('editTextSelect', _('FOLDER SELECT'), 'required') }}
     {{ forms.label_textarea('editTextRemark', _('FOLDER REMARK'), '6em', _('FOLDER REMARK HOLDER')) }}
     {{ forms.label_tinymce('editTextMce', _('TEXT CONTENT')) }}
     <div class="form-buttons">

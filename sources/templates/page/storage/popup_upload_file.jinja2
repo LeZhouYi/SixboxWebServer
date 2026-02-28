@@ -8,7 +8,7 @@
     {{ forms.form_title(_('UPLOAD FILE')) }}
     {{ forms.form_upload('uploadFileLoader', '*',_('FILE UPLOAD HOLDER')) }}
     {{ forms.label_line_input('uploadFileName', _('FILENAME'), 'text', _('FILENAME HOLDER'), 'required') }}
-    {{ forms.label_select('uploadFileSelect', _('FOLDER SELECT')) }}
+    {{ forms.label_select('uploadFileSelect', _('FOLDER SELECT'), 'required') }}
     {{ forms.label_textarea('uploadFileRemark', _('FOLDER REMARK'), '10em', _('FOLDER REMARK HOLDER')) }}
     <div class="form-buttons">
         {{ forms.button('uploadFileConfirm', _('CONFIRM BUTTON'), 'submit') }}
