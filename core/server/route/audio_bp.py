@@ -83,7 +83,7 @@ def add_audio():
     # 保存至合集
     AUDIO_SET_DB.add_audios(set_id, [audio_id])
     if not AUDIO_SET_DB.is_default_set(set_id):
-        AUDIO_SET_DB.add_audio(None, [audio_id])
+        AUDIO_SET_DB.add_audios(None, [audio_id])
     return gen_success_response(request, "CREATE SUCCESS", 201)
 
 
@@ -130,7 +130,7 @@ def add_set():
     if len(files) > 0:
         folder_id = AUDIO_FOLDERS[AudioFolder.COVER_FOLDER]
         folder_path = STORAGE_DB.get_folder_data(folder_id).get(Storage.FILE_PATH)
-        file_data = save_file(files[0], folder_path)
+        file_data = save_file(files[0], folder_path, ext_filter=[".png",".jpg",".jpeg"])
         file_data.update({
             Storage.FOLDER_ID: folder_id,
             Storage.FILE_NAME: f"{set_name}_cover",
@@ -181,7 +181,7 @@ def edit_set(set_id: str):
         # 处理新上传的cover
         folder_id = AUDIO_FOLDERS[AudioFolder.COVER_FOLDER]
         folder_path = STORAGE_DB.get_folder_data(folder_id).get(Storage.FILE_PATH)
-        file_data = save_file(files[0], folder_path)
+        file_data = save_file(files[0], folder_path, ext_filter=[".png",".jpg",".jpeg"])
         file_data.update({
             Storage.FOLDER_ID: folder_id,
             Storage.FILE_NAME: f"{set_name}_cover",
@@ -246,7 +246,7 @@ def edit_audio(audio_id: str):
         file = request.files.get(Audio.AUDIO)
         if file is None:
             raise Exception("AUDIO REQUIRED")
-        audio_data = save_file(file)
+        audio_data = save_file(file, ext_filter=[".mp3", ".m4a"])
         audio_data.update({
             Storage.UPLOADER: decoded.get(Session.USER_ID),
             Storage.FOLDER_ID: AUDIO_FOLDERS[AudioFolder.AUDIO_FOLDER],

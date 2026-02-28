@@ -143,7 +143,9 @@ class AudioController{
                     this.editAudioLoader.reset();
                     this.editAudioLoader.setData(responseData.fileID);
                     this.editAudioLyrics.reset();
-                    this.editAudioLyrics.setData(responseData.lyricsID);
+                    if(responseData.lyricsID){
+                        this.editAudioLyrics.setData(responseData.lyricsID);
+                    }
                     this.popupEditAudio.showContainer();
                     this.popupAudioControl.hideContainer();
                 }catch(error){
@@ -178,7 +180,7 @@ class AudioController{
                     let lyricsFile = null;
                     let lyricsID = null;
                     if(this.editAudioLyrics.tempFile.length > 0){
-                        let fileData = this.editAudioLoader.tempFile[0];
+                        let fileData = this.editAudioLyrics.tempFile[0];
                         if(typeof fileData !== "string"){
                             lyricsFile = fileData;
                         }else{
@@ -281,6 +283,45 @@ class AudioController{
             element.addEventListener("click", (event)=>{
                 this.popupAudioControl.hideContainer();
                 this.popupRemoveAudio.showContainer();
+            });
+        });
+        callElement("audioDownloadButton", element=>{
+            /*点击下载音频*/
+            element.addEventListener("click", (event)=>{
+                let spinner = createSpinner("audioDownloadButton");
+                try{
+                    let audioData = getSessionAsJson("controlAudioData");
+                    if(!audioData){
+                        return;
+                    }
+                    let accessToken = localStorage.getItem("accessToken");
+                    downloadFile(`${API_PREFIX}/storages/files/${audioData.fileID}/download?accessToken=${accessToken}`, `${audioData.singer}-${audioData.filename}`);
+                    this.popupAudioControl.hideContainer();
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
+
+        callElement("lyricsDownloadButton", element=>{
+            /*点击下载歌词*/
+            element.addEventListener("click", (event)=>{
+                let spinner = createSpinner("lyricsDownloadButton");
+                try{
+                    let audioData = getSessionAsJson("controlAudioData");
+                    if(!audioData || !audioData.lyricsID){
+                        return;
+                    }
+                    let accessToken = localStorage.getItem("accessToken");
+                    downloadFile(`${API_PREFIX}/storages/files/${audioData.lyricsID}/download?accessToken=${accessToken}`, `${audioData.singer}-${audioData.filename}.lrc`);
+                    this.popupAudioControl.hideContainer();
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
             });
         });
     }
@@ -625,6 +666,7 @@ class AudioController{
         controlDiv?.addEventListener("click", (event)=>{
             event.stopPropagation();
             storeSession("controlAudioID", audioData.audioID);
+            storeSession("controlAudioData", audioData);
             this.popupAudioControl.showContainer(event.pageX, event.pageY, "start", "end", 15);
         });
     }

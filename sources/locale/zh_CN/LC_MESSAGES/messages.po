@@ -386,3 +386,9 @@ msgstr "中文"
 msgid "LANG ENGLISH"
 msgstr "英文"
 
+msgid "AUDIO DOWNLOAD"
+msgstr "下载音频"
+
+msgid "LYRICS DOWNLOAD"
+msgstr "下载歌词"
+

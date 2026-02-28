@@ -16,9 +16,12 @@ function formatFileSize(fileSize) {
     }
 }
 
-function downloadFile(url){
+function downloadFile(url, name=null){
     /*下载文件*/
     let downloadA = document.createElement("a");
+    if(name){
+        downloadA.download = name;
+    }
     downloadA.href = url;
     downloadA.click();
     downloadA.remove();

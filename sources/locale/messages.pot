@@ -383,3 +383,9 @@ msgstr ""
 
 msgid "LANG ENGLISH"
 msgstr ""
+
+msgid "AUDIO DOWNLOAD"
+msgstr ""
+
+msgid "LYRICS DOWNLOAD"
+msgstr ""

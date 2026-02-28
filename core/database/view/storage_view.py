@@ -24,8 +24,8 @@ def save_file(file: FileStorage, folder: Union[LiteralString, str] = None, ext_f
         raise Exception("FILENAME EMPTY")
     file_ext = os.path.splitext(file.filename)[-1].lower()
     file_ext = correct_extension(file_ext)
-    if file_ext not in STORAGE_DB.get_env("extensions") and not (
-            ext_filter is not None and len(ext_filter) > 1 and ext_filter in ext_filter):
+    if file_ext not in STORAGE_DB.get_env("extensions") or not (
+            ext_filter is None or len(ext_filter) < 1 or file_ext in ext_filter):
         raise Exception("FILE FORMAT UNSUPPORTED")
     if folder is None:
         folder = os.path.join(STORAGE_DB.get_env("save_folder"), file_ext[1:])

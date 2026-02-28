@@ -45,13 +45,11 @@ async function fetchWithRetry(requestFunc, retryTimes = 1) {
         if (response.ok){
             return response;
         }else if (response.status === 401 && retryTimes) {
-            console.log("ok1");
             retryTimes = retryTimes - 1;
             try{
                 let tokenResponse = await new SessionsView().refreshToken(localStorage.getItem("refreshToken"));
                 localStorage.setItem("refreshToken",tokenResponse.refreshToken);
                 localStorage.setItem("accessToken",tokenResponse.accessToken);
-                console.log("ok");
             }catch(error){
                 window.location.href=LOGIN_URL;
                 throw error;
