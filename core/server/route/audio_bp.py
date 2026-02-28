@@ -158,7 +158,7 @@ def delete_set(set_id: str):
     delete_data = AUDIO_SET_DB.delete_set(set_id)
     # 移除相关封面
     cover_id = delete_data.get(AudioSet.COVER_ID)
-    STORAGE_DB.delete_file(cover_id)
+    STORAGE_DB.delete_file(cover_id, ignore_error=True)
     return gen_success_response(request, "DELETE SUCCESS")
 
 
