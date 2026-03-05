@@ -1,4 +1,6 @@
+import re
 import threading
+from typing import Optional
 from uuid import uuid4
 
 from tinydb import where
@@ -60,15 +62,23 @@ class AudioDB(TableBase):
         return insert_data[Audio.AUDIO_ID]
 
     @lock_required(_lock)
-    def get_datas(self, ids: list[str]):
+    def get_datas(self, ids: list[str], search: Optional[str]):
         """
         通过id列表获取详情
+        :param search:
         :param ids:
         :return:
         """
         details = []
+        query = None
+        if search is not None:
+            search = re.compile(search, re.IGNORECASE)
+            query = where(Storage.FILE_NAME).search(search) | where(Storage.REMARK).search(search)  # type:ignore
         for audio_id in ids:
-            result = self._db.get(where(Audio.AUDIO_ID) == audio_id)  # type:ignore
+            if query is None:
+                result = self._db.get(where(Audio.AUDIO_ID) == audio_id)  # type:ignore
+            else:
+                result = self._db.get((where(Audio.AUDIO_ID) == audio_id) & query)  # type:ignore
             if result:
                 details.append(result)
         return details

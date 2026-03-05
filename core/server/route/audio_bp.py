@@ -110,9 +110,10 @@ def get_audio_set_info(set_id: str):
     """获取合集详情"""
     # 校验
     validate_str_empty(set_id, "SET ID REQUIRED")
+    search = (request.args.get("search") or "").strip()
     # 处理
     set_data = AUDIO_SET_DB.get_set_detail(set_id)
-    set_data[AudioSet.AUDIOS] = AUDIO_DB.get_datas(set_data.get(AudioSet.AUDIOS, []))
+    set_data[AudioSet.AUDIOS] = AUDIO_DB.get_datas(set_data.get(AudioSet.AUDIOS, []), search)
     return jsonify(set_data)
 
 

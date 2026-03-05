@@ -30,6 +30,9 @@
     border-radius: 10px;
     min-width: 0;
 }
+.form-icon-input>.form-icon{
+    cursor: pointer;
+}
 
 /*简易，深色背景的按钮*/
 .form-button{
@@ -403,6 +406,23 @@
 
 .form-filename{
     font-size: 15px;
+}
+
+.form-progress-bar{
+    height: 20px;
+    border-radius: 10px;
+    background-color: var(--background-color);
+    border: 2px solid var(--theme-color);
+    width: 100%;
+    cursor: pointer;
+}
+
+.form-progress-bar>div{
+    height: 100%;
+    width: 0px;
+    background-color: rgb(144, 202, 248);
+    transition: width 0.5s;
+    border-radius: 8px;
 }
 
 @media (max-width: 500px), (max-device-width: 500px){

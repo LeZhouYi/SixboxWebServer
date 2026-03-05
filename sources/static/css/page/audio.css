@@ -33,6 +33,7 @@
     align-content: flex-start;
     transition: all 0.5s ease;
     gap: 4px;
+    cursor: pointer;
 }
 
 .audio-set-item:hover{
@@ -63,16 +64,16 @@
     background-color: var(--transparent-color);
     padding: 8px 15px 8px 15px;
     box-sizing: border-box;
-    grid-template-columns: 52px 200px 36px 36px 36px 36px 2fr 1fr;
+    grid-template-columns: 52px 200px 26px 26px 26px 26px 2fr 1fr;
     gap:10px;
     align-items: center;
 }
 
 .audio-play-progress{
     width: 100%;
-    display: flex;
-    flex-direction: rows;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: 41px 1fr 41px;
+    gap: 8px;
     align-items: center;
 }
 
@@ -84,19 +85,19 @@
 }
 
 .audio-play-button:hover>img{
-    width: 32px;
-    height: 32px;
+    width: 22px;
+    height: 22px;
 }
 
 .audio-play-button>img{
-    width: 36px;
-    height: 36px;
+    width: 26px;
+    height: 26px;
     transition: all ease 0.2s;
 }
 
 .audio-play-volume>img{
-    width: 36px;
-    height: 36px;
+    width: 26px;
+    height: 26px;
 }
 
 .audio-set-part{
@@ -168,7 +169,7 @@
     height: 38px;
     width: 100%;
     display: grid;
-    grid-template-columns: 32px 2fr 1fr 32px;
+    grid-template-columns: 32px 2fr 1fr 1fr 1fr 32px;
     padding: 0px 15px 0 5px;
     gap: 10px;
     box-sizing: border-box;
@@ -196,7 +197,7 @@
     height: 44px;
     width: 100%;
     display: grid;
-    grid-template-columns: 32px 2fr 1fr 32px;
+    grid-template-columns: 32px 2fr 1fr 1fr 1fr 32px;
     gap: 10px;
     box-sizing: border-box;
     border-bottom: 1px dotted var(--line-color);
@@ -208,6 +209,7 @@
     height: 100%;
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 .audio-item-column>a{
@@ -228,6 +230,7 @@
     box-sizing: border-box;
     transition: all .5s ease;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .audio-item-control:hover{
@@ -273,7 +276,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: center;
     gap: 3px;
 }
 
@@ -286,24 +289,9 @@
     color: var(--line-color);
 }
 
-.audio-play-progress-bar{
-    height: 20px;
-    border-radius: 10px;
-    background-color: var(--background-color);
-    border: 2px solid var(--theme-color);
-    width: 100%;
-}
-
-.audio-play-volume-bar{
-    height: 20px;
-    border-radius: 10px;
-    background-color: var(--background-color);
-    border: 2px solid var(--theme-color);
-}
-
 .audio-play-volume{
     display: grid;
-    grid-template-columns: 36px 1fr;
+    grid-template-columns: 26px 1fr;
     gap: 10px;
     box-sizing: border-box;
     align-items: center;

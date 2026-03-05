@@ -5,9 +5,13 @@ class AudioView{
         return fetchJsonWithAuth("GET", `/audioSet?_page=0&_limit=999`);
     }
 
-    async getSetInfo(audioSetID){
+    async getSetInfo(audioSetID, search){
         /*获取合集详情*/
-        return fetchJsonWithAuth("GET", `/audioSet/${audioSetID}`);
+        if(search){
+            return fetchJsonWithAuth("GET", `/audioSet/${audioSetID}?search=${search}`);
+        }else{
+            return fetchJsonWithAuth("GET", `/audioSet/${audioSetID}`);
+        }
     }
 
     async addSet(coverFile, setName, setRemark){

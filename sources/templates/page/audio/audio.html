@@ -33,6 +33,8 @@
                 <div class="audio-header-text"></div>
                 <div class="audio-header-text">{{ _('AUDIO NAME') }}</div>
                 <div class="audio-header-text">{{ _('AUDIO SINGER') }}</div>
+                <div class="audio-header-text">{{ _('AUDIO ALBUM') }}</div>
+                <div class="audio-header-text">{{ _('AUDIO REMARK') }}</div>
                 <div class="audio-header-text">{{ _('AUDIO CONTROL') }}</div>
             </div>
             <div class="audio-list-container">
@@ -43,11 +45,11 @@
     </div>
     <div class="audio-play-bar">
         <div class="audio-play-cover">
-            <img src="/static/audios/default.png">
+            <img src="/static/audios/default.png" id="audioPlayCover">
         </div>
         <div class="audio-play-info">
-            <div class="audio-play-name" id="audioPlayName">听妈妈的话</div>
-            <div class="audio-play-signer" id="audioPlaySinger">周杰伦</div>
+            <div class="audio-play-name" id="audioPlayName">{{ _('UNDEFINED') }}</div>
+            <div class="audio-play-signer" id="audioPlaySinger">{{ _('UNDEFINED') }}</div>
         </div>
         <div class="audio-play-button" id="audioPlayOrder">
             <img src="/static/icons/normal_order.png">
@@ -62,17 +64,13 @@
             <img src="/static/icons/fast_forward_trans.png">
         </div>
         <div class="audio-play-progress">
-            <div>00:00</div>
-            <div class="audio-play-progress-bar">
-                <div></div>
-            </div>
-            <div>XX:XX</div>
+            <div id="audioStartTime">00:00</div>
+            {{ forms.progress_bar('audioPlayProgress') }}
+            <div id="audioEndTime">99:99</div>
         </div>
         <div class="audio-play-volume">
             <img src="/static/icons/volume.png">
-            <div class="audio-play-volume-bar">
-                <div></div>
-            </div>
+            {{ forms.progress_bar('audioPlayVolume') }}
         </div>
 
     </div>
@@ -92,6 +90,7 @@
 {% endblock %}
 
 {% block js_file %}
+    <script type="module" src="{{url_for('static', filename='js/howler/howler.min.js')}}" referrerpolicy="origin"></script>
     {% assets "audio_js" %}
         <script type="module" src="{{ ASSET_URL }}"></script>
     {% endassets %}

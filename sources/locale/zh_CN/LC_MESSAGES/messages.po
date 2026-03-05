@@ -392,3 +392,6 @@ msgstr "下载音频"
 msgid "LYRICS DOWNLOAD"
 msgstr "下载歌词"
 
+msgid "UNDEFINED"
+msgstr "未知"
+

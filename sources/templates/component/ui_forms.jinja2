@@ -151,3 +151,10 @@
         {{ tinymce(id) }}
     </div>
 {% endmacro -%}
+
+{# 进度条 #}
+{%- macro progress_bar(id) %}
+    <div class="form-progress-bar" id="{{id}}">
+        <div id="{{id}}Child"></div>
+    </div>
+{% endmacro -%}

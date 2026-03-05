@@ -10,11 +10,20 @@ window.addEventListener("DOMContentLoaded", function(){
     let audioController = new AudioController();
 });
 
+const ORDER_MAPPING = {
+    "normal": "/static/icons/normal_order.png",
+    "random": "/static/icons/random_order.png",
+    "repeat": "/static/icons/repeat_order.png"
+}
+
 class AudioController{
 
     constructor(){
         // 数据
         this.audioView = new AudioView();
+        this.soundController = null; //维持一份howler实例
+        this.progressBarInterval = null; //进度条定时器
+        this.initElement();
         // 初始化弹窗
         this.popupMessage = new PopupMessage();
 
@@ -45,6 +54,10 @@ class AudioController{
         this.editAudioLyrics = new FormFileUploader("editAudioLyrics");
         this.editAudioLyrics.initBind();
 
+        // 初始化进度条
+        this.audioPlayProgress = new ProgressBar("audioPlayProgress", this.onClickPlayProgress.bind(this));
+        this.audioPlayVolume = new ProgressBar("audioPlayVolume", this.onClickVolume.bind(this), localStorage.getItem("nowPlayVolume")||50);
+
         // 初始化弹窗
         this.bindAddSet();
         this.bindDeleteSet();
@@ -55,6 +68,236 @@ class AudioController{
         this.bindRemoveAudio();
         this.bindEditAudio();
         this.bindAddToSet();
+        this.bindPlayEvent();
+        this.bindSearchEvent();
+    }
+
+    bindSearchEvent(){
+        callElement("audioSearch", element=>{
+            /*搜索事件*/
+            element.addEventListener("keydown", (event)=>{
+                if (event.key === "Enter" || event.keyCode === 13){
+                    event.preventDefault();
+                    storeSession("search", element.value);
+                    this.updateAudioList();
+                }
+            });
+            let icon = element.previousElementSibling;
+            icon?.addEventListener("click", (event)=>{
+                event.preventDefault();
+                storeSession("search", element.value);
+                this.updateAudioList();
+            });
+        });
+    }
+
+    onClickPlayProgress(event, percentage){
+        /*点击音频进度条*/
+        if (this.soundController) {
+            let progressPercent = percentage / 100.0;
+            let duration = this.soundController.duration();
+            let currentTime = duration * progressPercent;
+            this.soundController.seek(currentTime);
+            callElement("audioStartTime", element => {
+                element.textContent = formatSeconds(currentTime);
+            });
+        }
+    }
+
+    async onEndAudio(){
+        /*音频播放结束*/
+        callElement("audioPlayCover", element=>{
+            element.parentElement.classList.remove("on-play");
+        });
+        callElement("audioPlayPause", element=>{
+            element.src = "/static/icons/play.png";
+        });
+        this.stopPlayProgressInterval();
+        let nowPlayOrder = sessionStorage.getItem("nowPlayOrder") || "normal";
+        if(nowPlayOrder==="repeat"){
+            this.onClickAudio();
+            return;
+        }
+        let nowPlayList = getSessionAsJson("nowPlayList") || [];
+        if(nowPlayList.length<1){
+            this.soundController?.unload();
+            return;
+        }
+        let nowPlayAudioData = getSessionAsJson("nowPlayAudioData");
+        let index = nowPlayList.indexOf(nowPlayAudioData.audioID);
+        if(index<0){
+            index = getRandomInt(0, nowPlayList.length-1);
+        }
+        let audioID = nowPlayList[(index+1)%nowPlayList.length]
+        try{
+            let responseData = await this.audioView.getAudioInfo(audioID);
+            storeSession("nowPlayAudioData", responseData);
+            this.onClickAudio();
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }
+    }
+
+    startPlayProgressInterval(){
+        this.progressBarInterval = setInterval(this.updatePlayProgress.bind(this), 1000);
+    }
+
+    updatePlayProgress(){
+        /*更新音频播放条*/
+        let currentTime = this.soundController?.seek() || 0;
+        let duration = this.soundController?.duration() || 1;
+        let progressPercent = (currentTime / duration) * 100;
+        callElement("audioStartTime", element => {
+            element.textContent = formatSeconds(currentTime);
+        });
+        callElement("audioEndTime", element=>{
+            element.textContent = formatSeconds(duration);
+        });
+        this.audioPlayProgress?.update(progressPercent);
+    }
+
+    stopPlayProgressInterval() {
+        /*终止定时器*/
+        clearInterval(this.progressBarInterval);
+    }
+
+    bindPlayEvent(){
+        callElement("audioPlayOrder", element=>{
+            element.addEventListener("click", (event)=>{
+                let nowPlayOrder = sessionStorage.getItem("nowPlayOrder") || "normal";
+                let img = element.querySelector("img");
+                if(nowPlayOrder === "normal"){
+                    nowPlayOrder = "random";
+                    let nowPlayList = getSessionAsJson("nowPlayList") || [];
+                    nowPlayList = shuffle(nowPlayList);
+                    storeSession("nowPlayList", nowPlayList);
+                }else if(nowPlayOrder === "random"){
+                    nowPlayOrder = "repeat";
+                }else{
+                    nowPlayOrder = "normal";
+                    let nowPlaySetData = getSessionAsJson("nowPlaySetData") || [];
+                    let orderList = [];
+                    for(let audioItem of nowPlaySetData){
+                        orderList.push(audioItem.audioID);
+                    }
+                    storeSession("nowPlayList", orderList);
+                }
+                storeSession("nowPlayOrder", nowPlayOrder);
+                img.src = ORDER_MAPPING[nowPlayOrder]
+            });
+        });
+        callElement("audioPlayPause", element=>{
+            element.addEventListener("click", async (event)=>{
+                try{
+                    let img = element.querySelector("img");
+                    if(img.src.endsWith("/static/icons/play.png")){
+                        if(this.soundController){
+                            this.soundController.play();
+                            this.startPlayProgressInterval();
+                            callElement("audioPlayCover", element=>{
+                                element.parentElement.classList.add("on-play");
+                            });
+                            img.src="/static/icons/pause.png";
+                        }else{
+                            await this.storePlaySetData();
+                            let audioData = getSessionAsJson("nowPlayAudioData");
+                            if(!audioData){
+                                let nowPlayList = getSessionAsJson("nowPlayList") || [];
+                                if(nowPlayList.length < 1){
+                                    return;
+                                }
+                                let index = getRandomInt(0, nowPlayList.length -1);
+                                let responseData = await this.audioView.getAudioInfo(nowPlayList[index]);
+                                storeSession("nowPlayAudioData", responseData);
+                            }
+                            this.onClickAudio();
+                        }
+                    }else{
+                        img.src="/static/icons/play.png";
+                        this.soundController?.pause();
+                        this.stopPlayProgressInterval();
+                        callElement("audioPlayCover", element=>{
+                            element.parentElement.classList.remove("on-play");
+                        });
+                    }
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }
+            });
+        });
+        callElement("audioFastRewind", element=>{
+            /*点击上一首*/
+            element.addEventListener("click", async (event)=>{
+                if(!this.soundController){
+                    return;
+                }
+                try{
+                    let nowPlayAudioData = getSessionAsJson("nowPlayAudioData");
+                    let nowPlayList = getSessionAsJson("nowPlayList") || [];
+                    if(!nowPlayAudioData || nowPlayList.length<1){
+                        return;
+                    }
+                    let index = nowPlayList.indexOf(nowPlayAudioData.audioID);
+                    if(index < 0){
+                        index = getRandomInt(0, nowPlayList.length-1);
+                    }
+                    let audioID = nowPlayList[(index+nowPlayList.length-1)%nowPlayList.length];
+                    let responseData = await this.audioView.getAudioInfo(audioID);
+                    storeSession("nowPlayAudioData", responseData);
+                    this.onClickAudio();
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }
+            });
+        });
+        callElement("audioFastForward", element=>{
+            /*点击下一首*/
+            element.addEventListener("click", async (event)=>{
+                if(!this.soundController){
+                    return;
+                }
+                try{
+                    let nowPlayAudioData = getSessionAsJson("nowPlayAudioData");
+                    let nowPlayList = getSessionAsJson("nowPlayList") || [];
+                    if(!nowPlayAudioData || nowPlayList.length<1){
+                        return;
+                    }
+                    let index = nowPlayList.indexOf(nowPlayAudioData.audioID);
+                    if(index < 0){
+                        index = getRandomInt(0, nowPlayList.length-1);
+                    }
+                    let audioID = nowPlayList[(index+1)%nowPlayList.length];
+                    let responseData = await this.audioView.getAudioInfo(audioID);
+                    storeSession("nowPlayAudioData", responseData);
+                    this.onClickAudio();
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }
+            });
+        });
+    }
+
+    onClickVolume(event, percentage){
+        /*点击音量*/
+        let volume = parseInt(percentage);
+        storeLocal("nowPlayVolume", volume);
+        if(this.soundController){
+            this.soundController.volume(this.getActualVolume(volume));
+        }
+    }
+
+    initElement(){
+        /*初始化元素*/
+        storeSession("nowPlayList",[]);
+        storeSession("nowPlaySetData", []);
+        checkLocalDefault("nowPlayVolume", "50"); //howler实际音量=value/100/3,不除3音量过大
+        checkLocalDefault("nowPlayOrder", "normal"); //normal、random、repeat
+        callElement("audioPlayOrder", element=>{
+            let img = element.querySelector("img");
+            if(img){
+                img.src = ORDER_MAPPING[sessionStorage.getItem("nowPlayOrder")||"normal"];
+            }
+        });
     }
 
     bindAddToSet(){
@@ -453,6 +696,7 @@ class AudioController{
         let url = new URL(window.location.href);
         let params = new URLSearchParams(url.search);
         storeSession("audioSetID",params.get("setID"));
+        storeSession("search", params.get("search"));
     }
 
     bindDeleteSet(){
@@ -575,11 +819,13 @@ class AudioController{
         try{
             let url = new URL(window.location.href);
             let newParams = new URLSearchParams();
+            let search = sessionStorage.getItem("search");
             addParams(newParams, "setID", nowAudioSetID);
+            addParams(newParams, "search", search);
             url.search = newParams.toString();
             window.history.pushState({path:url.href},'',url.href);
 
-            let audioSetData = await this.audioView.getSetInfo(nowAudioSetID);
+            let audioSetData = await this.audioView.getSetInfo(nowAudioSetID, search);
             callElement("audioSetInfo", element=>{
                 element.textContent = audioSetData.setName;
             })
@@ -612,14 +858,24 @@ class AudioController{
         itemDiv.appendChild(iconDiv);
 
         let nameDiv = document.createElement("div");
-        nameDiv.classList.add("audio-item-column");
+        nameDiv.classList.add("audio-item-column", "ellipsis");
         nameDiv.textContent = audioData.filename;
         itemDiv.appendChild(nameDiv);
 
         let singerDiv = document.createElement("div");
-        singerDiv.classList.add("audio-item-column");
+        singerDiv.classList.add("audio-item-column", "ellipsis");
         singerDiv.textContent = audioData.singer;
         itemDiv.appendChild(singerDiv);
+
+        let albumDiv = document.createElement("div");
+        albumDiv.classList.add("audio-item-column", "ellipsis");
+        albumDiv.textContent = audioData.album;
+        itemDiv.appendChild(albumDiv);
+
+        let remarkDiv = document.createElement("div");
+        remarkDiv.classList.add("audio-item-column", "ellipsis");
+        remarkDiv.textContent = audioData.remark;
+        itemDiv.appendChild(remarkDiv);
 
         let controlDiv = document.createElement("div");
         controlDiv.classList.add("audio-item-control");
@@ -629,7 +885,93 @@ class AudioController{
         itemDiv.appendChild(controlDiv);
         this.bindControlEvent(controlDiv, audioData);
 
+        itemDiv.addEventListener("click", (event)=>{
+            storeSession("nowPlayAudioData", audioData);
+            this.onClickAudio(event);
+            this.storePlaySetData();
+        });
+
         return itemDiv;
+    }
+
+    async storePlaySetData(){
+        /*缓存播放合集队列*/
+        try{
+            let nowPlaySetID = sessionStorage.getItem("nowPlaySetID");
+            let nowAudioSetID = sessionStorage.getItem("audioSetID");
+            if(!nowPlaySetID || nowPlaySetID != nowAudioSetID){
+                nowPlaySetID = nowAudioSetID;
+            }
+            storeSession("nowPlaySetID", nowPlaySetID);
+            let search = sessionStorage.getItem("search");
+            let responseData = await this.audioView.getSetInfo(nowPlaySetID,search);
+            storeSession("nowPlaySetData", responseData.audios);
+            //设置封面
+            callElement("audioPlayCover", element=>{
+                if(responseData.coverID){
+                    element.src = `/api/v1/storages/files/${responseData.coverID}/download?accessToken=${localStorage.getItem("accessToken")}`;
+                }else{
+                    element.src = "/static/audios/default.png"
+                }
+            });
+            //计算并缓存播放序列
+            let nowPlayOrder = sessionStorage.getItem("nowPlayOrder")||"normal";
+            let orderList = [];
+            for(let audioItem of responseData.audios||[]){
+                orderList.push(audioItem.audioID);
+            }   
+            if(nowPlayOrder=="random"){
+                orderList = shuffle(orderList);
+            }
+            storeSession("nowPlayList", orderList);
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }
+    }
+
+    onClickAudio(event){
+        /*点击播放音频*/
+        try{
+            let audioData = getSessionAsJson("nowPlayAudioData");
+            if(!audioData){
+                return;
+            }
+            this.initSoundController(`api/v1/storages/files/${audioData.fileID}/download?accessToken=${localStorage.getItem("accessToken")}`);
+            this.soundController?.play();
+            callElement("audioPlayName", element=>{
+                element.textContent = audioData.filename;
+            });
+            callElement("audioPlaySinger", element=>{
+                element.textContent = audioData.singer;
+            });
+            callElement("audioPlayPause", element=>{
+                let img = element.querySelector("img");
+                img.src = "/static/icons/pause.png";
+            });
+            callElement("audioPlayCover", element=>{
+                element.parentElement.classList.add("on-play");
+            });
+            this.stopPlayProgressInterval();
+            this.startPlayProgressInterval();
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }
+    }
+
+    initSoundController(url){
+        /*重新初始化SoundController*/
+        this.soundController?.unload();
+        this.soundController = new Howl({
+            src: [url],
+            volume: this.getActualVolume(localStorage.getItem("nowPlayVolume")),
+            format: ["mp3"],
+            onend: this.onEndAudio.bind(this)
+        });
+    }
+
+    getActualVolume(value){
+        /*获取实际音量*/
+        return Number(value||"50")/100*(0.5);
     }
 
     createAudioSetItem(itemData){
@@ -651,10 +993,11 @@ class AudioController{
 
         setItemDiv.addEventListener("click", (event)=>{
             let audioSetID = sessionStorage.getItem("audioSetID");
-            if(audioSetID === itemData.setID){
-                return;
-            }
             storeSession("audioSetID", itemData.setID);
+            callElement("audioSearch", element=>{
+                element.value = "";
+            });
+            storeSession("search", null);
             this.updateAudioList();
         });
 
