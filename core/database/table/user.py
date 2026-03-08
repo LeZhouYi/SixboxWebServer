@@ -140,3 +140,22 @@ class UserDB(TableBase):
             self._db.remove(where(User.USER_ID) == user_id)  # type: ignore
             return
         raise Exception("USER NOT FOUND")
+
+    def edit_user(self, user_id: str, data: dict):
+        """
+        编辑用户
+        :param user_id:
+        :param data:
+        :return:
+        """
+        result = self._db.get(where(User.USER_ID) == user_id)  # type: ignore
+        if result:
+            edit_data = extract_values(data, [
+                User.BACKGROUND, User.ROLE, User.PASSWORD
+            ])
+            if User.PASSWORD in edit_data:
+                edit_data[User.PASSWORD] = self.hash_encrypt(edit_data[User.PASSWORD])
+            result.update(edit_data)
+            self._db.update(result, where(User.USER_ID) == user_id)  # type: ignore
+            return
+        raise Exception("USER NOT FOUND")

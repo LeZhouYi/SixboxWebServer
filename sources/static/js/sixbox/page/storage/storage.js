@@ -20,7 +20,8 @@ const storageTexts = {
 // 表示对应的操作类型会显示的操作列表
 const storageControlMapping = {
     "folder": ["fileEditButton","fileDeleteButton"],
-    "file": ["fileEditButton","fileDeleteButton","fileDownloadButton"]
+    "file": ["fileEditButton","fileDeleteButton","fileDownloadButton"],
+    "image": ["fileEditButton","fileDeleteButton","fileDownloadButton","setBackgroundButton"]
 }
 
 //第一个值表示操作类型，用于控制操作弹窗的具体行为
@@ -30,9 +31,9 @@ const fileTypeMapping = {
     "": ["folder", "folder", "/static/icons/folder.png"],
     "html": ["html","file","/static/icons/html.png"],
     "pdf": ["pdf", "file", "/static/icons/pdf.png"],
-    "png": ["image", "file", "/static/icons/image.png"],
-    "jpg": ["image", "file", "/static/icons/image.png"],
-    "jpeg": ["image", "file", "/static/icons/image.png"],
+    "png": ["image", "image", "/static/icons/image.png"],
+    "jpg": ["image", "image", "/static/icons/image.png"],
+    "jpeg": ["image", "image", "/static/icons/image.png"],
     "zip": ["zip", "file", "/static/icons/zip.png"],
     "xlsx": ["excel", "file", "/static/icons/ms_excel.png"],
     "pdf": ["pdf", "file", "/static/icons/pdf.png"],
@@ -75,6 +76,7 @@ class StorageController{
 
         // 初始化文件上传的控件
         this.formFileUpload = new FormFileUploader("uploadFileLoader");
+        this.editFileLoader = new FormFileUploader("editFileLoader");
 
         // TinyMCE控件
         let lang = document.documentElement.lang || "zh-CN";
@@ -235,6 +237,22 @@ class StorageController{
                 this.onEditFile();
             })
         });
+        this.editFileLoader.bindOnDrop(()=>{
+            if(this.editFileLoader.tempFile.length > 0){
+                callElement("editFilename", element=>{
+                    let name = this.editFileLoader.tempFile[0].name;
+                    element.value = getFilename(name);
+                });
+            }
+        });
+        this.editFileLoader.bindOnClick(()=>{
+            if(this.editFileLoader.tempFile.length > 0){
+                callElement("editFilename", element=>{
+                    let name = this.editFileLoader.tempFile[0].name;
+                    element.value = getFilename(name);
+                });
+            }
+        });
     }
 
     async onEditFile(){
@@ -242,11 +260,23 @@ class StorageController{
         let spinner = createSpinner("editFileConfirm");
         try{
             event?.preventDefault();
+            let fileID = null;
+            let file = null;
+            if(this.editFileLoader.tempFile.length > 0){
+                let fileData = this.editFileLoader.tempFile[0];
+                if(typeof fileData !== "string"){
+                    file = fileData;
+                }else{
+                    fileID = fileData;
+                }
+            }
             let responseData = await this.storagesView.editFile(
                 document.getElementById("editFileSelect")?.value,
                 document.getElementById("editFilename")?.value,
                 document.getElementById("editFileRemark")?.value,
-                sessionStorage.getItem("nowFileID")
+                sessionStorage.getItem("nowFileID"),
+                fileID,
+                file
             )
             this.updateFileList();
             this.popupEditFile.hideContainer();
@@ -433,6 +463,27 @@ class StorageController{
                 this.popupDeleteConfirm.showContainer();
             });
         });
+        callElement("setBackgroundButton", element=>{
+            element.addEventListener("click", async (event)=>{
+                let spinner = createSpinner("setBackgroundButton");
+                try{
+                    let fileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"))[0];
+                    if(fileType!=="image"){
+                        return;
+                    }
+                    let fileID = sessionStorage.getItem("nowFileID");
+                    let userID = localStorage.getItem("userID")
+                    let responseData = await new UsersView().setBackground(userID, fileID);
+                    new Background().init();
+                    this.popupFileControl.hideContainer();
+                    this.popupMessage.displaySuccessMessage(responseData.message);
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
     }
 
     async onClickEditText(event){
@@ -476,6 +527,8 @@ class StorageController{
             callElement("editFileRemark", element=>{
                 element.value = fileData.remark;
             });
+            this.editFileLoader.reset();
+            this.editFileLoader.setData(fileID);
             this.popupEditFile.showContainer();
         }catch(error){
             this.popupMessage.displayErrorMessage(error);

@@ -6,6 +6,7 @@
 {% block popup_content %}
 <form class="form-base" id="editFileForm">
     {{ forms.form_title(_('EDIT FILE')) }}
+    {{ forms.form_upload('editFileLoader', '*',_('FILE UPLOAD HOLDER')) }}
     {{ forms.label_line_input('editFilename',_('FILENAME'), 'text', _('FILENAME HOLDER'), 'required')}}
     {{ forms.label_select('editFileSelect', _('FOLDER SELECT'), 'required') }}
     {{ forms.label_textarea('editFileRemark', _('FOLDER REMARK'), '10em', _('FOLDER REMARK HOLDER')) }}

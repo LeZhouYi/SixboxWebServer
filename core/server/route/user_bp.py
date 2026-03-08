@@ -1,13 +1,13 @@
 from flask import Blueprint, request, jsonify
 
-from core.database.table import USER_DB, SESSION_DB
+from core.database.table import USER_DB, SESSION_DB, STORAGE_DB
 from core.database.table.session import Session
 from core.database.table.user import Role, User
 from core.database.view.session_view import verify_token
 from core.database.view.user_view import role_required
 from core.database.view.view_utils import catch_exception
 from core.helpers.route import gen_prefix_api, extract_values, gen_success_response
-from core.helpers.validate import validate_str_empty, validate_dict_str_empty
+from core.helpers.validate import validate_dict_str_empty
 
 USER_BP = Blueprint("user", __name__)
 
@@ -42,7 +42,7 @@ def get_user(user_id: str):
     ]))
 
 
-@USER_BP.route(gen_prefix_api("/user/<user_id>"), methods=["DELETE"])
+@USER_BP.route(gen_prefix_api("/users/<user_id>"), methods=["DELETE"])
 @catch_exception
 def delete_user(user_id: str):
     """删除/注销用户"""
@@ -52,4 +52,18 @@ def delete_user(user_id: str):
         raise Exception("PERMISSION DENIED")
     USER_DB.delete_user(user_id)
     SESSION_DB.delete_token_by_user(user_id)
+    return gen_success_response(request, "SUCCESS RESULT")
+
+@USER_BP.route(gen_prefix_api("/users/<user_id>/background"), methods=["PUT"])
+@catch_exception
+def set_background(user_id: str):
+    """修改背景"""
+    verify_result = verify_token(request)
+    now_user_id = verify_result.get(Session.USER_ID)
+    if not USER_DB.match_role(now_user_id, Role.ADMIN) and now_user_id != user_id:
+        raise Exception("PERMISSION DENIED")
+    data = request.json
+    if User.BACKGROUND in data and data[User.BACKGROUND] is not None:
+        STORAGE_DB.get_file_data(data[User.BACKGROUND])
+    USER_DB.edit_user(user_id, data)
     return gen_success_response(request, "SUCCESS RESULT")

@@ -14,14 +14,15 @@
         <div class="audio-set-bar">
             <div class="audio-set-info">
                 <img src="/static/icons/audio_set.png">
-                <a>{{ _('NOW AUDIO SET') }}</a>
-                <a id="audioSetInfo"></a>
+                <a class="ellipsis">{{ _('NOW AUDIO SET') }}</a>
+                <a id="audioSetInfo" class="ellipsis"></a>
             </div>
             {{ forms.icon_button('editSetButton','/static/icons/edit.png') }}
             {{ forms.icon_button('deleteSetButton','/static/icons/trash.png') }}
             {{ forms.icon_button('createSetButton','/static/icons/folder_create.png') }}
         </div>
         <div class="audio-list-bar">
+            {{ forms.icon_button('setListButton','/static/icons/list.png') }}
             {{ forms.search_bar('audioSearch', _('AUDIO SEARCH')) }}
             {{ forms.icon_button('uploadAudioButton','/static/icons/upload.png') }}
         </div>
@@ -30,12 +31,12 @@
         <div class="audio-set-list"></div>
         <div class="audio-list">
             <div class="audio-list-header">
-                <div class="audio-header-text"></div>
-                <div class="audio-header-text">{{ _('AUDIO NAME') }}</div>
-                <div class="audio-header-text">{{ _('AUDIO SINGER') }}</div>
-                <div class="audio-header-text">{{ _('AUDIO ALBUM') }}</div>
-                <div class="audio-header-text">{{ _('AUDIO REMARK') }}</div>
-                <div class="audio-header-text">{{ _('AUDIO CONTROL') }}</div>
+                <div class="audio-header-text ellipsis"></div>
+                <div class="audio-header-text ellipsis">{{ _('AUDIO NAME') }}</div>
+                <div class="audio-header-text ellipsis">{{ _('AUDIO SINGER') }}</div>
+                <div class="audio-header-text ellipsis">{{ _('AUDIO ALBUM') }}</div>
+                <div class="audio-header-text ellipsis">{{ _('AUDIO REMARK') }}</div>
+                <div class="audio-header-text ellipsis">{{ _('AUDIO CONTROL') }}</div>
             </div>
             <div class="audio-list-container">
                 <div class="audio-list-item">
@@ -43,11 +44,16 @@
             </div>
         </div>
     </div>
+    <div class="audio-lyrics-part hidden">
+        <div class="audio-lyrics-container">
+            <div class="audio-lyrics-list" id="audioLyricsContainer"></div>
+        </div>
+    </div>
     <div class="audio-play-bar">
         <div class="audio-play-cover">
             <img src="/static/audios/default.png" id="audioPlayCover">
         </div>
-        <div class="audio-play-info">
+        <div class="audio-play-info" id="audioPlayInfo">
             <div class="audio-play-name" id="audioPlayName">{{ _('UNDEFINED') }}</div>
             <div class="audio-play-signer" id="audioPlaySinger">{{ _('UNDEFINED') }}</div>
         </div>
@@ -87,6 +93,7 @@
     {% include 'page/audio/popup_remove_audio.jinja2' %}
     {% include 'page/audio/popup_edit_audio.jinja2' %}
     {% include 'page/audio/popup_add_to_set.jinja2' %}
+    {% include 'page/audio/popup_set_list.jinja2' %}
 {% endblock %}
 
 {% block js_file %}

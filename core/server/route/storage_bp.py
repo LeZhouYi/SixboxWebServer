@@ -13,6 +13,7 @@ from core.database.view.storage_view import save_file, search_storage_data, save
 from core.database.view.view_utils import catch_exception, page_args_required, Params
 from core.helpers.route import gen_prefix_api, gen_success_response, get_stream_io
 from core.helpers.validate import validate_str_empty, validate_dict_str_empty
+from core.log import logger
 
 STORAGE_BP = Blueprint("storage", __name__)
 
@@ -129,12 +130,33 @@ def edit_file(file_id: str):
     """编辑文件"""
     ## 校验
     validate_permission(request, file_id, is_file=True)
-    data = request.json
-    validate_dict_str_empty(data, Storage.FILE_NAME, "FILENAME REQUIRED")
-    validate_folder(data.get(Storage.FOLDER_ID))
+    decoded = verify_token(request)
+    filename = request.form.get(Storage.FILE_NAME)
+    validate_str_empty(filename, "FILENAME REQUIRED")
+    folder_id = request.form.get(Storage.FOLDER_ID)
+    validate_folder(folder_id)
+
     ## 处理
-    data[Storage.FILE_ID] = file_id
-    STORAGE_DB.edit_data(data)
+    input_file_id = request.form.get(Storage.FILE_ID)
+    edit_data = {
+        Storage.FILE_ID: file_id,
+        Storage.FOLDER_ID: folder_id,
+        Storage.FILE_NAME: filename,
+        Storage.UPLOADER: decoded.get(Session.USER_ID),
+        Storage.REMARK: request.form.get(Storage.REMARK)
+    }
+    if input_file_id is None:
+        file = request.files.get(Storage.FILES)
+        if file is None:
+            raise Exception("FILES REQUIRED")
+        edit_data.update(save_file(file))
+        old_file_data = STORAGE_DB.get_file_data(file_id)
+        try:
+            os.remove(old_file_data.get(Storage.FILE_PATH))
+        except Exception as e:
+            logger.warn(f"remove file: {old_file_data.get(Storage.FILE_PATH)}, error: {e}")
+
+    STORAGE_DB.edit_data(edit_data)
     return gen_success_response(request, "EDIT SUCCESS", 200)
 
 

@@ -36,5 +36,5 @@ input:focus-visible{
 }
 
 .hidden{
-    display: none;
+    display: none !important;
 }

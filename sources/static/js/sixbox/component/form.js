@@ -143,6 +143,8 @@ class FormFileUploader{
         display?.classList.add("hidden");
         let input = element.querySelector(".form-file-input");
         input?.classList.remove("hidden");
+        let inputElement = input.querySelector("input");
+        inputElement.value = "";
     }
 
 }

@@ -23,6 +23,8 @@ class AudioController{
         this.audioView = new AudioView();
         this.soundController = null; //维持一份howler实例
         this.progressBarInterval = null; //进度条定时器
+        this.lyricsData = null; //歌词数据实例
+        this.lyricsLineIndex = null; //歌词当前播放下标
         this.initElement();
         // 初始化弹窗
         this.popupMessage = new PopupMessage();
@@ -39,6 +41,7 @@ class AudioController{
         this.popupRemoveAudio = new PopupContainer("popupRemoveAudio");
         this.popupEditAudio = new PopupContainer("popupEditAudio");
         this.popupAddToSet = new PopupContainer("popupAddToSet");
+        this.popupSetList = new PopupContainerFloat("popupSetList");
 
         // 初始化文件上传的控件
         this.addCoverUpload = new FormFileUploader("addCoverLoader");
@@ -70,6 +73,175 @@ class AudioController{
         this.bindAddToSet();
         this.bindPlayEvent();
         this.bindSearchEvent();
+        this.bindLyricsEvent();
+        this.bindSetList();
+    }
+
+    bindSetList(){
+        callElement("setListButton", element=>{
+            element.addEventListener("click", async (event)=>{
+                let spinner = createSpinner("setListButton");
+                try{
+                    let responseData = await this.audioView.getSetList();
+                    callElement("setSelect", selectElement=>{
+                        selectElement.innerHTML = "";
+                        let audioSetID = sessionStorage.getItem("audioSetID");
+                        let willSetValue = null;
+                        for(let setData of responseData.contents){
+                            let option = document.createElement("option");
+                            option.text = setData.setName;
+                            option.value = setData.setID;
+                            selectElement.appendChild(option);
+                            if(setData.setID === audioSetID){
+                                willSetValue = audioSetID;
+                            }
+                        }
+                        if(responseData.contents.length > 0){
+                            selectElement.value = willSetValue || responseData.contents[0].setID;
+                        }
+                    });
+                    this.popupSetList.showContainer(event.pageX, event.pageY, "end", "end", 15);
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
+        callElement("setSelect", element=>{
+            element.addEventListener("change", (event)=>{
+                storeSession("audioSetID", element.value);
+                callElement("audioSearch", element=>{
+                    element.value = "";
+                });
+                storeSession("search", null);
+                this.popupSetList.hideContainer();
+                this.updateAudioList();
+            });
+        });
+    }
+
+    getActualLyricsIndex(){
+        /*获取当前播放的下标*/
+        if(!this.soundController || !this.lyricsData){
+            return -1;
+        }
+        let currentTime = this.soundController.seek();
+        let index = this.lyricsData.findIndex(item=>item.time > currentTime);
+        return index === -1 ? this.lyricsData.length -1 : index -1;
+    }
+
+    bindLyricsEvent(){
+        callElement("audioPlayCover", element=>{
+            /*点击弹出歌词*/
+            element.addEventListener("click", (event)=>{
+                let lyricsPart = document.querySelector(".audio-lyrics-part");
+                let setPart = document.querySelector(".audio-set-part");
+                if(!lyricsPart || !setPart){
+                    return;
+                }
+                let nowPlayAudioData = getSessionAsJson("nowPlayAudioData");
+                if(!nowPlayAudioData){
+                    return;
+                }
+                if(lyricsPart.classList.contains("hidden")){
+                    setPart.classList.add("hidden");
+                    lyricsPart.classList.remove("hidden");
+                    this.createLyricsContent(); //加载歌词
+                }else{
+                    setPart.classList.remove("hidden");
+                    lyricsPart.classList.add("hidden");
+                }
+            });
+        });
+        callElement("audioPlayInfo", element=>{
+             /*点击弹出歌词*/
+            element.addEventListener("click", (event)=>{
+                document.getElementById("audioPlayCover")?.click(event);
+            });
+        });
+    }
+
+    isShowLyrics(){
+        let lyricsPart = document.querySelector(".audio-lyrics-part");
+        // 隐藏中，不处理
+        if(!lyricsPart || lyricsPart.classList.contains("hidden")){
+            return false;
+        }
+        return true;
+    }
+
+    async createLyricsContent(){
+        /*创建歌词内容*/
+        if(!this.isShowLyrics()){
+            return;
+        }
+        try{
+            let audioLyricsContainer = document.getElementById("audioLyricsContainer");
+            if(!audioLyricsContainer){
+                return;
+            }
+            audioLyricsContainer.innerHTML = "";
+
+            let nowPlayAudioData = getSessionAsJson("nowPlayAudioData");
+            //没有在播放的音频，不处理
+            if(!nowPlayAudioData){
+                return;
+            }
+            let lyricsID = nowPlayAudioData.lyricsID;
+            //正在播放的音频没有歌词文件，不处理
+            if(!lyricsID){
+                return;
+            }
+            let accessToken = localStorage.getItem("accessToken");
+            let lyricsFile = await fetch(`${API_PREFIX}/storages/files/${nowPlayAudioData.lyricsID}/download?accessToken=${accessToken}`);
+            let lyricsText = await lyricsFile.text();
+            this.lyricsData = this.parseLrc(lyricsText);
+
+            for(let lyricsLineText of this.lyricsData){
+                audioLyricsContainer.appendChild(this.createLyricsItem(lyricsLineText));
+            }
+            //默认设置第一行在播放
+            if(this.lyricsData.length>0){
+                audioLyricsContainer.firstElementChild.classList.add("on-play");
+                this.lyricsLineIndex = 0;
+                this.highlightLrc(this.lyricsLineIndex);
+            }
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }
+    }
+
+    createLyricsItem(lyricsLineText){
+        /*新建一行歌词元素*/
+        let lineItem = document.createElement("div");
+        lineItem.classList.add("audio-lyrics-item");
+        lineItem.textContent = lyricsLineText.text;
+
+        return lineItem;
+    }
+
+    parseLrc(lrcText){
+        /*解析歌词*/
+        let lyrics = [];
+        let regex = /\[(\d+):(\d+(?:\.\d+)?)]\s*(.*)/;
+        let lines = lrcText.split("\n");
+        for(let line of lines){
+            let match = line.match(regex);
+            if (match) {
+                // 将 [分:秒] 转换为纯秒数 (数字)
+                let minutes = parseInt(match[1]);
+                let seconds = parseFloat(match[2]);
+                let time = parseFloat((minutes * 60 + seconds).toFixed(2));
+                let text = match[3].trim();
+                // 过滤掉没有歌词内容的空行
+                if (text) {
+                    lyrics.push({ time, text });
+                }
+            }
+        }
+        // 按时间排序（防止有的LRC文件时间轴乱序）
+        return lyrics.sort((a, b) => a.time - b.time);
     }
 
     bindSearchEvent(){
@@ -154,6 +326,51 @@ class AudioController{
             element.textContent = formatSeconds(duration);
         });
         this.audioPlayProgress?.update(progressPercent);
+
+        //更新歌词
+        if(!this.isShowLyrics()){
+            return;
+        }
+        let willIndex = this.getActualLyricsIndex();
+        console.log(this.lyricsData[willIndex]);
+        if(this.lyricsLineIndex===willIndex){
+            return;
+        }
+        this.lyricsLineIndex = willIndex;
+        this.highlightLrc(this.lyricsLineIndex);
+    }
+
+    highlightLrc(index) {
+        // 1. 样式高亮切换
+        let lrcList = document.getElementById("audioLyricsContainer");
+        let lrcContainer = lrcList.parentElement;
+
+        let oldActive = lrcList.querySelector(".on-play");
+        console.log(oldActive);
+        if (oldActive){
+            oldActive.classList.remove("on-play");
+        }
+
+        const currentLine = lrcList.children[index];
+        if (!currentLine){
+            return;
+        }
+
+        console.log(currentLine);
+        currentLine.classList.add("on-play");
+
+        // 2. 计算滚动距离
+        // offsetTop 是当前行相对于父容器顶部的距离
+        let offset = currentLine.offsetTop - lrcContainer.offsetHeight / 2 + currentLine.offsetHeight / 2;
+
+        console.log(offset);
+        // 边界处理：如果还没滚到一半，不需要向上滚
+        if (offset < 0){
+            offset = 0;
+        }
+
+        // 3. 执行平滑滚动
+        lrcList.style.transform = `translateY(-${offset}px)`;
     }
 
     stopPlayProgressInterval() {
@@ -951,6 +1168,9 @@ class AudioController{
             callElement("audioPlayCover", element=>{
                 element.parentElement.classList.add("on-play");
             });
+            if(this.isShowLyrics()){
+                this.createLyricsContent();
+            }
             this.stopPlayProgressInterval();
             this.startPlayProgressInterval();
         }catch(error){

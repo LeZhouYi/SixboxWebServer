@@ -395,3 +395,6 @@ msgstr "下载歌词"
 msgid "UNDEFINED"
 msgstr "未知"
 
+msgid "SET BACKGROUND"
+msgstr "设为壁纸"
+

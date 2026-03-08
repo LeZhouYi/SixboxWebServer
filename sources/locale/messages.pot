@@ -392,3 +392,6 @@ msgstr ""
 
 msgid "UNDEFINED"
 msgstr ""
+
+msgid "SET BACKGROUND"
+msgstr ""

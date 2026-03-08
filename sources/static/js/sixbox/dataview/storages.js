@@ -49,14 +49,20 @@ class StoragesView{
         });
     }
 
-    async editFile(folderID, filename, remark, fileID){
+    async editFile(folderID, filename, remark, fileDataID, fileID, file){
         /*编辑文件*/
-        return fetchJsonWithAuth("PUT", `/storages/files/${fileID}`, {
-            "folderID": folderID,
-            "filename": filename,
-            "remark": remark,
-            "fileID": fileID
-        });
+        let formData = new FormData();
+        if(file){
+            formData.append("files", file);
+        }
+        if(fileID){
+            formData.append("fileID", fileID);
+        }
+        formData.append("folderID", folderID);
+        formData.append("filename", filename);
+        formData.append("remark", remark);
+
+        return fetchFormWithAuth("PUT", `/storages/files/${fileDataID}`, formData);
     }
 
     async addFile(file,filename,folderID,remark){

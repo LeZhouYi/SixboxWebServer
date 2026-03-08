@@ -12,6 +12,9 @@ class Background{
         let backgroundUrl = userDetail.background;
         if(!backgroundUrl){
             backgroundUrl = "/static/covers/cover.png"; //没有自定义时默认使用封面
+        } else{
+            let accessToken = localStorage.getItem("accessToken");
+            backgroundUrl = `${API_PREFIX}/storages/files/${backgroundUrl}/download?accessToken=${accessToken}`;
         }
         let imgElement = this.backgroundContainer.querySelector("img");
         if(!imgElement){

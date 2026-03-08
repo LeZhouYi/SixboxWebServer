@@ -1,0 +1,12 @@
+{% extends 'component/ui_popup_base.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+
+{% block popup_id %}popupSetList{% endblock %}
+{% block overlay_class %}popup-overlay-float hidden{% endblock %}
+{% block container_class %}popup-container-float{% endblock %}
+
+{% block popup_content %}
+<div class="navigation-popup">
+    {{ forms.label_select('setSelect', _('SET SELECT'), '') }}
+</div>
+{% endblock %}
