@@ -332,7 +332,6 @@ class AudioController{
             return;
         }
         let willIndex = this.getActualLyricsIndex();
-        console.log(this.lyricsData[willIndex]);
         if(this.lyricsLineIndex===willIndex){
             return;
         }
@@ -346,7 +345,6 @@ class AudioController{
         let lrcContainer = lrcList.parentElement;
 
         let oldActive = lrcList.querySelector(".on-play");
-        console.log(oldActive);
         if (oldActive){
             oldActive.classList.remove("on-play");
         }
@@ -356,14 +354,12 @@ class AudioController{
             return;
         }
 
-        console.log(currentLine);
         currentLine.classList.add("on-play");
 
         // 2. 计算滚动距离
         // offsetTop 是当前行相对于父容器顶部的距离
         let offset = currentLine.offsetTop - lrcContainer.offsetHeight / 2 + currentLine.offsetHeight / 2;
 
-        console.log(offset);
         // 边界处理：如果还没滚到一半，不需要向上滚
         if (offset < 0){
             offset = 0;
