@@ -108,6 +108,7 @@
     padding: 0px 15px;
     box-sizing: border-box;
     gap: 10px;
+    min-height: 0;
 }
 
 .audio-set-bar{
@@ -159,6 +160,8 @@
     min-height: 0;
     border-radius: 12px;
     background-color: var(--transparent-color);
+    display: flex;
+    flex-direction: column;
 }
 
 .audio-control-bar{
@@ -170,7 +173,7 @@
 }
 
 .audio-list-header{
-    height: 38px;
+    min-height: 38px;
     width: 100%;
     display: grid;
     grid-template-columns: 32px 2fr 1fr 1fr 1fr 32px;
@@ -207,6 +210,7 @@
     border-bottom: 1px dotted var(--line-color);
     align-items: center;
     padding: 0 15px 0 5px;
+    min-height: 0;
 }
 
 .audio-item-column{
@@ -343,6 +347,10 @@
     height: 34px;
     font-size: 20px;
     color: var(--theme-color);
+}
+
+.audio-list-container{
+    overflow-y: auto;
 }
 
 @media (max-width: 1450px), (max-device-width: 1450px){

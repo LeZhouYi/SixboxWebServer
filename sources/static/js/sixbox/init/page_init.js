@@ -6,7 +6,7 @@ window.addEventListener("DOMContentLoaded", function(){
     FormUtils.initFormSelect();
 });
 
-window.addEventListener("resize", throttle(function(){
+window.addEventListener("resize", debounce(function(){
     //监听尺寸变化，全屏
     resizeFullScreen();
 }, 200));
