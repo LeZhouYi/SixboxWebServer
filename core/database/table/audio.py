@@ -72,7 +72,7 @@ class AudioDB(TableBase):
         details = []
         query = None
         if search is not None:
-            search = re.compile(search, re.IGNORECASE)
+            search = re.compile(re.escape(search), re.IGNORECASE)
             query = where(Storage.FILE_NAME).search(search) | where(Storage.REMARK).search(search)  # type:ignore
         for audio_id in ids:
             if query is None:

@@ -160,7 +160,7 @@ class StorageDB(TableBase):
         if search is None:
             query = where(Storage.FOLDER_ID) == folder_id
         else:
-            search = re.compile(search, re.IGNORECASE)
+            search = re.compile(re.escape(search), re.IGNORECASE)
             query = where(Storage.FILE_NAME).search(search) | where(Storage.REMARK).search(search) #type:ignore
         # 分别搜索文件夹和文件，按名称排序后拼接
         # noinspection PyComparisonWithNone

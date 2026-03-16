@@ -70,7 +70,7 @@ class AudioSetDB(TableBase):
         if search is None:
             search_data = self._db.all()
         else:
-            search = re.compile(search, re.IGNORECASE)
+            search = re.compile(re.escape(search), re.IGNORECASE)
             search_data = self._db.search(where(AudioSet.SET_NAME).search(search))  # type:ignore
         # 统计/切片
         count = len(search_data)
