@@ -866,9 +866,10 @@ class StorageController{
                 let spinner = createSpinner(fileItemDiv);
                 try{
                     let responseData = await this.storagesView.getText(itemData.fileID);
-                    tinymce.get("displayTextMce").setContent(responseData.content);
-                    tinymce.get("displayTextMce").execCommand('mceAutoResize');
+                    let editor = tinymce.get("displayTextMce");
+                    editor.setContent(responseData.content);
                     this.popupDisplayText.showContainer();
+                    editor.execCommand("mceAutoResize");
                 }catch(error){
                     this.popupMessage.displayErrorMessage(error);
                 }finally{

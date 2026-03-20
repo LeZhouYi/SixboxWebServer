@@ -353,6 +353,10 @@
     overflow-y: auto;
 }
 
+.audio-list-container::-webkit-scrollbar{
+    width: 0px;
+}
+
 @media (max-width: 1450px), (max-device-width: 1450px){
     .audio-set-part{
         grid-template-columns: 432px 1fr;
