@@ -1,0 +1,11 @@
+{% extends 'component/ui_popup_base.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+
+{% block popup_id %}popupDisplayNormalText{% endblock %}
+{% block container_class %}popup-empty-container{% endblock %}
+
+{% block popup_content %}
+<form class="form-base" id="displayNormalTextForm">
+    {{ forms.textarea('displayNormalText', 4, '', 'readonly', 'form-display') }}
+</form>
+{% endblock %}

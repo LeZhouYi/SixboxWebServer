@@ -48,6 +48,8 @@ const fileTypeMapping = {
     "lrc": ["text", "file", "/static/icons/text.png"]
 }
 
+const normalTextType = ["md"];
+
 class StorageController{
 
     constructor(){
@@ -74,6 +76,7 @@ class StorageController{
         this.popupEditText = new PopupContainer("popupEditText");
         this.popupImage = new PopupImage("popupImage");
         this.popupEditNormalText = new PopupContainer("popupEditNormalText");
+        this.popupDisplayNormalText = new PopupContainer("popupDisplayNormalText");
 
         // 初始化文件上传的控件
         this.formFileUpload = new FormFileUploader("uploadFileLoader");
@@ -486,7 +489,7 @@ class StorageController{
                     this.onClickEditFolder(event);
                 }else if(fileType=="html"){
                     this.onClickEditText(event);
-                }else if(["md"].includes(fileType)){
+                }else if(normalTextType.includes(fileType)){
                     this.onClickEditNormalText(event);
                 }else{
                     this.onClickEditFile(event);
@@ -945,6 +948,22 @@ class StorageController{
             fileItemDiv.addEventListener("click", (event)=>{
                 let accessToken = localStorage.getItem("accessToken");
                 this.popupImage.showImage(`${API_PREFIX}/storages/files/${itemData.fileID}/download?accessToken=${accessToken}`);
+            });
+        }else if(normalTextType.includes(fileType)){
+            fileItemDiv.addEventListener("click", async (event)=>{
+                let spinner = createSpinner(fileItemDiv);
+                try{
+                    let responseData = await this.storagesView.getText(itemData.fileID);
+                    this.popupDisplayNormalText.showContainer();
+                    callElement("displayNormalText", element=>{
+                        element.value = responseData.content;
+                        element.dispatchEvent(new Event("input"));
+                    });
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
             });
         }else{
             fileItemDiv.addEventListener("click", (event)=>{

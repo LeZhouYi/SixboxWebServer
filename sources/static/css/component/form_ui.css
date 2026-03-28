@@ -425,6 +425,13 @@
     border-radius: 8px;
 }
 
+.form-display{
+    /* 去除边框和背景 */
+    border: none;
+    outline: none;     /* 去除点击时的蓝色外框 */
+    resize: none;      /* 禁止用户手动拉伸大小 */
+}
+
 @media (max-width: 500px), (max-device-width: 500px){
     .form-base .form-title:first-child{
         padding-bottom: 10px;
