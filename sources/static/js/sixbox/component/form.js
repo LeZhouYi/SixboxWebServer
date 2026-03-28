@@ -217,12 +217,20 @@ class FormUtils{
         }
     }
 
-    static adjustTextAreaHeight(padding=10){
+    static adjustTextAreaHeight(padding=10, parentElementClass=".popup-overlay"){
         for(let element of document.querySelectorAll(".form-textarea")){
             function adjustHeight() {
+                const parent = element.closest(parentElementClass);
+                const scrollTop = parent.scrollTop;
+
                 element.style.height = "auto";
                 let height = element.scrollHeight + padding;
                 element.style.height = height + "px";
+
+                requestAnimationFrame(() => {
+                    // 恢复滚动位置
+                    parent.scrollTop=scrollTop;
+                });
             }
             element.addEventListener("input", debounce(adjustHeight,200));
             window.addEventListener("resize", debounce(adjustHeight,800));

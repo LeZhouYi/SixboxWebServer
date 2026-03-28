@@ -45,9 +45,11 @@ def save_file(file: FileStorage, folder: Union[LiteralString, str] = None, ext_f
     }
 
 
-def save_text(content: str, rewrite_path: Union[LiteralString, str, None] = None):
+def save_text(content: str, file_ext: Optional[str], rewrite_path: Union[LiteralString, str, None] = None):
     """保存文件"""
-    file_ext = correct_extension(".html")
+    if file_ext is None and rewrite_path is None:
+        raise Exception("FILE EXT EMPTY")
+    file_ext = correct_extension(file_ext or os.path.splitext(os.path.basename(rewrite_path))[-1])
     if file_ext not in STORAGE_DB.get_env("extensions"):
         raise Exception("FILE FORMAT UNSUPPORTED")
 

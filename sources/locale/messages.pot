@@ -395,3 +395,6 @@ msgstr ""
 
 msgid "SET BACKGROUND"
 msgstr ""
+
+msgid "EDIT TEXT"
+msgstr ""

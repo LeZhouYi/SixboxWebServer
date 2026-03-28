@@ -73,6 +73,7 @@ class StorageController{
         this.popupDisplayText = new PopupContainer("popupDisplayText");
         this.popupEditText = new PopupContainer("popupEditText");
         this.popupImage = new PopupImage("popupImage");
+        this.popupEditNormalText = new PopupContainer("popupEditNormalText");
 
         // 初始化文件上传的控件
         this.formFileUpload = new FormFileUploader("uploadFileLoader");
@@ -104,6 +105,39 @@ class StorageController{
         this.bindEditText();
         this.bindSearch();
         this.bindUpFolder();
+        this.bindEditNormalText();
+    }
+
+    bindEditNormalText(){
+        callElement("editNormalTextCancel", element=>{
+            element.addEventListener("click", (event)=>{
+                this.popupEditNormalText.hideContainer();
+            });
+        });
+        callElement("editNormalTextForm", element=>{
+            element.addEventListener("submit", async (event)=>{
+                /*点击新增文件夹*/
+                let spinner = createSpinner("editNormalTextConfirm");
+                try{
+                    event?.preventDefault();
+                    let responseData = await this.storagesView.editText(
+                        sessionStorage.getItem("nowFileID"),
+                        document.getElementById("editNormalTextName")?.value,
+                        document.getElementById("editNormalTextSelect")?.value,
+                        document.getElementById("editNormalTextRemark")?.value,
+                        document.getElementById("editNormalText")?.value
+                    );
+                    this.updateFileList();
+                    this.popupEditNormalText.hideContainer();
+                    document.getElementById("editNormalTextForm")?.reset();
+                    this.popupMessage.displaySuccessMessage(responseData.message);
+                }catch(error){
+                    this.popupMessage.displayErrorMessage(error);
+                }finally{
+                    spinner?.remove();
+                }
+            });
+        });
     }
 
     bindUpFolder(){
@@ -452,6 +486,8 @@ class StorageController{
                     this.onClickEditFolder(event);
                 }else if(fileType=="html"){
                     this.onClickEditText(event);
+                }else if(["md"].includes(fileType)){
+                    this.onClickEditNormalText(event);
                 }else{
                     this.onClickEditFile(event);
                 }
@@ -484,6 +520,35 @@ class StorageController{
                 }
             });
         });
+    }
+
+    async onClickEditNormalText(event){
+        /*点击编辑普通文本*/
+        let spinner = createSpinner("fileEditButton","spinner-container",0.75);
+        try{
+            let fileID = sessionStorage.getItem("nowFileID");
+            let fileData = await this.storagesView.getFileDetail(fileID);
+            let parentFolder = fileData.folderID;
+            let parentData = await this.storagesView.getFolderDetail(parentFolder);
+            this.resetSelectFolder("editNormalTextSelect", parentData);
+            callElement("editNormalTextName", element=>{
+                element.value = fileData.filename;
+            });
+            callElement("editNormalTextRemark", element=>{
+                element.value = fileData.remark;
+            });
+            let responseData = await this.storagesView.getText(fileID);
+            callElement("editNormalText", element=>{
+                element.value = responseData.content;
+                element.dispatchEvent(new Event("input"));
+            });
+            this.popupEditNormalText.showContainer();
+        }catch(error){
+            this.popupMessage.displayErrorMessage(error);
+        }finally{
+            this.popupFileControl.hideContainer();
+            spinner?.remove();
+        }
     }
 
     async onClickEditText(event){

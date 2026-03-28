@@ -1,0 +1,18 @@
+{% extends 'component/ui_popup_base.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
+
+{% block popup_id %}popupEditNormalText{% endblock %}
+
+{% block popup_content %}
+<form class="form-base" id="editNormalTextForm">
+    {{ forms.form_title(_('EDIT TEXT')) }}
+    {{ forms.label_line_input('editNormalTextName',_('FILENAME'), 'text', _('FILENAME HOLDER'), 'required')}}
+    {{ forms.label_select('editNormalTextSelect', _('FOLDER SELECT'), 'required') }}
+    {{ forms.label_textarea('editNormalTextRemark', _('FOLDER REMARK'), '6em', _('FOLDER REMARK HOLDER')) }}
+    {{ forms.label_textarea('editNormalText', _('TEXT CONTENT'), '6em', _('FOLDER REMARK HOLDER')) }}
+    <div class="form-buttons">
+        {{ forms.button('editNormalTextConfirm', _('CONFIRM BUTTON'), 'submit') }}
+        {{ forms.warn_button('editNormalTextCancel', _('CANCEL BUTTON')) }}
+    </div>
+</form>
+{% endblock %}

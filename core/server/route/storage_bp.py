@@ -214,7 +214,7 @@ def add_text():
     content = data.get(Storage.CONTENT)
     validate_str_empty(content, "CONTENT EMPTY")
     ## 处理
-    save_data = save_text(content)
+    save_data = save_text(content, file_ext=".html")
     data.update(save_data)
     data.update({
         Storage.UPLOADER: now_user_id
@@ -250,10 +250,11 @@ def edit_text(file_id: str):
     ## 处理
     data[Storage.FILE_ID] = file_id
     file_data = STORAGE_DB.get_file_data(file_id)
-    save_data = save_text(content, rewrite_path=file_data.get(Storage.FILE_PATH))
+    save_data = save_text(content, None, rewrite_path=file_data.get(Storage.FILE_PATH))
     data.update(save_data)
     STORAGE_DB.edit_data(data)
     return gen_success_response(request, "EDIT SUCCESS", 200)
+
 
 def validate_permission(request_in: Request, file_id, is_file: bool):
     """校验文件权限"""

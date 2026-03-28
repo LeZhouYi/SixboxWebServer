@@ -398,3 +398,6 @@ msgstr "未知"
 msgid "SET BACKGROUND"
 msgstr "设为壁纸"
 
+msgid "EDIT TEXT"
+msgstr "编辑文本"
+
