@@ -7,6 +7,7 @@ from uuid import uuid4
 from tinydb import TinyDB, where
 
 from core.database.table.table_base import TableBase
+from core.env import DEFAULT_USER, DEFAULT_PASSWORD
 from core.helpers.lock import lock_required
 from core.helpers.route import extract_values
 
@@ -48,8 +49,11 @@ class UserDB(TableBase):
         """
         if not os.path.exists(db_path):
             self._db = super().init_db(db_path)
-            for default_item in self.get_env("defaults"):
-                self.add_user(default_item)
+            self.add_user({
+                User.USERNAME: DEFAULT_USER,
+                User.PASSWORD: DEFAULT_PASSWORD,
+                User.ROLE: Role.ADMIN
+            })
             return self._db
         return TinyDB(db_path)
 

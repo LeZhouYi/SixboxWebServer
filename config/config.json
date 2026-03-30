@@ -19,19 +19,11 @@
             "db_path": "data/db/user.json",
             "db_init": {},
             "defaults": [
-                {
-                    "username": "admin",
-                    "password": "1234567a",
-                    "role": 0
-                }
             ]
         },
         "session": {
             "db_path": "data/db/session.json",
-            "db_init": {},
-            "jwt_secret_key": "vU7yZ4iH8pP7",
-            "jwt_algorithm": "HS256",
-            "jwt_exp_delta_seconds": 2592000
+            "db_init": {}
         },
         "storage": {
             "db_path": "data/db/storage.json",
@@ -155,11 +147,6 @@
                 "template_folder": "sources/templates",
                 "static_folder": "sources/static"
         },
-        "app_run": {
-            "debug": false,
-            "host": "0.0.0.0",
-            "port": 6840
-        },
         "env": {
             "api_prefix": "/api/v1",
             "langs": [
@@ -169,6 +156,9 @@
             "domain": "messages",
             "locale_dir": "sources/locale",
             "chunk_size": 1024
+        },
+        "config": {
+            "SEND_FILE_MAX_AGE_DEFAULT": 86400
         },
         "sources": {
             "cssmin": {

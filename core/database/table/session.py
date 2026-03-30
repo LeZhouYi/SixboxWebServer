@@ -7,6 +7,7 @@ from tinydb import where
 
 from core.database.table.table_base import TableBase
 from core.database.table.user import User
+from core.env import JWT_SECRET_KEY, JWT_ALGORITHM, JWT_EXPIRED_SECONDS
 from core.helpers.lock import lock_required
 from core.helpers.validate import validate_str_empty
 
@@ -73,8 +74,8 @@ class SessionDB(TableBase):
         :return:
         """
         try:
-            decoded = jwt.decode(access_token, self.get_env("jwt_secret_key"),
-                                 algorithms=[self.get_env("jwt_algorithm")], options={"require_exp": True})
+            decoded = jwt.decode(access_token, JWT_SECRET_KEY,
+                                 algorithms=[JWT_ALGORITHM], options={"require_exp": True})
             user_id = decoded.get(Session.USER_ID)
             validate_str_empty(user_id, "TOKEN INVALID")
             result = self._db.get(
@@ -111,7 +112,7 @@ class SessionDB(TableBase):
         :return:
         """
         expire_at = datetime.datetime.now(datetime.UTC) + datetime.timedelta(
-            seconds=self.get_env("jwt_exp_delta_seconds"))
+            seconds=JWT_EXPIRED_SECONDS)
         payload = {
             Session.USER_ID: user_id,
             Session.EXPIRE_AT: expire_at.timestamp()

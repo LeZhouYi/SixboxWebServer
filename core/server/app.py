@@ -2,6 +2,7 @@ from flask import Flask
 from flask_assets import Environment
 
 from core.config import get_section
+from core.env import SERVER_PORT
 from core.helpers.route import register_assets, clear_webasset_cache
 from core.server.route.audio_bp import AUDIO_BP
 from core.server.route.cover_bp import COVER_PB
@@ -13,6 +14,10 @@ from core.server.template.template import register_template
 
 _config = get_section("flask")
 _app = Flask(**_config.get("app_init"))
+
+# 配置
+for key, value in _config.get("config", {}).items():
+    _app.config[key] = value
 
 # 注册蓝图
 _app.register_blueprint(USER_BP)
@@ -36,4 +41,4 @@ def run_app():
     :return:
     """
     global _app, _config
-    _app.run(**_config.get("app_run"))
+    _app.run(debug=False, host="0.0.0.0", port=SERVER_PORT)
