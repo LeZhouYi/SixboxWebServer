@@ -1,4 +1,5 @@
 import datetime
+import logging
 import os
 import re
 import threading
@@ -10,7 +11,6 @@ from tinydb import TinyDB, where
 from core.database.table.table_base import TableBase
 from core.helpers.lock import lock_required
 from core.helpers.route import extract_values
-from core.log import logger
 
 
 class Storage:
@@ -232,7 +232,7 @@ class StorageDB(TableBase):
                     try:
                         os.remove(data_item.get(Storage.FILE_PATH))
                     except Exception as e:
-                        logger.warn(f"remove file: {data_item.get(Storage.FILE_PATH)}, error: {e}")
+                        logging.warning(f"remove file: {data_item.get(Storage.FILE_PATH)}, error: {e}")
             self._db.remove(query)
 
     @lock_required(_lock)
@@ -272,7 +272,7 @@ class StorageDB(TableBase):
             self._db.remove(query)
             os.remove(file_data.get(Storage.FILE_PATH))
         except Exception as e:
-            logger.warn(f"remove file: {file_data.get(Storage.FILE_PATH)}, error: {e}")
+            logging.warning(f"remove file: {file_data.get(Storage.FILE_PATH)}, error: {e}")
 
     @lock_required(_lock)
     def get_child_folder(self, parent_folder_id: str, folder_name: str):

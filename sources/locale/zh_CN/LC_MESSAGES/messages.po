@@ -401,3 +401,6 @@ msgstr "设为壁纸"
 msgid "EDIT TEXT"
 msgstr "编辑文本"
 
+msgid "AI CHAT"
+msgstr "AI聊天"
+

@@ -1,0 +1,17 @@
+{% extends 'base/navigation/page_navigation_base.jinja2' %}
+{% set navigation_title = _('AI CHAT') %}
+
+{% block css_file %}
+    {% assets "ai_chat_css" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+{% endblock %}
+
+{% block page_content %}
+{% endblock %}
+
+{% block js_file %}
+    {% assets "ai_chat_js" %}
+        <script type="module" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}

@@ -1,3 +1,4 @@
+import logging
 import os.path
 from typing import Union, Optional, LiteralString
 from uuid import uuid4
@@ -7,7 +8,6 @@ from werkzeug.datastructures import FileStorage
 from core.database.table import STORAGE_DB
 from core.database.table.storage import Storage, AudioFolder
 from core.database.view.view_utils import Params
-from core.log import logger
 
 
 def correct_extension(file_ext: str) -> str:
@@ -36,7 +36,7 @@ def save_file(file: FileStorage, folder: Union[LiteralString, str] = None, ext_f
         file.save(filepath)
         file_size = os.path.getsize(filepath)
     except Exception as e:
-        logger.error(f"保存文件失败：{e}")
+        logging.error(f"保存文件失败：{e}")
         raise Exception("FILE SAVE FAIL")
     return {
         Storage.FILE_TYPE: file_ext[1:],

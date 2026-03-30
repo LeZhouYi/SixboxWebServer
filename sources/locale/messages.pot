@@ -398,3 +398,6 @@ msgstr ""
 
 msgid "EDIT TEXT"
 msgstr ""
+
+msgid "AI CHAT"
+msgstr ""

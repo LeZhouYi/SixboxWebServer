@@ -29,3 +29,8 @@ def music():
 def pdf_editor():
     """音乐盒"""
     return render_template("page/tools/pdf_editor.html")
+
+@PAGE_BP.route("/chat.html", methods=["GET"])
+def chat():
+    """AI消息"""
+    return render_template("page/chat/chat.html")

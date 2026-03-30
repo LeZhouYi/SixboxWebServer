@@ -16,6 +16,7 @@ dependencies = [
     "cssmin (>=0.2.0,<0.3.0)", # web css 管理
     "jsmin (>=3.0.1,<4.0.0)", # web js 管理
     "pyinstaller (>=6.17.0,<7.0.0)",
+    "dotenv (>=0.9.9,<0.10.0)",
 ]
 
 

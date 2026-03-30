@@ -13,7 +13,7 @@ if __name__ == "__main__":
     des_path = os.path.join(dist_folder, "sources")
     shutil.copytree(source_path, des_path, dirs_exist_ok=True)
 
-    clear_webasset_cache() ## 清除测试时产生的缓存
+    clear_webasset_cache()  ## 清除测试时产生的缓存
     source_path = os.path.join(os.getcwd(), "data/static")
     des_path = os.path.join(dist_folder, "data/static")
     os.makedirs(des_path, exist_ok=True)
@@ -23,6 +23,12 @@ if __name__ == "__main__":
     des_path = os.path.join(dist_folder, "config")
     os.makedirs(des_path, exist_ok=True)
     shutil.copytree(source_path, des_path, dirs_exist_ok=True)
+
+    source_path = os.path.join(os.getcwd(), ".env")
+    des_path = os.path.join(dist_folder, ".env")
+    if os.path.exists(source_path):
+        shutil.copy2(source_path, des_path)
+
     try:
         command = "pyinstaller main.spec"
         result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True, encoding="utf-8")

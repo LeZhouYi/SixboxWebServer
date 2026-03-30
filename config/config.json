@@ -199,6 +199,14 @@
                         "css/page/audio.css"
                     ]
                 },
+                "ai_chat_css": {
+                    "output": "css/generate/ai_chat.css",
+                    "sources": [
+                        "css/component/*",
+                        "css/default.css",
+                        "css/theme.css"
+                    ]
+                },
                 "pdf_editor_css": {
                     "output": "css/generate/pdf_editor.css",
                     "sources": [
@@ -241,6 +249,17 @@
                         "js/sixbox/component/*",
                         "js/sixbox/dataview/*",
                         "js/sixbox/page/audio/*"
+                    ]
+                },
+                "ai_chat_js": {
+                    "output": "js/generate/pdf_editor.js",
+                    "sources": [
+                        "js/spinner/spinner.js",
+                        "js/sixbox/helpers/*",
+                        "js/sixbox/init/*",
+                        "js/sixbox/component/*",
+                        "js/sixbox/dataview/*",
+                        "js/sixbox/page/chat/*"
                     ]
                 },
                 "pdf_editor_js": {

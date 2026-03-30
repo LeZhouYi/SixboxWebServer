@@ -1,3 +1,4 @@
+import logging
 import mimetypes
 import os.path
 from urllib.parse import quote
@@ -13,7 +14,6 @@ from core.database.view.storage_view import save_file, search_storage_data, save
 from core.database.view.view_utils import catch_exception, page_args_required, Params
 from core.helpers.route import gen_prefix_api, gen_success_response, get_stream_io
 from core.helpers.validate import validate_str_empty, validate_dict_str_empty
-from core.log import logger
 
 STORAGE_BP = Blueprint("storage", __name__)
 
@@ -154,7 +154,7 @@ def edit_file(file_id: str):
         try:
             os.remove(old_file_data.get(Storage.FILE_PATH))
         except Exception as e:
-            logger.warn(f"remove file: {old_file_data.get(Storage.FILE_PATH)}, error: {e}")
+            logging.warning(f"remove file: {old_file_data.get(Storage.FILE_PATH)}, error: {e}")
 
     STORAGE_DB.edit_data(edit_data)
     return gen_success_response(request, "EDIT SUCCESS", 200)

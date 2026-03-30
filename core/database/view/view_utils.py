@@ -1,10 +1,10 @@
+import logging
 from functools import wraps
 
 from flask import request
 
 from core.helpers.route import gen_fail_response
 from core.helpers.validate import validate_int
-from core.log import logger
 
 
 class Params:
@@ -25,7 +25,7 @@ def catch_exception(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            logger.error(e, exc_info=True)
+            logging.error(e, exc_info=True)
             if str(e) in ["TOKEN INVALID", "TOKEN EXPIRED"]:
                 return gen_fail_response(request, str(e), 401)
             return gen_fail_response(request, str(e), 400)
