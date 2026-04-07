@@ -620,7 +620,7 @@ class AudioController{
         callElement("editAudioForm", element=>{
             /*点击确认编辑*/
             element.addEventListener("submit", async (event)=>{
-                let spinner = createSpinner("editAudioConfirm");
+                let spinner = createSpinner("editAudioConfirm","spinner-holder", 0.75);
                 try{
                     event?.preventDefault();
                     let fileID = null;
@@ -798,7 +798,7 @@ class AudioController{
         callElement("addAudioForm", element=>{
             /*点击确认新增*/
             element.addEventListener("submit", async (event)=>{
-                let spinner = createSpinner("addAudioConfirm");
+                let spinner = createSpinner("addAudioConfirm","spinner-holder", 0.75);
                 try{
                     event?.preventDefault();
                     let audioFile = null;
@@ -870,7 +870,7 @@ class AudioController{
         callElement("editSetForm", element=>{
             /*点击提交编辑合集*/
             element.addEventListener("submit", async (event)=>{
-                let spinner = createSpinner("editSetConfirm");
+                let spinner = createSpinner("editSetConfirm","spinner-holder", 0.75);
                 try{
                     event?.preventDefault();
                     let coverFile = null;
@@ -963,7 +963,7 @@ class AudioController{
         });
         callElement("addSetForm", element=>{
             element.addEventListener("submit", async(event)=>{
-                let spinner = createSpinner("addSetConfirm");
+                let spinner = createSpinner("addSetConfirm","spinner-holder", 0.75);
                 try{
                     event?.preventDefault();
                     let coverFile = null;

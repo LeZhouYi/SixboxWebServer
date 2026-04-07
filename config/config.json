@@ -75,7 +75,8 @@
                 ".exe",
                 ".yaml",
                 ".mp3",
-                ".lrc"
+                ".lrc",
+                ".mp4"
             ],
             "save_folder": "data/storage",
             "corrections": {
@@ -194,7 +195,8 @@
                     "sources": [
                         "css/component/*",
                         "css/default.css",
-                        "css/theme.css"
+                        "css/theme.css",
+                        "css/page/chat.css"
                     ]
                 },
                 "pdf_editor_css": {

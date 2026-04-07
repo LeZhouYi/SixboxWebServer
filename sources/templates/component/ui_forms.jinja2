@@ -17,13 +17,13 @@
 {% endmacro -%}
 
 {# 简单的深色按钮 #}
-{%- macro button(id, name, type=None) %}
-    <input class="form-button spinner-holder" {% if id is not none %}id="{{id}}"{% endif %} value="{{name}}" {% if type is not none %}type="{{type}}"{% endif %}>
+{%- macro button(id, name, type='button') %}
+    <button class="form-button spinner-holder" {% if id is not none %}id="{{id}}"{% endif %} {% if type is not none %}type="{{type}}"{% endif %}>{{name}}</button>
 {% endmacro -%}
 
 {# 简单的警告色按钮 #}
-{%- macro warn_button(id, name, type=None) %}
-    <input class="form-warn_button spinner-holder" id="{{id}}" value="{{name}}" {% if type is not none %}type="{{type}}"{% endif %}>
+{%- macro warn_button(id, name, type='button') %}
+    <button class="form-warn_button spinner-holder" id="{{id}}" {% if type is not none %}type="{{type}}"{% endif %}>{{name}}</button>
 {% endmacro -%}
 
 {# 图标按钮 #}

@@ -33,7 +33,7 @@ class LoginController{
 
     async login(event){
         /*登录*/
-        let spinner = createSpinner(this.buttonId);
+        let spinner = createSpinner(this.buttonId,"spinner-holder", 0.75);
         try{
             event?.preventDefault();
             let responseData = await new SessionsView().login(

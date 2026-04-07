@@ -45,10 +45,11 @@ const fileTypeMapping = {
     "msi": ["exe", "file", "/static/icons/app.png"],
     "yaml": ["yaml", "file", "/static/icons/text.png"],
     "mp3": ["audio", "file", "/static/icons/music.png"],
-    "lrc": ["text", "file", "/static/icons/text.png"]
+    "lrc": ["text", "file", "/static/icons/text.png"],
+    "mp4": ["video", "file", "/static/icons/video.png"]
 }
 
-const normalTextType = ["md"];
+const normalTextType = ["md","yaml","text","code"];
 
 class StorageController{
 
@@ -77,6 +78,7 @@ class StorageController{
         this.popupImage = new PopupImage("popupImage");
         this.popupEditNormalText = new PopupContainer("popupEditNormalText");
         this.popupDisplayNormalText = new PopupContainer("popupDisplayNormalText");
+        this.popupVideo = new PopupVideo("popupVideo");
 
         // 初始化文件上传的控件
         this.formFileUpload = new FormFileUploader("uploadFileLoader");
@@ -120,7 +122,7 @@ class StorageController{
         callElement("editNormalTextForm", element=>{
             element.addEventListener("submit", async (event)=>{
                 /*点击新增文件夹*/
-                let spinner = createSpinner("editNormalTextConfirm");
+                let spinner = createSpinner("editNormalTextConfirm","spinner-holder", 0.75);
                 try{
                     event?.preventDefault();
                     let responseData = await this.storagesView.editText(
@@ -195,7 +197,7 @@ class StorageController{
         });
         callElement("editTextForm", element=>{
             element.addEventListener("submit", async(event)=>{
-                let spinner = createSpinner("editTextConfirm");
+                let spinner = createSpinner("editTextConfirm","spinner-holder", 0.75);
                 try{
                     event?.preventDefault();
                     let responseData = await this.storagesView.editText(
@@ -241,7 +243,7 @@ class StorageController{
         });
         callElement("addTextForm", element=>{
             element.addEventListener("submit", async (event)=>{
-                let spinner = createSpinner("addTextConfirm");
+                let spinner = createSpinner("addTextConfirm","spinner-holder", 0.75);
                 try{
                     event?.preventDefault();
                     let responseData = await this.storagesView.addText(
@@ -294,7 +296,7 @@ class StorageController{
 
     async onEditFile(){
         /*编辑文件*/
-        let spinner = createSpinner("editFileConfirm");
+        let spinner = createSpinner("editFileConfirm","spinner-holder", 0.75);
         try{
             event?.preventDefault();
             let fileID = null;
@@ -455,7 +457,7 @@ class StorageController{
 
     async onEditFolder(event){
         /*编辑文件夹*/
-        let spinner = createSpinner("editFolderConfirm");
+        let spinner = createSpinner("editFolderConfirm","spinner-holder", 0.75);
         try{
             event?.preventDefault();
             let responseData = await this.storagesView.editFolder(
@@ -672,7 +674,7 @@ class StorageController{
             /*确认新增*/
             element.addEventListener("submit", async (event)=>{
                 /*点击新增文件夹*/
-                let spinner = createSpinner("addFolderConfirm");
+                let spinner = createSpinner("addFolderConfirm","spinner-holder", 0.75);
                 try{
                     event?.preventDefault();
                     let responseData = await this.storagesView.addFolder(

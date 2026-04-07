@@ -105,7 +105,8 @@ class SessionDB(TableBase):
         self._db.update(return_body, where(Session.REFRESH_TOKEN) == refresh_token)  # type: ignore
         return return_body
 
-    def generate_access_token(self, user_id: str) -> str:
+    @staticmethod
+    def generate_access_token(user_id: str) -> str:
         """
         生成access_token
         :param user_id: 用户ID
@@ -117,7 +118,7 @@ class SessionDB(TableBase):
             Session.USER_ID: user_id,
             Session.EXPIRE_AT: expire_at.timestamp()
         }
-        token = jwt.encode(payload, self.get_env("jwt_secret_key"), algorithm=self.get_env("jwt_algorithm"))
+        token = jwt.encode(payload, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
         return token
 
     @lock_required(_lock)

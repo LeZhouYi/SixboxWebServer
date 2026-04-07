@@ -287,7 +287,7 @@
 }
 
 .form-text-button{
-    height: 36px;
+    min-height: 36px;
     display: flex;
     flex-direction: row;
     background-color: var(--transparent-color);

@@ -1,10 +1,10 @@
-function createSpinner(elementId, className="spinner-container", scale=1){
+function createSpinner(elementId, className="spinner-holder", scale=1){
     /*创建loading*/
     let target = document.getElementById(elementId);
     return createSpinnerByElement(target, className, scale);
 }
 
-function createSpinnerByElement(elementTarget, className="spinner-container", scale=1){
+function createSpinnerByElement(elementTarget, className="spinner-holder", scale=1){
     /*创建loading*/
     if(!elementTarget){
         return;
