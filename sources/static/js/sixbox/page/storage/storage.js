@@ -990,9 +990,8 @@ class StorageController{
     createFileText(text){
         /*创建文本*/
         let textDiv = document.createElement("div");
-        textDiv.classList.add("storage-file-column");
+        textDiv.classList.add("storage-file-column", "ellipsis");
         let textA = document.createElement("a");
-        textA.classList.add("ellipsis");
         textA.textContent = text;
         textDiv.appendChild(textA);
         return textDiv;

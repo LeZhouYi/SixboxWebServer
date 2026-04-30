@@ -218,6 +218,11 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    overflow-x: auto;
+}
+
+.audio-item-column::-webkit-scrollbar{
+    height:0;
 }
 
 .audio-item-column>a{
