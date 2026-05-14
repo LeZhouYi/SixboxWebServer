@@ -172,21 +172,8 @@
     height: 24px;
 }
 
-.storage-file-column{
-    height: 100%;
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-}
-
-.storage-file-column::-webkit-scrollbar{
-    height: 0;
-}
-
 .storage-file-column>a{
     min-height:22px;
-    display: flex;
-    align-items: center;
     font-size: 15px;
     height:100%;
 }
