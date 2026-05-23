@@ -78,7 +78,7 @@ class StorageController{
         this.popupImage = new PopupImage("popupImage");
         this.popupEditNormalText = new PopupContainer("popupEditNormalText");
         this.popupDisplayNormalText = new PopupContainer("popupDisplayNormalText");
-        this.popupVideo = new PopupVideo("popupVideo");
+        this.popupVideo = new PopupVideo("popupVideo","videoPlayer");
 
         // 初始化文件上传的控件
         this.formFileUpload = new FormFileUploader("uploadFileLoader");
@@ -336,7 +336,7 @@ class StorageController{
         });
         callElement("deleteFileConfirm", element=>{
             element.addEventListener("click", async (event)=>{
-                let spinner = createSpinner("deleteFileConfirm");
+                let spinner = createSpinner("deleteFileConfirm","spinner-holder", 0.75);
                 try{
                     let fileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"))[0];
                     let nowFileID = sessionStorage.getItem("nowFileID");
@@ -402,7 +402,7 @@ class StorageController{
 
     async onUploadFile(event){
         /*点击上传文件*/
-        let spinner = createSpinner("uploadFileConfirm");
+        let spinner = createSpinner("uploadFileConfirm","spinner-holder", 0.75);
         try{
             event?.preventDefault();
             let file = null;
@@ -506,7 +506,7 @@ class StorageController{
         });
         callElement("setBackgroundButton", element=>{
             element.addEventListener("click", async (event)=>{
-                let spinner = createSpinner("setBackgroundButton");
+                let spinner = createSpinner("setBackgroundButton","spinner-holder", 0.75);
                 try{
                     let fileType = this.getSuitFileType(sessionStorage.getItem("nowFileType"))[0];
                     if(fileType!=="image"){
@@ -966,6 +966,14 @@ class StorageController{
                 }finally{
                     spinner?.remove();
                 }
+            });
+        }else if(fileType=="video"){
+            fileItemDiv.addEventListener("click", (event)=>{
+                let accessToken = localStorage.getItem("accessToken");
+                this.popupVideo.showVideo(
+                    `${API_PREFIX}/storages/files/${itemData.fileID}/download?accessToken=${accessToken}`,
+                    "video/mp4"
+                );
             });
         }else{
             fileItemDiv.addEventListener("click", (event)=>{

@@ -12,7 +12,7 @@ function createSpinnerByElement(elementTarget, className="spinner-holder", scale
     const computedRadius = adjustBorderRadius(elementTarget, 2);
     let spinner = document.createElement("div");
     spinner.style.borderRadius = computedRadius;
-    spinner.classList.add(className);
+    spinner.classList.add(".spinner-container");
     spinner.addEventListener("click", function(event){
         event.preventDefault();
         event.stopPropagation();

@@ -80,7 +80,7 @@ class AudioController{
     bindSetList(){
         callElement("setListButton", element=>{
             element.addEventListener("click", async (event)=>{
-                let spinner = createSpinner("setListButton");
+                let spinner = createSpinner("setListButton","spinner-holder", 0.75);
                 try{
                     let responseData = await this.audioView.getSetList();
                     callElement("setSelect", selectElement=>{
@@ -516,7 +516,7 @@ class AudioController{
     bindAddToSet(){
         callElement("audioAppendButton", element=>{
             element.addEventListener("click", async (event)=>{
-                let spinner = createSpinner("audioAppendButton");
+                let spinner = createSpinner("audioAppendButton","spinner-holder", 0.75);
                 try{
                     let nowAudioSetID = sessionStorage.getItem("audioSetID");
                     if (!nowAudioSetID){
@@ -553,7 +553,7 @@ class AudioController{
         callElement("addToSetConfirm", element=>{
             /*点击确认添加*/
             element.addEventListener("click", async (event)=>{
-                let spinner = createSpinner("addToSetConfirm");
+                let spinner = createSpinner("addToSetConfirm","spinner-holder", 0.75);
                 try{
                     event?.preventDefault();
                     let setID = document.getElementById("addToSetSelect").value;
@@ -577,7 +577,7 @@ class AudioController{
         callElement("audioEditButton", element=>{
             /*点击编辑音频*/
             element.addEventListener("click", async (event)=>{
-                let spinner = createSpinner("audioEditButton");
+                let spinner = createSpinner("audioEditButton","spinner-holder", 0.75);
                 try{
                     let controlAudioID = sessionStorage.getItem("controlAudioID");
                     if(!controlAudioID){
@@ -677,7 +677,7 @@ class AudioController{
         callElement("removeAudioConfirm", element=>{
             /*确认移出*/
             element.addEventListener("click", async (event)=>{
-                let spinner = createSpinner("removeAudioConfirm");
+                let spinner = createSpinner("removeAudioConfirm","spinner-holder", 0.75);
                 try{
                     let nowAudioSetID = sessionStorage.getItem("audioSetID");
                     let controlAudioID = sessionStorage.getItem("controlAudioID");
@@ -707,7 +707,7 @@ class AudioController{
         callElement("deleteAudioConfirm", element=>{
             /*确认删除音频*/
             element.addEventListener("click", async (event)=>{
-                let spinner = createSpinner("deleteAudioConfirm");
+                let spinner = createSpinner("deleteAudioConfirm","spinner-holder", 0.75);
                 try{
                     let controlAudioID = sessionStorage.getItem("controlAudioID");
                     if(!controlAudioID){
@@ -744,7 +744,7 @@ class AudioController{
         callElement("audioDownloadButton", element=>{
             /*点击下载音频*/
             element.addEventListener("click", (event)=>{
-                let spinner = createSpinner("audioDownloadButton");
+                let spinner = createSpinner("audioDownloadButton","spinner-holder", 0.75);
                 try{
                     let audioData = getSessionAsJson("controlAudioData");
                     if(!audioData){
@@ -764,7 +764,7 @@ class AudioController{
         callElement("lyricsDownloadButton", element=>{
             /*点击下载歌词*/
             element.addEventListener("click", (event)=>{
-                let spinner = createSpinner("lyricsDownloadButton");
+                let spinner = createSpinner("lyricsDownloadButton","spinner-holder", 0.75);
                 try{
                     let audioData = getSessionAsJson("controlAudioData");
                     if(!audioData || !audioData.lyricsID){
@@ -931,7 +931,7 @@ class AudioController{
         callElement("deleteSetConfirm", element=>{
             /*点击确认删除*/
             element.addEventListener("click", async (event)=>{
-                let spinner = createSpinner("deleteSetConfirm");
+                let spinner = createSpinner("deleteSetConfirm","spinner-holder", 0.75);
                 try{
                     let nowAudioSetID = sessionStorage.getItem("audioSetID");
                     let responseData = await this.audioView.deleteSet(nowAudioSetID);

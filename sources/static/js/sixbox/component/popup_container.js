@@ -21,8 +21,7 @@ class PopupContainer{
         /*判断是否在容器范围内*/
         callElement(this.containerID, element=>{
             if(!element.contains(target)){
-                let popupOverlay = element.parentNode;
-                popupOverlay?.classList.add("hidden");
+                this.hideContainer();
             }
         });
     }

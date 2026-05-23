@@ -1,4 +1,5 @@
 {% extends 'component/ui_popup_base.jinja2' %}
+{% import 'component/ui_forms.jinja2' as forms %}
 
 {% block popup_id %}popupVideo{% endblock %}
 {% block container_class %}popup-empty-container{% endblock %}
@@ -6,5 +7,15 @@
 
 {% block popup_content %}
 <div class="popup-video">
+    <video id="videoPlayer" controls class="video-js popup-video-container">
+    </video>
+    <div class="popup-video-controls">
+        {{ forms.icon_button('fastReverseButton','/static/icons/reverse.png') }}
+        {{ forms.icon_button('reverseButton','/static/icons/reverse.png') }}
+        {{ forms.icon_button('playPauseButton','/static/icons/caret_forward.png') }}
+        {{ forms.icon_button('forwardButton','/static/icons/fast_forward.png') }}
+        {{ forms.icon_button('fastForwardButton','/static/icons/fast_forward.png') }}
+        {{ forms.icon_button('closeVideoButton','/static/icons/close.png') }}
+    </div>
 </div>
 {% endblock %}
