@@ -1,6 +1,6 @@
-from core.log.log import init_logger
+from core.log.log import init_logging
 from core.server import run_app
 
 if __name__ == "__main__":
-    init_logger()
+    init_logging()
     run_app()

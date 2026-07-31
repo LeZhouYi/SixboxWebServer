@@ -2,7 +2,7 @@
 使用flask+tinydb构建的简单web服务
 
 ## 本地运行
-- 搭建好python虚拟环境(3.12)后，安装依赖：
+- 搭建好python虚拟环境(>=3.12)后，安装依赖：
    ```commandline
    pip install poetry
    poetry install --no-root

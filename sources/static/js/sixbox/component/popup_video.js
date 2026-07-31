@@ -23,7 +23,7 @@ class PopupVideo extends PopupContainer{
 
     playOrPause(){
         /*播放暂停*/
-        let player = videojs(this.videoID);
+        let player = videojs.getPlayer(this.videoID);
         if(player){
             let isPaused = player.paused();
             player.paused() ? player.play() : player.pause();
@@ -36,7 +36,7 @@ class PopupVideo extends PopupContainer{
 
     adjustProgress(seconds = 60){
         // 调整播放进度
-        let player = videojs(this.videoID);
+        let player = videojs.getPlayer(this.videoID);
         if(player){
             player.currentTime(player.currentTime() + seconds);
         }
@@ -45,39 +45,59 @@ class PopupVideo extends PopupContainer{
     hideContainer(){
         /*关闭视频*/
         super.hideContainer();
-        let player = videojs(this.videoID);
+
+        let player = videojs.getPlayer(this.videoID);
         player?.dispose();
-        callElement(this.videoID, element => {
-            element.remove();
-        });
+        player = null;
+
+        let videoElement = document.getElementById(this.videoID);
+        if(videoElement){
+            videoElement.remove();
+        }
+
         let container = document.getElementById(this.containerID);
         if(container){
-            let videoPanel = document.createElement("video");
-            videoPanel.id = this.videoID;
-            videoPanel.controls = true;
-            videoPanel.classList.add("video-js", "popup-video-container");
-            container.insertBefore(videoPanel, container.firstChild);
+            let videoContainer = container.querySelector('.popup-video');
+            if(videoContainer){
+                let videoPanel = document.createElement("video");
+                videoPanel.id = this.videoID;
+                videoPanel.controls = true;
+                videoPanel.classList.add("video-js", "popup-video-container");
+                videoContainer.insertBefore(videoPanel, videoContainer.firstChild);
+            }
         }
     }
 
     showVideo(src,fileType){
         /*显示视频*/
-//        let func = this.showContainer.bind(this);
-//        videojs(this.videoID, {
-//            controls: true,
-//            autoplay: false,
-//            fluid: false,
-//            preload: false,
-//            muted: false
-//        }).ready(function () {
-//            this.volume(nowPlayVolume);
-//            this.src({
-//                src: src,
-//                type: fileType
-//            });
-//            func?.();
-//        });
+        let func = this.showContainer.bind(this);
         this.showContainer();
+
+        let player = videojs.getPlayer(this.videoID);
+        if (player){
+            player.dispose();
+            player = null;
+        }
+
+        videojs(this.videoID, {
+            controls: false,
+            autoplay: true,
+            fluid: false,    //自适应容器宽度
+            preload: "auto",
+            muted: false
+        }).ready(function () {
+            let nowPlayVolume = localStorage.getItem("nowPlayVolume");
+            this.volume(nowPlayVolume);
+            this.src({
+                src: src,
+                type: fileType
+            });
+
+            this.play().catch(error=>{
+                console.log("自动播放被阻止",error);
+            });
+            func?.();
+        });
     }
 
 }

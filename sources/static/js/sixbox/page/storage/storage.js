@@ -46,7 +46,8 @@ const fileTypeMapping = {
     "yaml": ["yaml", "file", "/static/icons/text.png"],
     "mp3": ["audio", "file", "/static/icons/music.png"],
     "lrc": ["text", "file", "/static/icons/text.png"],
-    "mp4": ["video", "file", "/static/icons/video.png"]
+    "mp4": ["video", "file", "/static/icons/video.png"],
+    "txt": ["text", "file", "/static/icons/text.png"]
 }
 
 const normalTextType = ["md","yaml","text","code"];
@@ -56,6 +57,9 @@ class StorageController{
     constructor(){
         // 数据
         this.storagesView = new StoragesView();
+
+        // storage
+        checkLocalDefault("nowPlayVolume", "50"); //howler实际音量=value/100/3,不除3音量过大
 
         // 初始化页面选择器
         this.pageSelect = new PageSelect("storage", 20);

@@ -5,6 +5,7 @@
 {% set navigation_title = _('STORAGE TITLE') %}
 
 {% block css_file %}
+    <link rel="stylesheet" type="text/css" href="/static/js/videojs/video-js.min.css"/>
     {% assets "storage_css" %}
         <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
     {% endassets %}
