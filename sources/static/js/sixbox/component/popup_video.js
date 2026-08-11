@@ -3,10 +3,10 @@ class PopupVideo extends PopupContainer{
     constructor(containerID, videoID="videoPlayer"){
         super(containerID);
         this.videoID = videoID;
-        this.init();
     }
 
     init(){
+        super.init();
         let closeVideoButton = document.getElementById("closeVideoButton");
         closeVideoButton?.addEventListener("click", this.hideContainer.bind(this));
         let fastReverseButton = document.getElementById("fastReverseButton");
@@ -26,10 +26,11 @@ class PopupVideo extends PopupContainer{
         let player = videojs.getPlayer(this.videoID);
         if(player){
             let isPaused = player.paused();
-            player.paused() ? player.play() : player.pause();
+            isPaused?player.play():player.pause();
             let playPauseButton = document.getElementById("playPauseButton");
             if(playPauseButton){
-                playPauseButton.src = isPaused ? "/static/images/caret_forward.png" : "/static/images/pause.png";
+                let img = playPauseButton.querySelector("img");
+                img.src = isPaused ? "/static/icons/caret_forward.png" : "/static/icons/pause.png";
             }
         }
     }
@@ -80,17 +81,22 @@ class PopupVideo extends PopupContainer{
         }
 
         videojs(this.videoID, {
-            controls: false,
+            controls: true,
             autoplay: true,
             fluid: false,    //自适应容器宽度
             preload: "auto",
             muted: false
         }).ready(function () {
-            let nowPlayVolume = localStorage.getItem("nowPlayVolume");
+            let nowPlayVolume = (localStorage.getItem("nowPlayVolume") || 50)/100;
             this.volume(nowPlayVolume);
             this.src({
                 src: src,
                 type: fileType
+            });
+
+            this.on("volumechange", function () {
+                var currentVolume = this.volume();
+                localStorage.setItem("nowPlayVolume", parseInt(currentVolume*100));
             });
 
             this.play().catch(error=>{
