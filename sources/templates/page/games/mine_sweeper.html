@@ -1,26 +1,17 @@
 {% extends 'base/navigation/page_navigation_base.jinja2' %}
-{% set navigation_title = _('AI CHAT') %}
+{% set navigation_title = _('PDF EDITOR') %}
 
 {% block css_file %}
-    {% assets "ai_chat_css" %}
+    {% assets "mine_sweeper_css" %}
         <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
     {% endassets %}
 {% endblock %}
 
 {% block page_content %}
-    <div class="chat-page">
-        <div class="chat-control-panel"></div>
-        <div class="chat-message-panel"></div>
-        <div class="chat-input-panel"></div>
-    </div>
-{% endblock %}
-
-{% block popup_pending %}
-
 {% endblock %}
 
 {% block js_file %}
-    {% assets "ai_chat_js" %}
+    {% assets "mine_sweeper_js" %}
         <script type="module" src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock %}

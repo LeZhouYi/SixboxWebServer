@@ -20,17 +20,14 @@ def default():
     """主页"""
     return render_template("page/storage/storage.html")
 
+
 @PAGE_BP.route("/audio.html", methods=["GET"])
 def music():
     """音乐盒"""
     return render_template("page/audio/audio.html")
 
-@PAGE_BP.route("/tools/pdf_editor.html", methods=["GET"])
-def pdf_editor():
-    """音乐盒"""
-    return render_template("page/tools/pdf_editor.html")
 
-@PAGE_BP.route("/chat.html", methods=["GET"])
-def chat():
-    """AI消息"""
-    return render_template("page/chat/chat.html")
+@PAGE_BP.route("/games/mine_sweeper.html", methods=["GET"])
+def mine_sweeper():
+    """扫雷"""
+    return render_template("page/games/mine_sweeper.html")
